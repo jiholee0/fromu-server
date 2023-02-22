@@ -29,7 +29,6 @@ repositories {
 dependencies {
     implementation 'org.jetbrains:annotations:19.0.0'
 
-
     // Spring Boot Starter
     testImplementation ('org.springframework.boot:spring-boot-starter-test')
 
@@ -38,13 +37,17 @@ dependencies {
     compileOnly ('org.projectlombok:lombok:1.18.16')
     annotationProcessor ('org.projectlombok:lombok:1.18.16')
 
+    // randomStringUtils
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
     // DB
     runtimeOnly ('mysql:mysql-connector-java') //mysql8
     //runtimeOnly 'mysql:mysql-connector-java:5.1.47' //mysql5
-    //implementation ('org.springframework.boot:spring-boot-starter-jdbc')
-    //compile('org.springframework.boot:spring-boot-starter-data-jpa') //mysql 5버전의 경우 삭제.
+    implementation ('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile ('mysql:mysql-connector-java')
 
-
+    // Kakao
+    implementation "com.kakao.sdk:v2-user:2.8.6"
 
     // Web
     implementation ('org.springframework.boot:spring-boot-starter-web')
@@ -56,11 +59,6 @@ dependencies {
 
     implementation('org.springframework.boot:spring-boot-starter')
     compile('org.springframework.boot:spring-boot-starter-web')
-
-
-
-
-
 }
 
 test {
