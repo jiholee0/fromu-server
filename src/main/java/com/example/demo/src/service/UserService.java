@@ -14,25 +14,24 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
+import static com.example.demo.utils.CommonUtils.createUserCode;
 
 @Service
 public class UserService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final UserDao userDao;
     private final JwtService jwtService;
-    private final CommonUtils commonUtils;
 
 
     @Autowired
-    public UserService(UserDao userDao, JwtService jwtService, CommonUtils commonUtils) {
+    public UserService(UserDao userDao, JwtService jwtService) {
         this.userDao = userDao;
         this.jwtService = jwtService;
-        this.commonUtils = commonUtils;
     }
 
     // 회원가입(POST)
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
-        String userCode = commonUtils.createUserCode();
+        String userCode = createUserCode();
         int userId = userDao.createUser(postUserReq, userCode);
         try {
             String jwt = jwtService.createJwt(userId);

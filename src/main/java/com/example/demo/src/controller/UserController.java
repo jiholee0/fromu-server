@@ -3,7 +3,6 @@ package com.example.demo.src.controller;
 import com.example.demo.src.data.dto.user.*;
 import com.example.demo.src.service.KakaoService;
 import com.example.demo.src.service.UserService;
-import com.example.demo.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
@@ -29,14 +28,12 @@ public class UserController {
     private final KakaoService kakaoService;
     @Autowired
     private final JwtService jwtService;
-    private final CommonUtils commonUtils;
 
 
-    public UserController(UserService userService, KakaoService kakaoService, JwtService jwtService, CommonUtils commonUtils) {
+    public UserController(UserService userService, KakaoService kakaoService, JwtService jwtService) {
         this.userService = userService;
         this.kakaoService = kakaoService;
         this.jwtService = jwtService;
-        this.commonUtils = commonUtils;
     }
 
     // TODO: 소셜 로그인

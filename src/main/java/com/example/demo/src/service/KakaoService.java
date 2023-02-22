@@ -4,7 +4,6 @@ package com.example.demo.src.service;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.dto.user.*;
-import com.example.demo.utils.CommonUtils;
 import com.example.demo.utils.JwtService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,28 +17,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class KakaoService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final UserDao userDao;
     private final JwtService jwtService;
-    private final CommonUtils commonUtils;
-
 
     @Autowired
-    public KakaoService(UserDao userDao, JwtService jwtService, CommonUtils commonUtils) {
+    public KakaoService(UserDao userDao, JwtService jwtService) {
         this.userDao = userDao;
         this.jwtService = jwtService;
-        this.commonUtils = commonUtils;
     }
 
     // 토큰으로 카카오 API 호출
