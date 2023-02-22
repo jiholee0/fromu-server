@@ -24,7 +24,6 @@ import static com.example.demo.config.BaseResponseStatus.*;
 public class UserController {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Autowired
     private final UserService userService;
     private final KakaoService kakaoService;
