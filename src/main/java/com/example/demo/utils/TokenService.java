@@ -17,7 +17,7 @@ import java.util.Date;
 import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
-public class JwtService {
+public class TokenService {
 
     public String createJwt(int userId){
         Date now = new Date();
@@ -33,6 +33,15 @@ public class JwtService {
     public String getJwt(){
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
         return request.getHeader("X-ACCESS-TOKEN");
+    }
+
+    public String getAccessToken() throws BaseException{
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+        String accessToken = request.getHeader("LOGIN-ACCESS-TOKEN");
+        if(accessToken == null || accessToken.length() == 0){
+            throw new BaseException(EMPTY_ACCESS_TOKEN);
+        }
+        return accessToken;
     }
 
     public int getUserId() throws BaseException{

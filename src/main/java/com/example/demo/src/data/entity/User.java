@@ -3,11 +3,14 @@ package com.example.demo.src.data.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
+@Table(name = "user")
+@SQLDelete(sql = "UPDATE user SET delete_flag = true WHERE user_id = ?")
 @NoArgsConstructor
 public class User {
     @Id
@@ -23,7 +26,7 @@ public class User {
     public String gender;
     @Column(length = 8, nullable = false)
     public String firstMetDay;
-    @Column(length = 10, nullable = false)
+    @Column(length = 10)
     public String userCode;
     public boolean deleteFlag;
 

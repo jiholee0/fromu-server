@@ -28,6 +28,7 @@ public class PostUserReq {
                 .birthday(birthday)
                 .gender(gender)
                 .firstMetDay(firstMetDay)
+                .userCode(userCode)
                 .deleteFlag(false)
                 .build();
     }
