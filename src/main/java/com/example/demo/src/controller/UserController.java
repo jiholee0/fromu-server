@@ -1,6 +1,7 @@
 package com.example.demo.src.controller;
 
 import com.example.demo.src.data.dto.user.*;
+import com.example.demo.src.data.entity.User;
 import com.example.demo.src.service.KakaoService;
 import com.example.demo.src.service.UserService;
 import org.slf4j.Logger;
@@ -76,10 +77,10 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping("")
-    public BaseResponse<List<GetUserRes>> getUsers() {
+    public BaseResponse<List<User>> getUsers() {
         try {
-            List<GetUserRes> getUsersRes = userService.getUsers();
-            return new BaseResponse<>(getUsersRes);
+            List<User> usersList = userService.getUsers();
+            return new BaseResponse<>(usersList);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

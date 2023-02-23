@@ -4,6 +4,7 @@ package com.example.demo.src.service;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dto.user.*;
 import com.example.demo.src.data.dao.UserDao;
+import com.example.demo.src.data.entity.User;
 import com.example.demo.utils.CommonUtils;
 import com.example.demo.utils.JwtService;
 import org.slf4j.Logger;
@@ -35,17 +36,17 @@ public class UserService {
         int userId = userDao.createUser(postUserReq, userCode);
         try {
             String jwt = jwtService.createJwt(userId);
-            return new PostUserRes(userId, jwt, userCode);
+            return new PostUserRes(userId, userCode, jwt);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
     // User 전체 조회
-    public List<GetUserRes> getUsers() throws BaseException {
+    public List<User> getUsers() throws BaseException {
         try {
-            List<GetUserRes> getUserRes = userDao.getUsers();
-            return getUserRes;
+            List<User> usersList = userDao.getUsers();
+            return usersList;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
