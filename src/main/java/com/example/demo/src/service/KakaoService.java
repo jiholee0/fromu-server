@@ -2,9 +2,10 @@ package com.example.demo.src.service;
 
 
 import com.example.demo.config.BaseException;
+import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.dto.user.*;
-import com.example.demo.utils.JwtService;
+import com.example.demo.utils.TokenService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,12 +25,10 @@ import org.springframework.web.client.RestTemplate;
 public class KakaoService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final UserDao userDao;
-    private final JwtService jwtService;
 
     @Autowired
-    public KakaoService(UserDao userDao, JwtService jwtService) {
+    public KakaoService(UserDao userDao) {
         this.userDao = userDao;
-        this.jwtService = jwtService;
     }
 
     // 토큰으로 카카오 API 호출
