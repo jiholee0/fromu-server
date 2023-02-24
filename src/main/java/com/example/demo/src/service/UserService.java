@@ -1,31 +1,24 @@
 package com.example.demo.src.service;
 
-
 import com.example.demo.config.BaseException;
-import com.example.demo.config.BaseResponse;
 import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.data.dto.user.*;
 import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.entity.User;
 import com.example.demo.utils.TokenService;
-import com.example.demo.utils.ValidationRegex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
-import static com.example.demo.utils.CommonUtils.createUserCode;
-import static com.example.demo.utils.ValidationRegex.isRegexEmail;
+import static com.example.demo.utils.CommonUtils.*;
+import static com.example.demo.utils.ValidationRegex.*;
 
 @Service
 public class UserService {
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final UserDao userDao;
     private final TokenService tokenService;
-
 
     @Autowired
     public UserService(UserDao userDao, TokenService tokenService) {
@@ -35,7 +28,7 @@ public class UserService {
 
     // 회원가입(POST)
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
-        BaseResponseStatus status = ValidationRegex.isRegexPostUser(postUserReq);
+        BaseResponseStatus status = isRegexPostUser(postUserReq);
         if (status != null){
             throw new BaseException(status);
         }
@@ -77,8 +70,7 @@ public class UserService {
     // User 전체 조회
     public List<User> getUsers() throws BaseException {
         try {
-            List<User> usersList = userDao.getUsers();
-            return usersList;
+            return userDao.getUsers();
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
@@ -88,8 +80,7 @@ public class UserService {
     // userId로 User 조회
     public GetUserRes getUser(int userId) throws BaseException {
         try {
-            GetUserRes getUserRes = userDao.getUser(userId);
-            return getUserRes;
+            return userDao.getUser(userId);
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);

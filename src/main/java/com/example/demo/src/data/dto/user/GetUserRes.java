@@ -3,7 +3,6 @@ import com.example.demo.src.data.entity.User;
 import com.example.demo.utils.CommonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.text.ParseException;
 

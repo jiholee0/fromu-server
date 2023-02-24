@@ -1,6 +1,5 @@
 package com.example.demo.src.data.dto.user;
 import com.example.demo.src.data.entity.User;
-import com.example.demo.utils.CommonUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
