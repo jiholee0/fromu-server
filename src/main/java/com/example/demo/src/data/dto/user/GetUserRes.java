@@ -15,7 +15,6 @@ public class GetUserRes {
     private String birthday;
     private String gender;
     private String firstMetDay;
-    private int dDay;
     private String userCode;
     private boolean deleteFlag;
 
@@ -26,7 +25,6 @@ public class GetUserRes {
         this.birthday = entity.getBirthday();
         this.gender = entity.getGender();
         this.firstMetDay = entity.getFirstMetDay();
-        this.dDay = CommonUtils.calDDay(entity.getFirstMetDay());
         this.userCode = entity.getUserCode();
         this.deleteFlag = entity.isDeleteFlag();
     }

@@ -10,6 +10,7 @@ import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.temporal.ValueRange;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -128,6 +129,32 @@ public class UserController {
             return new BaseResponse<>(userId);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 유저 정보 변경 API
+     * [PATCH] /users/:userId/:typeNum
+     * 닉네임 수정 : typeNum = 1
+     * 생일 수정 : typeNum = 2
+     * 처음 만난 날 수정 : typeNum = 3
+     */
+    @ResponseBody
+    @PatchMapping("/{userId}/{typeNum}")
+    public BaseResponse<Integer> modifyUser(@PathVariable("userId") int userId, @PathVariable("typeNum") int type, @RequestBody String str) {
+        try {
+            int userIdByJwt = tokenService.getUserId();
+            if(userId != userIdByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            if (type >= 1 && type <= 3) {
+                userService.modifyUser(userId, type, str);
+                return new BaseResponse<>(userId);
+            } else {
+                throw new BaseException(INVALID_REQ_PARAM);
+            }
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 }

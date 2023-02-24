@@ -16,7 +16,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://fromu-db.cckllmursbot.ap-northeast-2.rds.amazonaws.com/fromuDB?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://fromu-db.cckllmursbot.ap-northeast-2.rds.amazonaws.com/fromuDB?useSSL=false
     username: bella
     password: fromu1212
 
