@@ -1,29 +1,49 @@
 package com.example.demo.src.controller;
 
+import com.example.demo.config.BaseException;
+import com.example.demo.config.BaseResponse;
+import com.example.demo.src.data.dto.couple.PostCoupleReq;
+import com.example.demo.src.data.dto.couple.PostCoupleRes;
 import com.example.demo.src.service.CoupleService;
 import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static com.example.demo.config.BaseResponseStatus.INVALID_USER_JWT;
 
 @RestController
 @RequestMapping("/app/couples")
 
 public class CoupleController {
-//    @Autowired
-//    private final CoupleService coupleService;
-//    @Autowired
-//    private final TokenService tokenService;
-//
-//    public CoupleController(CoupleService coupleService, TokenService tokenService) {
-//        this.coupleService = coupleService;
-//        this.tokenService = tokenService;
-//    }
+    @Autowired
+    private final CoupleService coupleService;
+    @Autowired
+    private final TokenService tokenService;
+
+    public CoupleController(CoupleService coupleService, TokenService tokenService) {
+        this.coupleService = coupleService;
+        this.tokenService = tokenService;
+    }
 
     /**
      * 커플 생성 API
      * [POST] /couples
+     * return : coupleId, 상대방 닉네임
      */
+    @ResponseBody
+    @PostMapping("")
+    public BaseResponse<PostCoupleRes> createCouple(@RequestBody PostCoupleReq postCoupleReq) {
+        try {
+            int userIdByJwt = tokenService.getUserId();
+            if(userIdByJwt != postCoupleReq.getUser1Id()){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            PostCoupleRes postCoupleRes = coupleService.createCouple(postCoupleReq);
+            return new BaseResponse<>(postCoupleRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
     /**
      * 커플 전체 조회 API
@@ -38,6 +58,7 @@ public class CoupleController {
     /**
      * 매칭 여부 확인 API
      * [GET] /couples/:userId/isMatch
+     * return : 매칭 여부 / coupleId, 상대방 닉네임
      */
 
     /**
