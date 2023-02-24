@@ -4,8 +4,6 @@ import com.example.demo.src.data.dto.user.*;
 import com.example.demo.src.data.entity.User;
 import com.example.demo.src.service.KakaoService;
 import com.example.demo.src.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.utils.TokenService;
@@ -14,16 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 import static com.example.demo.config.BaseResponseStatus.*;
-import static com.example.demo.utils.ValidationRegex.isRegexEmail;
 
 @RestController
 @RequestMapping("/app/users")
 
 public class UserController {
-
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private final UserService userService;
     private final KakaoService kakaoService;
