@@ -54,7 +54,7 @@ public class UserService {
     }
 
     // 로그인
-    public String logIn(String email) throws BaseException {
+    public String login(String email) throws BaseException {
         try {
             if (email == null || email.isEmpty()) {
                 throw new BaseException(POST_USERS_EMPTY_EMAIL);

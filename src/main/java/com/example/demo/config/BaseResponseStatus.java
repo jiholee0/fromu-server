@@ -40,7 +40,8 @@ public enum BaseResponseStatus {
      */
     // [POST] /users
     NOT_EXIST_EMAIL(false, 3000, "존재하지 않는 이메일입니다."),
-
+    FAIL_TO_GET_EMAIL(false, 3001, "이메일 정보를 가져오는데 실패하였습니다."),
+    FAIL_TO_RESPONSE_KAKAO(false, 3002, "카카오 api 호출 응답 정보를 불러오는데 실패하였습니다."),
 
 
     /**
