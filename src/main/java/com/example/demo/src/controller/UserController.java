@@ -10,7 +10,6 @@ import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.temporal.ValueRange;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -60,8 +59,8 @@ public class UserController {
     @PostMapping("")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         try {
-            PostUserRes PostRes = userService.createUser(postUserReq);
-            return new BaseResponse<>(PostRes);
+            PostUserRes postUserRes = userService.createUser(postUserReq);
+            return new BaseResponse<>(postUserRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

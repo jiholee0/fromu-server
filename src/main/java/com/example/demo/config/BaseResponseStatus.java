@@ -35,6 +35,9 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_FIRSTMETDAY(false, 2019, "만난 날을 입력해주세요."),
     POST_USERS_INVALID_FIRSTMETDAY(false, 2020, "만난 날 형식을 확인해주세요."),
 
+    // [POST] /couples
+    POST_COUPLES_EXISTS_USER(false,2021,"이미 커플 매칭이 완료된 유저입니다."),
+
     // [PATCH] /users
     PATCH_USERS_INVALID_NICKNAME(false,2050, "닉네임 형식을 확인해주세요."),
     PATCH_USERS_INVALID_BIRTHDAY(false, 2051, "생일 형식을 확인해주세요."),
