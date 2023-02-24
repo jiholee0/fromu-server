@@ -3,7 +3,6 @@ package com.example.demo.utils;
 import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.data.dto.user.PostUserReq;
 
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,25 +52,28 @@ public class ValidationRegex {
         return matcher.find();
     }
 
+    // 닉네임 형식 체크
     public static boolean isRegexNickname(String nickname) {
-        if (nickname.length()>5){
-            return false;
-        }
-        return true;
+        String regex = "^[가-힣a-zA-Z0-9]{1,5}$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(nickname);
+        return matcher.find();
     }
 
+    // 날짜 형식 체크
     public static boolean isRegexDay(String day) {
-        String regex = "\\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])";
+        String regex = "^\\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(day);
         return matcher.find();
     }
 
+    // 성별 형식 체크
     public static boolean isRegexGender(String gender) {
-        if (Objects.equals(gender, "M") || Objects.equals(gender, "FM")){
-            return true;
-        }
-        return false;
+        String regex = "^F?M$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(gender);
+        return matcher.find();
     }
 }
 

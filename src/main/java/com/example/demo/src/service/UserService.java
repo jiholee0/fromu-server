@@ -28,16 +28,20 @@ public class UserService {
 
     // 회원가입(POST)
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
-        BaseResponseStatus status = isRegexPostUser(postUserReq);
-        if (status != null){
-            throw new BaseException(status);
-        }
-        if (userDao.checkEmail(postUserReq.getEmail())){
-            throw new BaseException(POST_USERS_EXISTS_EMAIL);
-        }
-        String userCode = createUserCode();
-        int userId = userDao.createUser(postUserReq, userCode);
         try {
+            BaseResponseStatus status = isRegexPostUser(postUserReq);
+            if (status != null){
+                throw new BaseException(status);
+            }
+            if (userDao.checkEmail(postUserReq.getEmail())){
+                throw new BaseException(POST_USERS_EXISTS_EMAIL);
+            }
+            String userCode = createUserCode();
+            while (userDao.checkUserCode(userCode)){
+                userCode = createUserCode();
+            }
+            int userId = userDao.createUser(postUserReq, userCode);
+
             String jwt = tokenService.createJwt(userId);
             return new PostUserRes(userId, userCode, jwt);
         } catch (Exception exception) {

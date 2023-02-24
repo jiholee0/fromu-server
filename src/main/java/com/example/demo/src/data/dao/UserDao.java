@@ -38,8 +38,10 @@ public class UserDao {
 
     @Transactional
     // email로 userId 조회
-    public int getUserIdByEmail(String email){
-        Optional<User> user = userRepository.findByEmail(email);
+    public int getUserIdByEmail(String email) throws BaseException {
+        Optional<User> user = Optional.of(userRepository.findByEmail(email).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
         return user.get().getUserId();
     }
 
@@ -74,4 +76,22 @@ public class UserDao {
             case 3 : user.get().modifyFirstMetDay(str); break;
         }
     }
+
+    // userCode 존재 여부
+    @Transactional
+    public boolean checkUserCode(String userCode) throws BaseException {
+        Optional<User> user = userRepository.findByUserCode(userCode);
+        return user.isPresent();
+    }
+    
+    // userCode로 userId 조회
+    @Transactional
+    public int getUserIdByUserCode(String userCode) throws BaseException {
+        Optional<User> user = Optional.of(userRepository.findByUserCode(userCode).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        return user.get().getUserId();
+    }
+
+    
 }
