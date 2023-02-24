@@ -2,10 +2,8 @@ package com.example.demo.src.service;
 
 
 import com.example.demo.config.BaseException;
-import com.example.demo.config.BaseResponseStatus;
 import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.dto.user.*;
-import com.example.demo.utils.TokenService;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
 public class KakaoService {
@@ -53,13 +53,17 @@ public class KakaoService {
 
             String email = jsonNode.get("kakao_account").get("email").asText();
 
+            if (email == null) {
+                throw new BaseException(FAIL_TO_GET_EMAIL);
+            }
             if (userDao.checkEmail(email)) {
                 return new PostKakaoRes(true, email, userDao.getUserIdByEmail(email), null);
             } else {
                 return new PostKakaoRes(false, email, null, null);
             }
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new BaseException(FAIL_TO_RESPONSE_KAKAO);
         }
     }
 

@@ -78,9 +78,9 @@ public class UserController {
      */
     @ResponseBody
     @PostMapping("/login")
-    public BaseResponse<String> logIn(@RequestBody String email) {
+    public BaseResponse<String> login(@RequestBody String email) {
         try {
-            String jwt = userService.logIn(email);
+            String jwt = userService.login(email);
             return new BaseResponse<>(jwt);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
