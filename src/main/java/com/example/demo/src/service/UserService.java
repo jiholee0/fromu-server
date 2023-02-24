@@ -48,13 +48,13 @@ public class UserService {
 
     // 로그인
     public String login(String email) throws BaseException {
+        if (email == null || email.isEmpty()) {
+            throw new BaseException(POST_USERS_EMPTY_EMAIL);
+        }
+        else if (!isRegexEmail(email)) {
+            throw new BaseException(POST_USERS_INVALID_EMAIL);
+        }
         try {
-            if (email == null || email.isEmpty()) {
-                throw new BaseException(POST_USERS_EMPTY_EMAIL);
-            }
-            else if (!isRegexEmail(email)) {
-                throw new BaseException(POST_USERS_INVALID_EMAIL);
-            }
             if(userDao.checkEmail(email)){
                 int userId = userDao.getUserIdByEmail(email);
                 return tokenService.createJwt(userId);
@@ -91,6 +91,25 @@ public class UserService {
     public void deleteUser(int userId) throws BaseException {
         try {
             userDao.deleteUser(userId);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // User 수정
+    public void modifyUser(int userId, int type, String str) throws BaseException {
+        if (type == 1 && !isRegexNickname(str)) {
+            throw new BaseException(PATCH_USERS_INVALID_NICKNAME);
+        }
+        else if (type == 2 && !isRegexDay(str)){
+            throw new BaseException(PATCH_USERS_INVALID_BIRTHDAY);
+        }
+        else if (type == 3 && !isRegexDay(str)){
+            throw new BaseException(PATCH_USERS_INVALID_FIRSTMETDAY);
+        }
+        try {
+            userDao.modifyUser(userId, type, str);
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);

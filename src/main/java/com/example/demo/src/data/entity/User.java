@@ -41,4 +41,8 @@ public class User {
         this.userCode = userCode;
         this.deleteFlag = deleteFlag;
     }
+
+    public void modifyNickname(String str) { this.nickname = str; }
+    public void modifyBirthday(String str) { this.birthday = str; }
+    public void modifyFirstMetDay(String str) { this.firstMetDay = str; }
 }
