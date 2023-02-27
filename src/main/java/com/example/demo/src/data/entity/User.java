@@ -24,25 +24,22 @@ public class User {
     public String birthday;
     @Column(length = 2, nullable = false)
     public String gender;
-    @Column(length = 8, nullable = false)
-    public String firstMetDay;
+
     @Column(length = 10)
     public String userCode;
     public boolean deleteFlag;
 
     @Builder
-    public User(int userId, String email, String nickname, String birthday, String gender, String firstMetDay, String userCode, boolean deleteFlag) {
+    public User(int userId, String email, String nickname, String birthday, String gender, String userCode, boolean deleteFlag) {
         this.userId = userId;
         this.email = email;
         this.nickname = nickname;
         this.birthday = birthday;
         this.gender = gender;
-        this.firstMetDay = firstMetDay;
         this.userCode = userCode;
         this.deleteFlag = deleteFlag;
     }
 
     public void modifyNickname(String str) { this.nickname = str; }
     public void modifyBirthday(String str) { this.birthday = str; }
-    public void modifyFirstMetDay(String str) { this.firstMetDay = str; }
 }

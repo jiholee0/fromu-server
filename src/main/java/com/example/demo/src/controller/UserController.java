@@ -37,12 +37,12 @@ public class UserController {
      * [POST] /users/kakao
      */
     @ResponseBody
-    @GetMapping("/kakao")
+    @PostMapping("/kakao")
     public BaseResponse<PostKakaoRes> kakaoLogin() throws BaseException {
         try {
             String accessToken = tokenService.getAccessToken();
             PostKakaoRes postKakaoRes = kakaoService.getUserInfo(accessToken);
-            if (!postKakaoRes.getIsMember()) {
+            if (postKakaoRes.getIsMember()) {
                 postKakaoRes.setJwt(tokenService.createJwt(postKakaoRes.getUserId()));
             }
             return new BaseResponse<>(postKakaoRes);
@@ -102,10 +102,10 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping("/{userId}")
-    public BaseResponse<GetUserRes> getUser(@PathVariable("userId") int userId) {
+    public BaseResponse<User> getUser(@PathVariable("userId") int userId) {
         try {
-            GetUserRes getUserRes = userService.getUser(userId);
-            return new BaseResponse<>(getUserRes);
+            User user = userService.getUser(userId);
+            return new BaseResponse<>(user);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -117,15 +117,12 @@ public class UserController {
      * [PATCH] /users/:userId/d
      */
     @ResponseBody
-    @PatchMapping("/{userId}/d")
-    public BaseResponse<Integer> deleteUser(@PathVariable("userId") int userId) {
+    @PatchMapping("/d")
+    public BaseResponse<Integer> deleteUser() {
         try {
             int userIdByJwt = tokenService.getUserId();
-            if(userId != userIdByJwt){
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
-            userService.deleteUser(userId);
-            return new BaseResponse<>(userId);
+            userService.deleteUser(userIdByJwt);
+            return new BaseResponse<>(userIdByJwt);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -133,22 +130,18 @@ public class UserController {
 
     /**
      * 유저 정보 변경 API
-     * [PATCH] /users/:userId/:typeNum
+     * [PATCH] /users/:typeNum
      * 닉네임 수정 : typeNum = 1
      * 생일 수정 : typeNum = 2
-     * 처음 만난 날 수정 : typeNum = 3
      */
     @ResponseBody
-    @PatchMapping("/{userId}/{typeNum}")
-    public BaseResponse<Integer> modifyUser(@PathVariable("userId") int userId, @PathVariable("typeNum") int type, @RequestBody String str) {
+    @PatchMapping("/{typeNum}")
+    public BaseResponse<Integer> modifyUser(@PathVariable("typeNum") int type, @RequestBody String str) {
         try {
             int userIdByJwt = tokenService.getUserId();
-            if(userId != userIdByJwt){
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
-            if (type >= 1 && type <= 3) {
-                userService.modifyUser(userId, type, str);
-                return new BaseResponse<>(userId);
+            if (type == 1 || type == 2) {
+                userService.modifyUser(userIdByJwt, type, str);
+                return new BaseResponse<>(userIdByJwt);
             } else {
                 throw new BaseException(INVALID_REQ_PARAM);
             }

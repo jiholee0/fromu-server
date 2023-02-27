@@ -18,7 +18,7 @@ public enum BaseResponseStatus {
     EMPTY_JWT(false, 2000, "JWT를 입력해주세요."),
     INVALID_JWT(false, 2001, "유효하지 않은 JWT입니다."),
     INVALID_USER_JWT(false,2002,"권한이 없는 유저의 접근입니다."),
-    EMPTY_ACCESS_TOKEN(false, 2003, "ACCESS_TOKEN을 입력해주세요."),
+    EMPTY_ACCESS_TOKEN(false, 2003, "LOGIN-ACCESS-TOKEN을 입력해주세요."),
     INVALID_REQ_PARAM(false,2004,"파라미터 값을 확인해주세요."),
 
 
@@ -32,16 +32,17 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_BIRTHDAY(false, 2016, "생일 형식을 확인해주세요."),
     POST_USERS_EMPTY_GENDER(false, 2017, "성별을 입력해주세요."),
     POST_USERS_INVALID_GENDER(false, 2018, "성별 형식을 확인해주세요."),
-    POST_USERS_EMPTY_FIRSTMETDAY(false, 2019, "만난 날을 입력해주세요."),
-    POST_USERS_INVALID_FIRSTMETDAY(false, 2020, "만난 날 형식을 확인해주세요."),
 
     // [POST] /couples
-    POST_COUPLES_EXISTS_USER(false,2021,"이미 커플 매칭이 완료된 유저입니다."),
+    POST_COUPLES_EXISTS_USER(false,2020,"이미 커플 매칭이 완료된 유저입니다."),
 
     // [PATCH] /users
     PATCH_USERS_INVALID_NICKNAME(false,2050, "닉네임 형식을 확인해주세요."),
     PATCH_USERS_INVALID_BIRTHDAY(false, 2051, "생일 형식을 확인해주세요."),
-    PATCH_USERS_INVALID_FIRSTMETDAY(false, 2052, "만난 날 형식을 확인해주세요."),
+
+    // [PATCH] /couples
+    PATCH_COUPLES_INVALID_FIRSTMETDAY(false, 2060, "만난 날 형식을 확인해주세요."),
+
 
 
 
@@ -60,8 +61,7 @@ public enum BaseResponseStatus {
      * 4000 : Database, Server 오류
      */
     DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
-    SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
-    NOT_EXIST_DATA(false, 4002, "데이터가 존재하지 않습니다.");
+    NOT_EXIST_DATA(false, 4001, "데이터가 존재하지 않습니다.");
 
 
     // 5000 : 필요시 만들어서 쓰세요
