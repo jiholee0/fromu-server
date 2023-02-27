@@ -1,12 +1,10 @@
 package com.example.demo.src.data.dto.couple;
 
-import com.example.demo.src.data.entity.Couple;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class GetCoupleMatchRes {
     private boolean isMatch;
     private CoupleRes coupleRes;
