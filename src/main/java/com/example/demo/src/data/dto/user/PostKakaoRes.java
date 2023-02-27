@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-
 public class PostKakaoRes {
     private Boolean isMember;
     private String email;
