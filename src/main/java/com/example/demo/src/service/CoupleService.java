@@ -7,6 +7,7 @@ import com.example.demo.src.data.dto.couple.CoupleRes;
 import com.example.demo.src.data.dto.couple.GetCoupleMatchRes;
 import com.example.demo.src.data.dto.couple.PostCoupleReq;
 import com.example.demo.src.data.entity.Couple;
+import com.example.demo.src.data.entity.User;
 import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,12 +33,7 @@ public class CoupleService {
     // 커플 등록(POST)
     public CoupleRes createCouple(int userId, String partnerCode) throws BaseException {
         try {
-            int partnerId = userDao.getUserIdByUserCode(partnerCode);
-            if (coupleDao.checkUserId(partnerId)){
-                throw new BaseException(POST_COUPLES_EXISTS_USER);
-            }
-            PostCoupleReq postCoupleReq = new PostCoupleReq(userId, partnerId);
-            return coupleDao.createCouple(postCoupleReq);
+            return coupleDao.createCouple(userId, partnerCode);
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);

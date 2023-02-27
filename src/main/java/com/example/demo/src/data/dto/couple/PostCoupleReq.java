@@ -7,21 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class PostCoupleReq {
-    private int user1Id;
-    private int user2Id;
 
-    @Builder
-    public PostCoupleReq(int user1Id, int user2Id){
-        this.user1Id = user1Id;
-        this.user2Id = user2Id;
-    }
-
-    public Couple toEntity() {
+    public Couple toEntity(int userId1, int userId2) {
         return Couple.builder()
-                .user1Id(user1Id)
-                .user2Id(user2Id)
+                .userId1(userId1)
+                .userId2(userId2)
                 .deleteFlag(false)
                 .build();
     }

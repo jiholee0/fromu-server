@@ -90,4 +90,12 @@ public class UserDao {
         ));
         return user.get().getUserId();
     }
+
+    @Transactional
+    public User findByUserCode(String userCode) throws BaseException {
+        Optional<User> user = Optional.of(userRepository.findByUserCode(userCode).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        return user.get();
+    }
 }

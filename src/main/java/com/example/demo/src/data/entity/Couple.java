@@ -17,20 +17,21 @@ public class Couple {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int coupleId;
     @Column(nullable = false)
-    public int user1Id;
+    public int userId1;
     @Column(nullable = false)
-    public int user2Id;
-    public int mailbox_id;
+    public int userId2;
+    @Column
+    public int mailboxId;
     @Column(length = 8)
     public String firstMetDay;
     public boolean deleteFlag;
 
     @Builder
-    public Couple(int coupleId, int user1Id, int user2Id, int mailbox_id, String firstMetDay, boolean deleteFlag) {
+    public Couple(int coupleId, int userId1, int userId2, int mailboxId, String firstMetDay, boolean deleteFlag) {
         this.coupleId = coupleId;
-        this.user1Id = user1Id;
-        this.user2Id = user2Id;
-        this.mailbox_id = mailbox_id;
+        this.userId1 = userId1;
+        this.userId2 = userId2;
+        this.mailboxId = mailboxId;
         this.firstMetDay = firstMetDay;
         this.deleteFlag = deleteFlag;
     }
