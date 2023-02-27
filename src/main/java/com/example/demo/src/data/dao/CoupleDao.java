@@ -55,23 +55,23 @@ public class CoupleDao {
     @Transactional
     public GetCoupleMatchRes getCoupleMatchRes(int userId) {
         CoupleRes coupleRes = null;
-//        Optional<Couple> couple = coupleRepository.findByUser1IdOrUser2Id(userId, userId);
-//        if (!couple.isPresent()) {
-//            return new GetCoupleMatchRes(false, null);
-//        }
-//        if(couple.get().getUser1Id() == userId){
-//            coupleRes = new CoupleRes(
-//                    couple.get().getCoupleId(),
-//                    userRepository.findById(userId).get().getNickname(),
-//                    userRepository.findById(couple.get().getUser2Id()).get().getNickname()
-//            );
-//        } else if (couple.get().getUser2Id() == userId) {
-//            coupleRes = new CoupleRes(
-//                    couple.get().getCoupleId(),
-//                    userRepository.findById(userId).get().getNickname(),
-//                    userRepository.findById(couple.get().getUser1Id()).get().getNickname()
-//            );
-//        }
+        Optional<Couple> couple = coupleRepository.findByUserId1OrUserId2(userId, userId);
+        if (!couple.isPresent()) {
+            return new GetCoupleMatchRes(false, null);
+        }
+        if(couple.get().getUserId1() == userId){
+            coupleRes = new CoupleRes(
+                    couple.get().getCoupleId(),
+                    userRepository.findById(userId).get().getNickname(),
+                    userRepository.findById(couple.get().getUserId1()).get().getNickname()
+            );
+        } else if (couple.get().getUserId2() == userId) {
+            coupleRes = new CoupleRes(
+                    couple.get().getCoupleId(),
+                    userRepository.findById(userId).get().getNickname(),
+                    userRepository.findById(couple.get().getUserId1()).get().getNickname()
+            );
+        }
         return new GetCoupleMatchRes(true, coupleRes);
     }
 
