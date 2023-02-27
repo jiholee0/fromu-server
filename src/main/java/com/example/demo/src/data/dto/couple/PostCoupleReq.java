@@ -10,15 +10,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostCoupleReq {
     private int user1Id;
-    private String user2Code;
+    private int user2Id;
 
     @Builder
-    public PostCoupleReq(int user1Id, String user2Code){
+    public PostCoupleReq(int user1Id, int user2Id){
         this.user1Id = user1Id;
-        this.user2Code = user2Code;
+        this.user2Id = user2Id;
     }
 
-    public Couple toEntity(int user2Id) {
+    public Couple toEntity() {
         return Couple.builder()
                 .user1Id(user1Id)
                 .user2Id(user2Id)

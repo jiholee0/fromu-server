@@ -16,20 +16,24 @@ public class Couple {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int coupleId;
+    @Column(nullable = false)
     public int user1Id;
+    @Column(nullable = false)
     public int user2Id;
-    @Column(length = 20, nullable = false)
-    public String mailbox;
+    public int mailbox_id;
+    @Column(length = 8)
+    public String firstMetDay;
     public boolean deleteFlag;
 
     @Builder
-    public Couple(int coupleId, int user1Id, int user2Id, String mailbox, boolean deleteFlag) {
+    public Couple(int coupleId, int user1Id, int user2Id, int mailbox_id, String firstMetDay, boolean deleteFlag) {
         this.coupleId = coupleId;
         this.user1Id = user1Id;
         this.user2Id = user2Id;
-        this.mailbox = mailbox;
+        this.mailbox_id = mailbox_id;
+        this.firstMetDay = firstMetDay;
         this.deleteFlag = deleteFlag;
     }
 
-    public void modifyMailbox(String str) { this.mailbox = str; }
+    public void modifyFirstMetDay(String str) { this.firstMetDay = str;}
 }

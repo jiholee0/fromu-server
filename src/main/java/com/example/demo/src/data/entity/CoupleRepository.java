@@ -10,4 +10,5 @@ public interface CoupleRepository extends JpaRepository<Couple, Integer> {
     @NotNull List<Couple> findAll();
     Optional<Couple> findByUser1Id(int userId);
     Optional<Couple> findByUser2Id(int userId);
+    Optional<Couple> findByUser1IdOrUser2Id(int user1Id, int user2Id);
 }
