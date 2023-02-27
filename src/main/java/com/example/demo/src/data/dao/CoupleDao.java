@@ -16,28 +16,38 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.demo.config.BaseResponseStatus.NOT_EXIST_DATA;
+import static com.example.demo.config.BaseResponseStatus.POST_COUPLES_EXISTS_USER;
 
 @Repository
 public class CoupleDao {
     @Autowired
     CoupleRepository coupleRepository;
+
     @Autowired
     UserRepository userRepository;
 
     @Transactional
     // 커플 등록(POST)
-    public CoupleRes createCouple(PostCoupleReq postCoupleReq) throws BaseException {
-        Couple couple = postCoupleReq.toEntity();
+    public CoupleRes createCouple(int userId, String partnerCode) throws BaseException {
+        Optional<User> partner = userRepository.findByUserCode(partnerCode);
+        int partnerId = partner.get().getUserId();
+        if (checkUserId(partnerId)){
+            throw new BaseException(POST_COUPLES_EXISTS_USER);
+        }
+        PostCoupleReq postCoupleReq = new PostCoupleReq();
+        Couple couple = postCoupleReq.toEntity(userId, partnerId);
         coupleRepository.save(couple);
-        Optional<User> user = userRepository.findById(couple.getUser1Id());
-        Optional<User> partner = userRepository.findById(couple.getUser2Id());
-        return new CoupleRes(couple.getCoupleId(), user.get().getNickname(), partner.get().getNickname());
+
+        return new CoupleRes(
+                couple.getCoupleId(),
+                userRepository.findById(userId).get().getNickname(),
+                partner.get().getNickname());
     }
 
     @Transactional
     // userId로 커플에 존재하는지 확인
     public boolean checkUserId(int userId) {
-        Optional<Couple> couple = coupleRepository.findByUser1IdOrUser2Id(userId, userId);
+        Optional<Couple> couple = coupleRepository.findByUserId1OrUserId2(userId, userId);
         return couple.isPresent();
     }
 
@@ -45,23 +55,23 @@ public class CoupleDao {
     @Transactional
     public GetCoupleMatchRes getCoupleMatchRes(int userId) {
         CoupleRes coupleRes = null;
-        Optional<Couple> couple = coupleRepository.findByUser1IdOrUser2Id(userId, userId);
-        if (!couple.isPresent()) {
-            return new GetCoupleMatchRes(false, null);
-        }
-        if(couple.get().getUser1Id() == userId){
-            coupleRes = new CoupleRes(
-                    couple.get().getCoupleId(),
-                    userRepository.findById(userId).get().getNickname(),
-                    userRepository.findById(couple.get().getUser2Id()).get().getNickname()
-            );
-        } else if (couple.get().getUser2Id() == userId) {
-            coupleRes = new CoupleRes(
-                    couple.get().getCoupleId(),
-                    userRepository.findById(userId).get().getNickname(),
-                    userRepository.findById(couple.get().getUser1Id()).get().getNickname()
-            );
-        }
+//        Optional<Couple> couple = coupleRepository.findByUser1IdOrUser2Id(userId, userId);
+//        if (!couple.isPresent()) {
+//            return new GetCoupleMatchRes(false, null);
+//        }
+//        if(couple.get().getUser1Id() == userId){
+//            coupleRes = new CoupleRes(
+//                    couple.get().getCoupleId(),
+//                    userRepository.findById(userId).get().getNickname(),
+//                    userRepository.findById(couple.get().getUser2Id()).get().getNickname()
+//            );
+//        } else if (couple.get().getUser2Id() == userId) {
+//            coupleRes = new CoupleRes(
+//                    couple.get().getCoupleId(),
+//                    userRepository.findById(userId).get().getNickname(),
+//                    userRepository.findById(couple.get().getUser1Id()).get().getNickname()
+//            );
+//        }
         return new GetCoupleMatchRes(true, coupleRes);
     }
 
@@ -72,7 +82,7 @@ public class CoupleDao {
     @Transactional
     // userId로 커플 조회
     public Couple getCoupleByUserId(int userId) throws BaseException {
-        Optional<Couple> couple = Optional.of(coupleRepository.findByUser1IdOrUser2Id(userId, userId).orElseThrow(
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
         return couple.get();
@@ -89,7 +99,7 @@ public class CoupleDao {
 
     @Transactional
     public void modifyFirstMetDay(int userId, String str) throws BaseException{
-        Optional<Couple> couple = Optional.of(coupleRepository.findByUser1IdOrUser2Id(userId, userId).orElseThrow(
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
         couple.get().modifyFirstMetDay(str);
@@ -97,7 +107,7 @@ public class CoupleDao {
 
     @Transactional
     public void deleteCouple(int userId) throws BaseException {
-        Optional<Couple> couple = Optional.of(coupleRepository.findByUser1IdOrUser2Id(userId, userId).orElseThrow(
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
         coupleRepository.deleteById(couple.get().coupleId);

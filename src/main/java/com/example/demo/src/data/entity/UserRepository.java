@@ -2,6 +2,7 @@ package com.example.demo.src.data.entity;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,4 +12,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findById(int userId);
     Optional<User> findByEmail(String email);
     Optional<User> findByUserCode(String userCode);
+
+    @Query(value = "SELECT u.nickname FROM User u WHERE u.userId = :userId")
+    String findNicknameByUserId(@Param("userId") int userId);
 }
