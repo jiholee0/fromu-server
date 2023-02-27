@@ -35,12 +35,6 @@ public class ValidationRegex {
         if(!isRegexGender(postUserReq.getGender())){
             return POST_USERS_INVALID_GENDER;
         }
-        if(postUserReq.getFirstMetDay() == null || postUserReq.getFirstMetDay().length() == 0){
-            return POST_USERS_EMPTY_FIRSTMETDAY;
-        }
-        if(!isRegexDay(postUserReq.getFirstMetDay())){
-            return POST_USERS_INVALID_FIRSTMETDAY;
-        }
         return null;
     }
 

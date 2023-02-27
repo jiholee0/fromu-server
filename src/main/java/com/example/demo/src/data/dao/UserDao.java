@@ -2,7 +2,6 @@ package com.example.demo.src.data.dao;
 
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.data.dto.user.GetUserRes;
 import com.example.demo.src.data.dto.user.PostUserReq;
 import com.example.demo.src.data.entity.User;
 import com.example.demo.src.data.entity.UserRepository;
@@ -53,11 +52,11 @@ public class UserDao {
 
     @Transactional
     // userId로 User 조회
-    public GetUserRes getUser(int userId) throws ParseException, BaseException {
+    public User getUser(int userId) throws ParseException, BaseException {
         Optional<User> user = Optional.of(userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
-        return new GetUserRes(user.get());
+        return user.get();
     }
 
     @Transactional
@@ -73,7 +72,6 @@ public class UserDao {
         switch (type) {
             case 1 : user.get().modifyNickname(str); break;
             case 2 : user.get().modifyBirthday(str); break;
-            case 3 : user.get().modifyFirstMetDay(str); break;
         }
     }
 
@@ -92,6 +90,4 @@ public class UserDao {
         ));
         return user.get().getUserId();
     }
-
-    
 }

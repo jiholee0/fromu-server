@@ -13,15 +13,13 @@ public class PostUserReq {
     private String nickname;
     private String birthday;
     private String gender;
-    private String firstMetDay;
 
     @Builder
-    public PostUserReq(String email, String nickname, String birthday, String gender, String firstMetDay) {
+    public PostUserReq(String email, String nickname, String birthday, String gender) {
         this.email = email;
         this.nickname = nickname;
         this.birthday = birthday;
         this.gender = gender;
-        this.firstMetDay = firstMetDay;
     }
 
     public User toEntity(String userCode){
@@ -30,7 +28,6 @@ public class PostUserReq {
                 .nickname(nickname)
                 .birthday(birthday)
                 .gender(gender)
-                .firstMetDay(firstMetDay)
                 .userCode(userCode)
                 .deleteFlag(false)
                 .build();

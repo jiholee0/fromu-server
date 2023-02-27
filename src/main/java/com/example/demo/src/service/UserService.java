@@ -82,7 +82,7 @@ public class UserService {
     }
 
     // userId로 User 조회
-    public GetUserRes getUser(int userId) throws BaseException {
+    public User getUser(int userId) throws BaseException {
         try {
             return userDao.getUser(userId);
         } catch (Exception exception) {
@@ -109,9 +109,7 @@ public class UserService {
         else if (type == 2 && !isRegexDay(str)){
             throw new BaseException(PATCH_USERS_INVALID_BIRTHDAY);
         }
-        else if (type == 3 && !isRegexDay(str)){
-            throw new BaseException(PATCH_USERS_INVALID_FIRSTMETDAY);
-        }
+
         try {
             userDao.modifyUser(userId, type, str);
         } catch (Exception exception) {
