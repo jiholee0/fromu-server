@@ -20,6 +20,7 @@ import static com.example.demo.config.BaseResponseStatus.*;
 public class UserController {
     @Autowired
     private final UserService userService;
+    @Autowired
     private final KakaoService kakaoService;
     @Autowired
     private final TokenService tokenService;
