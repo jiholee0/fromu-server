@@ -19,7 +19,6 @@ import java.util.List;
 import static com.example.demo.config.BaseResponseStatus.*;
 
 @RestController
-@Tag(name = "UserController")
 @RequestMapping("/app/users")
 public class UserController {
     @Autowired
