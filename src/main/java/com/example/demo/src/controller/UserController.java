@@ -7,6 +7,7 @@ import com.example.demo.src.service.UserService;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.utils.TokenService;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,6 +21,7 @@ import static com.example.demo.config.BaseResponseStatus.*;
 
 @RestController
 @RequestMapping("/app/users")
+@Tag(name = "UserController", description = "User-Controller")
 public class UserController {
     @Autowired
     private final UserService userService;
@@ -40,7 +42,7 @@ public class UserController {
      * 카카오 로그인 API
      * [POST] /users/kakao
      */
-    @Operation(method = "POST", description = "카카오 로그인 API")
+    @Operation(method = "POST", description = "카카오 로그인 API", tags = "UserController", operationId = "0")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2003", description = "LOGIN-ACCESS-TOKEN을 입력해주세요."),
@@ -68,7 +70,7 @@ public class UserController {
      * 회원가입 API
      * [POST] /users
      */
-    @Operation(method = "POST", description = "회원가입 API")
+    @Operation(method = "POST", description = "회원가입 API", tags = "UserController", operationId = "1")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2010", description = "이메일을 입력해주세요."),
@@ -97,7 +99,7 @@ public class UserController {
      * 로그인 API
      * [POST] /users/login
      */
-    @Operation(method = "POST", description = "로그인 테스트 API")
+    @Operation(method = "POST", description = "로그인 테스트 API", tags = "UserController", operationId = "3")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2010", description = "이메일을 입력해주세요."),
@@ -120,7 +122,7 @@ public class UserController {
      * 모든 회원들의 조회 API
      * [GET] /users
      */
-    @Operation(method = "GET", description = "모든 회원 조회 API")
+    @Operation(method = "GET", description = "모든 회원 조회 API", tags = "UserController", operationId = "4")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다.")
@@ -140,7 +142,7 @@ public class UserController {
      * 회원 1명 조회 API
      * [GET] /users/:userId
      */
-    @Operation(method = "GET", description = "userId로 회원 조회 API")
+    @Operation(method = "GET", description = "userId로 회원 조회 API", tags = "UserController", operationId = "5")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
@@ -162,7 +164,7 @@ public class UserController {
      * 유저삭제 API (soft delete)
      * [PATCH] /users/:userId/d
      */
-    @Operation(method = "PATCH", description = "유저 삭제 API")
+    @Operation(method = "PATCH", description = "유저 삭제 API", tags = "UserController", operationId = "6")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -188,7 +190,7 @@ public class UserController {
      * 닉네임 수정 : typeNum = 1
      * 생일 수정 : typeNum = 2
      */
-    @Operation(method = "PATCH", description = "유저 정보 변경(닉네임, 생일) API")
+    @Operation(method = "PATCH", description = "유저 정보 변경(닉네임, 생일) API", tags = "UserController", operationId = "7")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
