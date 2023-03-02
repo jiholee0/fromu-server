@@ -9,6 +9,7 @@ import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -28,14 +29,15 @@ public class UserService {
 
     // 회원가입(POST)
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
+
+        BaseResponseStatus status = isRegexPostUser(postUserReq);
+        if (status != null){
+            throw new BaseException(status);
+        }
+        if (userDao.checkEmail(postUserReq.getEmail())){
+            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+        }
         try {
-            BaseResponseStatus status = isRegexPostUser(postUserReq);
-            if (status != null){
-                throw new BaseException(status);
-            }
-            if (userDao.checkEmail(postUserReq.getEmail())){
-                throw new BaseException(POST_USERS_EXISTS_EMAIL);
-            }
             String userCode = createUserCode();
             while (userDao.checkUserCode(userCode)){
                 userCode = createUserCode();
@@ -58,47 +60,26 @@ public class UserService {
         else if (!isRegexEmail(email)) {
             throw new BaseException(POST_USERS_INVALID_EMAIL);
         }
-        try {
-            if(userDao.checkEmail(email)){
-                int userId = userDao.getUserIdByEmail(email);
-                return tokenService.createJwt(userId);
-            }
-            throw new BaseException(NOT_EXIST_EMAIL);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw new BaseException(DATABASE_ERROR);
+        if(userDao.checkEmail(email)){
+            User user = userDao.getUserByEmail(email);
+            return tokenService.createJwt(user.getUserId());
         }
-
+        throw new BaseException(NOT_EXIST_EMAIL);
     }
 
     // User 전체 조회
     public List<User> getUsers() throws BaseException {
-        try {
-            return userDao.getUsers();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw new BaseException(DATABASE_ERROR);
-        }
+        return userDao.getUsers();
     }
 
     // userId로 User 조회
-    public User getUser(int userId) throws BaseException {
-        try {
-            return userDao.getUser(userId);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw new BaseException(DATABASE_ERROR);
-        }
+    public User getUser(int userId) throws BaseException{
+        return userDao.getUser(userId);
     }
 
     // User 삭제
     public void deleteUser(int userId) throws BaseException {
-        try {
-            userDao.deleteUser(userId);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw new BaseException(DATABASE_ERROR);
-        }
+        userDao.deleteUser(userId);
     }
 
     // User 수정
@@ -109,12 +90,7 @@ public class UserService {
         else if (type == 2 && !isRegexDay(str)){
             throw new BaseException(PATCH_USERS_INVALID_BIRTHDAY);
         }
+        userDao.modifyUser(userId, type, str);
 
-        try {
-            userDao.modifyUser(userId, type, str);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw new BaseException(DATABASE_ERROR);
-        }
     }
 }

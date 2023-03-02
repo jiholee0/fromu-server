@@ -10,5 +10,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PatchCoupleRes {
     private int coupleId;
-    private int dDay;
+    private Object after;
 }
