@@ -23,6 +23,7 @@ import static com.example.demo.config.BaseResponseStatus.*;
 
 @RestController
 @RequestMapping("/app/couples")
+@Tag(name = "CoupleController", description = "Couple-Controller")
 public class CoupleController {
     @Autowired
     private final CoupleService coupleService;
@@ -39,7 +40,7 @@ public class CoupleController {
      * [POST] /couples
      * return : coupleId, 본인 닉네임, 상대방 닉네임
      */
-    @Operation(method = "POST", description = "커플 생성 API")
+    @Operation(method = "POST", description = "커플 생성 API", tags = "CoupleController", operationId = "0")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -64,7 +65,7 @@ public class CoupleController {
      * 만난 날 설정 및 수정 API
      * [PATCH] /couples/firstMetDay
      */
-    @Operation(method = "PATCH", description = "만난 날 설정 및 수정 API")
+    @Operation(method = "PATCH", description = "만난 날 설정 및 수정 API", tags = "CoupleController", operationId = "5")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -89,7 +90,7 @@ public class CoupleController {
      * 우편함 이름 설정 및 수정 API
      * [PATCH] /couples/mailbox
      */
-    @Operation(method = "PATCH", description = "우편함 이름 설정 및 수정 API")
+    @Operation(method = "PATCH", description = "우편함 이름 설정 및 수정 API", tags = "CoupleController", operationId = "6")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -115,7 +116,7 @@ public class CoupleController {
      * 커플 매칭 끊기 API
      * [PATCH] /couples/d
      */
-    @Operation(method = "PATCH", description = "커플 연결 끊기 API")
+    @Operation(method = "PATCH", description = "커플 연결 끊기 API", tags = "CoupleController", operationId = "7")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -139,7 +140,7 @@ public class CoupleController {
      * 커플 전체 조회 API
      * [GET] /couples
      */
-    @Operation(method = "GET", description = "커플 전체 조회 API")
+    @Operation(method = "GET", description = "커플 전체 조회 API" , tags = "CoupleController", operationId = "1")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다.")
@@ -159,7 +160,7 @@ public class CoupleController {
      * 커플 id로 커플 조회 API
      * [GET] /couples/:coupleId
      */
-    @Operation(method = "GET", description = "coupleId로 커플 API")
+    @Operation(method = "GET", description = "coupleId로 커플 API" , tags = "CoupleController", operationId = "2")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
@@ -180,7 +181,7 @@ public class CoupleController {
      * 유저 id로 커플 조회 API
      * [GET] /couples/users/:userId
      */
-    @Operation(method = "GET", description = "userId로 커플 API")
+    @Operation(method = "GET", description = "userId로 커플 API", tags = "CoupleController", operationId = "3")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
@@ -202,7 +203,7 @@ public class CoupleController {
      * [GET] /couples/isMatch
      * return : 매칭 여부 / coupleId, 본인 닉네임, 상대방 닉네임
      */
-    @Operation(method = "PATCH", description = "매칭 여부 확인(새로고침) API")
+    @Operation(method = "PATCH", description = "매칭 여부 확인(새로고침) API", tags = "CoupleController", operationId = "4")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
