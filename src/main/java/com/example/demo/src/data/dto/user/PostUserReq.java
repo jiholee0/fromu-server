@@ -1,6 +1,7 @@
 package com.example.demo.src.data.dto.user;
 
 import com.example.demo.src.data.entity.User;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,9 +10,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostUserReq {
+    @ApiModelProperty(example = "~@email.com")
     private String email;
+    @ApiModelProperty(example = "벨라")
     private String nickname;
+    @ApiModelProperty(example = "20010607")
     private String birthday;
+    @ApiModelProperty(example = "FM")
     private String gender;
 
     @Builder

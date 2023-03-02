@@ -9,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CoupleRes {
     private int coupleId;
+    private boolean isSetMailboxName;
     private String nickname;
     private String partnerNickname;
 }

@@ -27,6 +27,6 @@ public class ViewController {
     /**
      * 메인 뷰 API
      * [GET] /view/main
-     * return : 닉네임, 상대방 닉네임, dday, 일기장 id
+     * return : 닉네임, 상대방 닉네임, dday, 일기장 data
      */
 }

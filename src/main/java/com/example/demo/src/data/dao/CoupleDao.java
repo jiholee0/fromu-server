@@ -8,6 +8,7 @@ import com.example.demo.src.data.entity.Couple;
 import com.example.demo.src.data.entity.CoupleRepository;
 import com.example.demo.src.data.entity.User;
 import com.example.demo.src.data.entity.UserRepository;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +16,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.demo.config.BaseResponseStatus.NOT_EXIST_DATA;
-import static com.example.demo.config.BaseResponseStatus.POST_COUPLES_EXISTS_USER;
+import static com.example.demo.config.BaseResponseStatus.*;
 
 @Repository
 public class CoupleDao {
@@ -29,19 +29,29 @@ public class CoupleDao {
     @Transactional
     // 커플 등록(POST)
     public CoupleRes createCouple(int userId, String partnerCode) throws BaseException {
+
         Optional<User> partner = userRepository.findByUserCode(partnerCode);
+        if (!partner.isPresent()){
+            throw new BaseException(NOT_EXIST_DATA);
+        }
         int partnerId = partner.get().getUserId();
-        if (checkUserId(partnerId)){
+        Optional<Couple> checkPartner = coupleRepository.findByUserId1OrUserId2(partnerId, partnerId);
+        if (checkPartner.isPresent()){
             throw new BaseException(POST_COUPLES_EXISTS_USER);
         }
-        PostCoupleReq postCoupleReq = new PostCoupleReq();
-        Couple couple = postCoupleReq.toEntity(userId, partnerId);
-        coupleRepository.save(couple);
-
-        return new CoupleRes(
-                couple.getCoupleId(),
-                userRepository.findById(userId).get().getNickname(),
-                partner.get().getNickname());
+        try {
+            PostCoupleReq postCoupleReq = new PostCoupleReq();
+            Couple couple = postCoupleReq.toEntity(userId, partnerId);
+            coupleRepository.save(couple);
+            return new CoupleRes(
+                    couple.getCoupleId(),
+                    false,
+                    userRepository.findById(userId).get().getNickname(),
+                    partner.get().getNickname());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
@@ -53,26 +63,34 @@ public class CoupleDao {
 
     // 매칭 여부 확인
     @Transactional
-    public GetCoupleMatchRes getCoupleMatchRes(int userId) {
-        CoupleRes coupleRes = null;
-        Optional<Couple> couple = coupleRepository.findByUserId1OrUserId2(userId, userId);
-        if (!couple.isPresent()) {
-            return new GetCoupleMatchRes(false, null);
+    public GetCoupleMatchRes getCoupleMatchRes(int userId) throws BaseException {
+        try {
+            CoupleRes coupleRes = null;
+            Optional<Couple> couple = coupleRepository.findByUserId1OrUserId2(userId, userId);
+            if (!couple.isPresent()) {
+                return new GetCoupleMatchRes(false, null);
+            }
+            boolean isSetMailboxName = couple.get().mailboxName != null && !couple.get().mailboxName.equals("");
+            if(couple.get().getUserId1() == userId){
+                coupleRes = new CoupleRes(
+                        couple.get().getCoupleId(),
+                        isSetMailboxName,
+                        userRepository.findById(userId).get().getNickname(),
+                        userRepository.findById(couple.get().getUserId1()).get().getNickname()
+                );
+            } else if (couple.get().getUserId2() == userId) {
+                coupleRes = new CoupleRes(
+                        couple.get().getCoupleId(),
+                        isSetMailboxName,
+                        userRepository.findById(userId).get().getNickname(),
+                        userRepository.findById(couple.get().getUserId1()).get().getNickname()
+                );
+            }
+            return new GetCoupleMatchRes(true, coupleRes);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
         }
-        if(couple.get().getUserId1() == userId){
-            coupleRes = new CoupleRes(
-                    couple.get().getCoupleId(),
-                    userRepository.findById(userId).get().getNickname(),
-                    userRepository.findById(couple.get().getUserId1()).get().getNickname()
-            );
-        } else if (couple.get().getUserId2() == userId) {
-            coupleRes = new CoupleRes(
-                    couple.get().getCoupleId(),
-                    userRepository.findById(userId).get().getNickname(),
-                    userRepository.findById(couple.get().getUserId1()).get().getNickname()
-            );
-        }
-        return new GetCoupleMatchRes(true, coupleRes);
     }
 
     @Transactional
@@ -85,7 +103,12 @@ public class CoupleDao {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
-        return couple.get();
+        try {
+            return couple.get();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
@@ -94,7 +117,12 @@ public class CoupleDao {
         Optional<Couple> couple = Optional.of(coupleRepository.findById(coupleId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
-        return couple.get();
+        try {
+            return couple.get();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
@@ -102,7 +130,30 @@ public class CoupleDao {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
-        couple.get().modifyFirstMetDay(str);
+        try {
+            couple.get().modifyFirstMetDay(str);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    @Transactional
+    public void modifyMailbox(int userId, String str) throws BaseException{
+        Optional<Couple> checkMailboxCouple = coupleRepository.findByMailboxName(str);
+        if (checkMailboxCouple.isPresent()){
+            throw new BaseException(PATCH_COUPLES_EXISTS_MAILBOX);
+        }
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        try {
+            couple.get().modifyMailbox(str);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
@@ -110,6 +161,26 @@ public class CoupleDao {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
-        coupleRepository.deleteById(couple.get().coupleId);
+        try {
+            coupleRepository.deleteById(couple.get().coupleId);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    // 우편함 이름 설정 flag
+    @Transactional
+    public boolean isSetMailboxName(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        try {
+            return couple.get().mailboxName != null && !couple.get().mailboxName.equals("");
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

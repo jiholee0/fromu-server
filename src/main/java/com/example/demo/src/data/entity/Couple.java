@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -20,21 +21,22 @@ public class Couple {
     public int userId1;
     @Column(nullable = false)
     public int userId2;
-    @Column
-    public int mailboxId;
+    @Column(length = 6)
+    public String mailboxName;
     @Column(length = 8)
     public String firstMetDay;
     public boolean deleteFlag;
 
     @Builder
-    public Couple(int coupleId, int userId1, int userId2, int mailboxId, String firstMetDay, boolean deleteFlag) {
+    public Couple(int coupleId, int userId1, int userId2, String mailboxName, String firstMetDay, boolean deleteFlag) {
         this.coupleId = coupleId;
         this.userId1 = userId1;
         this.userId2 = userId2;
-        this.mailboxId = mailboxId;
+        this.mailboxName = mailboxName;
         this.firstMetDay = firstMetDay;
         this.deleteFlag = deleteFlag;
     }
 
     public void modifyFirstMetDay(String str) { this.firstMetDay = str;}
+    public void modifyMailbox(String str) {this.mailboxName = str;}
 }

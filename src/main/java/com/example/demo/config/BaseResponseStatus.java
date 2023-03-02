@@ -42,6 +42,8 @@ public enum BaseResponseStatus {
 
     // [PATCH] /couples
     PATCH_COUPLES_INVALID_FIRSTMETDAY(false, 2060, "만난 날 형식을 확인해주세요."),
+    PATCH_COUPLES_INVALID_MAILBOX(false, 2061, "우편함 이름 형식을 확인해주세요."),
+    PATCH_COUPLES_EXISTS_MAILBOX(false,2062,"중복된 우편함 이름입니다."),
 
 
 

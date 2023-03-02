@@ -2,9 +2,11 @@ package com.example.demo.src.service;
 
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.data.dao.CoupleDao;
 import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.dto.user.*;
 
+import com.example.demo.src.data.entity.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,10 +27,12 @@ import static com.example.demo.config.BaseResponseStatus.*;
 public class KakaoService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final UserDao userDao;
+    private final CoupleDao coupleDao;
 
     @Autowired
-    public KakaoService(UserDao userDao) {
+    public KakaoService(UserDao userDao, CoupleDao coupleDao) {
         this.userDao = userDao;
+        this.coupleDao = coupleDao;
     }
 
     // 토큰으로 카카오 API 호출
@@ -57,9 +61,18 @@ public class KakaoService {
                 throw new BaseException(FAIL_TO_GET_EMAIL);
             }
             if (userDao.checkEmail(email)) {
-                return new PostKakaoRes(true, email, userDao.getUserIdByEmail(email), null);
+                User user = userDao.getUserByEmail(email);
+                UserInfo userInfo = new UserInfo(
+                        coupleDao.checkUserId(user.getUserId()),
+                                coupleDao.isSetMailboxName(user.getUserId()),
+                                user.getUserId(),
+                                null,
+                                email,
+                                user.getUserCode()
+                        );
+                return new PostKakaoRes(true, userInfo);
             } else {
-                return new PostKakaoRes(false, email, null, null);
+                return new PostKakaoRes(false, null);
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();

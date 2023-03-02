@@ -37,31 +37,52 @@ public class UserDao {
 
     @Transactional
     // email로 userId 조회
-    public int getUserIdByEmail(String email) throws BaseException {
+    public User getUserByEmail(String email) throws BaseException {
         Optional<User> user = Optional.of(userRepository.findByEmail(email).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
-        return user.get().getUserId();
+        try {
+            return user.get();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
     // User 전체 조회
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<User> getUsers() throws BaseException {
+        try {
+            return userRepository.findAll();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
     // userId로 User 조회
-    public User getUser(int userId) throws ParseException, BaseException {
+    public User getUser(int userId) throws BaseException {
         Optional<User> user = Optional.of(userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
-        return user.get();
+        try {
+            return user.get();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
-    public void deleteUser(int userId) {
-        userRepository.deleteById(userId);
+    public void deleteUser(int userId) throws BaseException {
+        try {
+            userRepository.deleteById(userId);
+        } catch (IllegalArgumentException exception){
+            throw new BaseException(NOT_EXIST_DATA);
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
@@ -69,10 +90,19 @@ public class UserDao {
         Optional<User> user = Optional.of(userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
-        switch (type) {
-            case 1 : user.get().modifyNickname(str); break;
-            case 2 : user.get().modifyBirthday(str); break;
-        }
+        try {
+            switch (type) {
+                case 1:
+                    user.get().modifyNickname(str);
+                    break;
+                case 2:
+                    user.get().modifyBirthday(str);
+                    break;
+            }
+        } catch (Exception exception) {
+        exception.printStackTrace();
+        throw new BaseException(DATABASE_ERROR);
+    }
     }
 
     // userCode 존재 여부
@@ -91,11 +121,4 @@ public class UserDao {
         return user.get().getUserId();
     }
 
-    @Transactional
-    public User findByUserCode(String userCode) throws BaseException {
-        Optional<User> user = Optional.of(userRepository.findByUserCode(userCode).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
-        ));
-        return user.get();
-    }
 }
