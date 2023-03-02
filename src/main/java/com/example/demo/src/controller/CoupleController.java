@@ -22,7 +22,6 @@ import static com.example.demo.utils.CommonUtils.*;
 import static com.example.demo.config.BaseResponseStatus.*;
 
 @RestController
-@Tag(name = "CoupleController")
 @RequestMapping("/app/couples")
 public class CoupleController {
     @Autowired
