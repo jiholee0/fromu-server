@@ -126,7 +126,7 @@ public class CoupleController {
      * [GET] /couples/mailbox
      */
     @Operation(method = "GET",
-    description = "string 값이 이미 존재하는 우편함 이름인지 확인해주는 api입니다. 중복이면 true / 중복 아니면 false",
+    description = "쿼리 스트링 값이 이미 존재하는 우편함 이름인지 확인해주는 api입니다. 중복이면 true / 중복 아니면 false",
     tags = "COUPLE", summary = "우편함 이름 중복확인 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
@@ -136,7 +136,7 @@ public class CoupleController {
     })
     @ResponseBody
     @GetMapping("/mailbox")
-    public BaseResponse<Boolean> checkMailbox(@Parameter @RequestBody String mailbox) {
+    public BaseResponse<Boolean> checkMailbox(@Parameter @RequestParam(name = "mailboxName") String mailbox) {
         try {
             return new BaseResponse<>(coupleService.checkMailbox(mailbox));
         } catch (BaseException exception) {
