@@ -20,7 +20,7 @@ public class Diarybook {
     public int coupleId;
     @Column
     public int coverNum;
-    @Column(length = 6)
+    @Column(length = 20)
     public String name;
     @Column
     public int recentUserId;

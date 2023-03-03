@@ -57,6 +57,10 @@ public enum BaseResponseStatus {
     NOT_EXIST_EMAIL(false, 3000, "존재하지 않는 이메일입니다."),
     FAIL_TO_GET_EMAIL(false, 3001, "이메일 정보를 가져오는데 실패하였습니다."),
     FAIL_TO_RESPONSE_KAKAO(false, 3002, "카카오 api 호출 응답 정보를 불러오는데 실패하였습니다."),
+    FAIL_TO_RESPONSE_APPLE(false, 3003, "애플 api 호출 응답 정보를 불러오는데 실패하였습니다."),
+    FAIL_TO_FIND_AVALIABLE_RSA(false,3004,"사용 가능한 공개키가 없습니다."),
+    FAIL_TO_RESPONSE_GOOGLE(false, 3005, "구글 api 호출 응답 정보를 불러오는데 실패하였습니다."),
+
 
 
     /**
