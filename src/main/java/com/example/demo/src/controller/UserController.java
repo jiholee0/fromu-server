@@ -2,13 +2,12 @@ package com.example.demo.src.controller;
 
 import com.example.demo.src.data.dto.user.*;
 import com.example.demo.src.data.entity.User;
-import com.example.demo.src.service.KakaoService;
+import com.example.demo.src.service.SocialLoginService;
 import com.example.demo.src.service.UserService;
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.utils.TokenService;
 import io.swagger.v3.oas.annotations.*;
-import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,18 +25,17 @@ public class UserController {
     @Autowired
     private final UserService userService;
     @Autowired
-    private final KakaoService kakaoService;
+    private final SocialLoginService socialLoginService;
     @Autowired
     private final TokenService tokenService;
 
 
-    public UserController(UserService userService, KakaoService kakaoService, TokenService tokenService) {
+    public UserController(UserService userService, SocialLoginService socialLoginService, TokenService tokenService) {
         this.userService = userService;
-        this.kakaoService = kakaoService;
+        this.socialLoginService = socialLoginService;
         this.tokenService = tokenService;
     }
 
-    // TODO: 소셜 로그인
     /**
      * 카카오 로그인 API
      * [POST] /users/kakao
@@ -57,10 +55,75 @@ public class UserController {
     })
     @ResponseBody
     @PostMapping("/kakao")
-    public BaseResponse<PostKakaoRes> kakaoLogin() throws BaseException {
+    public BaseResponse<PostSocialLoginRes> kakaoLogin() throws BaseException {
         try {
             String accessToken = tokenService.getAccessToken();
-            PostKakaoRes postKakaoRes = kakaoService.getUserInfo(accessToken);
+            PostSocialLoginRes postKakaoRes = socialLoginService.getUserInfoByKakao(accessToken);
+            if (postKakaoRes.isMember()) {
+                postKakaoRes.getUserInfo().setJwt(tokenService.createJwt(postKakaoRes.getUserInfo().getUserId()));
+            }
+            return new BaseResponse<>(postKakaoRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 애플 로그인 API
+     * [POST] /users/apple
+     */
+    @Operation(method = "POST",
+            description = "Header-'X-ACCESS-TOKEN'에 소셜 로그인 accessToken 값을 넣어 " +
+                    "(멤버 여부, 매칭 여부, 우편함 이름 설정 여부, 유저 ID, JWT, RefreshToken, 이메일, 유저 코드) 를 반환받는 api이며, " +
+                    "JWT와 RefreshToken을 새로 발급합니다.",
+            tags = "USER", summary = "애플 로그인 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2003", description = "accessToken을 입력해주세요."),
+            @ApiResponse(responseCode = "3001", description = "이메일 정보를 가져오는데 실패하였습니다."),
+            @ApiResponse(responseCode = "3003", description = "애플 api 호출 응답 정보를 불러오는데 실패하였습니다."),
+            @ApiResponse(responseCode = "3004", description = "사용 가능한 공개키가 없습니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @PostMapping("/apple")
+    public BaseResponse<PostSocialLoginRes> appleLogin() throws BaseException {
+        try {
+            String accessToken = tokenService.getAccessToken();
+            PostSocialLoginRes postSocialLoginRes = socialLoginService.getUserInfoByApple(accessToken);
+            if (postSocialLoginRes.isMember()) {
+                postSocialLoginRes.getUserInfo().setJwt(tokenService.createJwt(postSocialLoginRes.getUserInfo().getUserId()));
+            }
+            return new BaseResponse<>(postSocialLoginRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 구글 로그인 API
+     * [POST] /users/google
+     */
+    @Operation(method = "POST",
+            description = "Header-'X-ACCESS-TOKEN'에 소셜 로그인 accessToken 값을 넣어 " +
+                    "(멤버 여부, 매칭 여부, 우편함 이름 설정 여부, 유저 ID, JWT, RefreshToken, 이메일, 유저 코드) 를 반환받는 api이며, " +
+                    "JWT와 RefreshToken을 새로 발급합니다.",
+            tags = "USER", summary = "구글 로그인 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2003", description = "accessToken을 입력해주세요."),
+            @ApiResponse(responseCode = "3001", description = "이메일 정보를 가져오는데 실패하였습니다."),
+            @ApiResponse(responseCode = "3005", description = "구글 api 호출 응답 정보를 불러오는데 실패하였습니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @PostMapping("/google")
+    public BaseResponse<PostSocialLoginRes> googleLogin() throws BaseException {
+        try {
+            String accessToken = tokenService.getAccessToken();
+            PostSocialLoginRes postKakaoRes = socialLoginService.getUserInfoByGoogle(accessToken);
             if (postKakaoRes.isMember()) {
                 postKakaoRes.getUserInfo().setJwt(tokenService.createJwt(postKakaoRes.getUserInfo().getUserId()));
             }
