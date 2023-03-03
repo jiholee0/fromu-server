@@ -182,4 +182,16 @@ public class CoupleDao {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    @Transactional
+    public boolean checkMailbox(String mailbox) throws BaseException {
+        try {
+            Optional<Couple> couple = coupleRepository.findByMailboxName(mailbox);
+            return couple.isPresent();
+        } catch (Exception exception){
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+    }
 }
