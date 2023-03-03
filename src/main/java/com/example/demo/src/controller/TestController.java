@@ -27,7 +27,7 @@ public class TestController {
      * [GET] /test/log
      * @return String
      */
-    @Operation(method = "GET", description = "테스트 로그 API", tags = "TEST", summary = "테스트 로그 API")
+    @Operation(method = "GET", description = "테스트 로그 API : 테스트 로그를 찍는 api입니다.", tags = "TEST", summary = "테스트 로그 API")
     @ResponseBody
     @GetMapping("/log")
     public String getAll() {
@@ -50,7 +50,7 @@ public class TestController {
     /** 테스트 API
      * [GET] /test
      */
-    @Operation(method = "GET", description = "테스트 API", tags = "TEST", summary = "테스트 API")
+    @Operation(method = "GET", description = "테스트 API : 서버가 켜져 있는지 테스트하는 api입니다.", tags = "TEST", summary = "테스트 API")
     @GetMapping("")
     public BaseResponse<Date> test() {
         Date date = new Date();

@@ -42,7 +42,11 @@ public class UserController {
      * 카카오 로그인 API
      * [POST] /users/kakao
      */
-    @Operation(method = "POST", description = "카카오 로그인 API", tags = "USER", summary = "카카오 로그인 API")
+    @Operation(method = "POST",
+            description = "Header-'X-ACCESS-TOKEN'에 소셜 로그인 accessToken 값을 넣어 " +
+                    "(멤버 여부, 매칭 여부, 우편함 이름 설정 여부, 유저 ID, JWT, RefreshToken, 이메일, 유저 코드) 를 반환받는 api이며, " +
+                    "JWT와 RefreshToken을 새로 발급합니다.",
+            tags = "USER", summary = "카카오 로그인 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2003", description = "accessToken을 입력해주세요."),
@@ -70,7 +74,11 @@ public class UserController {
      * Refresh Token API
      * [POST] /users/refreshToken
      */
-    @Operation(method = "POST", description = "Refresh Token 로그인 API", tags = "USER", summary = "Refresh Token 로그인 API")
+    @Operation(method = "POST",
+            description = "Header-'X-ACCESS-TOKEN'에 refreshToken 값을 넣어 " +
+                    "(매칭 여부, 우편함 이름 설정 여부, 유저 ID, JWT, RefreshToken, 이메일, 유저 코드) 를 반환받는 api이며, " +
+                    "JWT와 RefreshToken을 새로 발급합니다.",
+            tags = "USER", summary = "Refresh Token 로그인 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -94,7 +102,9 @@ public class UserController {
      * 회원가입 API
      * [POST] /users
      */
-    @Operation(method = "POST", description = "회원가입 API", tags = "USER", summary = "회원가입 API")
+    @Operation(method = "POST",
+            description = "유저 정보(이메일, 닉네임, 생일, 성별)를 입력하여 " +
+            "(유저 ID, 코드, JWT, RefreshToken) 을 발급받는 api입니다.", tags = "USER", summary = "회원가입 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2010", description = "이메일을 입력해주세요."),
@@ -123,7 +133,10 @@ public class UserController {
      * 로그인 API
      * [POST] /users/login
      */
-    @Operation(method = "POST", description = "로그인 테스트 API", tags = "USER", summary = "로그인 테스트 API")
+    @Operation(method = "POST",
+            description = "테스트용 api로, 이메일로 " +
+            "(매칭 여부, 우편함 이름 설정 여부, 유저 ID, JWT, RefreshToken, 이메일, 유저 코드) 를 반환받는 api이며, " +
+            "JWT를 새로 발급합니다.", tags = "USER", summary = "로그인 테스트 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2010", description = "이메일을 입력해주세요."),
@@ -146,7 +159,8 @@ public class UserController {
      * 모든 회원들의 조회 API
      * [GET] /users
      */
-    @Operation(method = "GET", description = "모든 회원 조회 API", tags = "USER", summary = "모든 회원 조회 API")
+    @Operation(method = "GET",
+            description = "유저 객체 그대로 반환하는 api입니다.", tags = "USER", summary = "모든 회원 조회 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다.")
@@ -166,7 +180,8 @@ public class UserController {
      * 회원 1명 조회 API
      * [GET] /users/:userId
      */
-    @Operation(method = "GET", description = "userId로 회원 조회 API", tags = "USER", summary = "userId로 회원 조회 API")
+    @Operation(method = "GET",
+            description = "유저 객체 그대로 반환하는 api입니다.", tags = "USER", summary = "userId로 회원 조회 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
@@ -186,9 +201,11 @@ public class UserController {
 
     /**
      * 유저삭제 API (soft delete)
-     * [PATCH] /users/:userId/d
+     * [PATCH] /users/d
      */
-    @Operation(method = "PATCH", description = "유저 삭제 API", tags = "USER", summary = "유저 삭제 API")
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 해당 유저의 delete_flag 값을 true로 변환해주는 SOFT DELETE api입니다.",
+            tags = "USER", summary = "유저 삭제 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -214,7 +231,10 @@ public class UserController {
      * 닉네임 수정 : typeNum = 1
      * 생일 수정 : typeNum = 2
      */
-    @Operation(method = "PATCH", description = "유저 정보 변경(닉네임, 생일) API", tags = "USER", summary = "유저 정보 변경(닉네임, 생일) API")
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+            "경로 변수 typeNum에 따라 유저의 닉네임 또는 생일을 변경하는 api입니다.",
+            tags = "USER", summary = "유저 정보 변경(닉네임, 생일) API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
