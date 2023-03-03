@@ -2,6 +2,7 @@ package com.example.demo.src.service;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponseStatus;
+import com.example.demo.src.data.dao.CoupleDao;
 import com.example.demo.src.data.dto.user.*;
 import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.entity.User;
@@ -19,11 +20,13 @@ import static com.example.demo.utils.ValidationRegex.*;
 @Service
 public class UserService {
     private final UserDao userDao;
+    private final CoupleDao coupleDao;
     private final TokenService tokenService;
 
     @Autowired
-    public UserService(UserDao userDao, TokenService tokenService) {
+    public UserService(UserDao userDao, CoupleDao coupleDao, TokenService tokenService) {
         this.userDao = userDao;
+        this.coupleDao = coupleDao;
         this.tokenService = tokenService;
     }
 
@@ -37,23 +40,49 @@ public class UserService {
         if (userDao.checkEmail(postUserReq.getEmail())){
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
         }
-        try {
-            String userCode = createUserCode();
-            while (userDao.checkUserCode(userCode)){
-                userCode = createUserCode();
-            }
-            int userId = userDao.createUser(postUserReq, userCode);
+        String userCode = createUserCode();
+        while (userDao.checkUserCode(userCode)){
+            userCode = createUserCode();
+        }
+        int userId = userDao.createUser(postUserReq, userCode);
 
-            String jwt = tokenService.createJwt(userId);
-            return new PostUserRes(userId, userCode, jwt);
+        String jwt = tokenService.createJwt(userId);
+        String refreshToken = tokenService.createRefreshToken(userId);
+        userDao.saveRefreshToken(userId, refreshToken);
+        try {
+            return new PostUserRes(userId, userCode, jwt, refreshToken);
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
+    // 자동로그인
+    public UserInfo loginRefreshToken(String accessToken) throws BaseException {
+        int userId = tokenService.getUserId();
+        User user = userDao.getUser(userId);
+        if (user.getRefreshToken().equals(accessToken)){
+            // refresh token 유효 -> jwt 재발급(access, refresh)
+            String jwt = tokenService.createJwt(userId);
+            String refreshToken = tokenService.createRefreshToken(userId);
+            userDao.saveRefreshToken(userId, refreshToken);
+            UserInfo userInfo = new UserInfo(
+                    coupleDao.checkUserId(userId),
+                    coupleDao.isSetMailboxName(userId),
+                    userId,
+                    jwt,
+                    refreshToken,
+                    null,
+                    user.getUserCode()
+            );
+            return userInfo;
+        } else {
+            throw new BaseException(INVALID_JWT);
+        }
+    }
+
     // 로그인
-    public String login(String email) throws BaseException {
+    public UserInfo login(String email) throws BaseException {
         if (email == null || email.isEmpty()) {
             throw new BaseException(POST_USERS_EMPTY_EMAIL);
         }
@@ -62,7 +91,17 @@ public class UserService {
         }
         if(userDao.checkEmail(email)){
             User user = userDao.getUserByEmail(email);
-            return tokenService.createJwt(user.getUserId());
+            String jwt = tokenService.createJwt(user.getUserId());
+            UserInfo userInfo = new UserInfo(
+                    coupleDao.checkUserId(user.getUserId()),
+                    coupleDao.isSetMailboxName(user.getUserId()),
+                    user.getUserId(),
+                    jwt,
+                    user.getRefreshToken(),
+                    email,
+                    user.getUserCode()
+            );
+            return userInfo;
         }
         throw new BaseException(NOT_EXIST_EMAIL);
     }

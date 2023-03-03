@@ -76,7 +76,7 @@ public class CoupleDao {
                         couple.get().getCoupleId(),
                         isSetMailboxName,
                         userRepository.findById(userId).get().getNickname(),
-                        userRepository.findById(couple.get().getUserId1()).get().getNickname()
+                        userRepository.findById(couple.get().getUserId2()).get().getNickname()
                 );
             } else if (couple.get().getUserId2() == userId) {
                 coupleRes = new CoupleRes(
@@ -172,9 +172,8 @@ public class CoupleDao {
     // 우편함 이름 설정 flag
     @Transactional
     public boolean isSetMailboxName(int userId) throws BaseException {
-        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
-        ));
+        Optional<Couple> couple = coupleRepository.findByUserId1OrUserId2(userId, userId);
+        if(!couple.isPresent()) return false;
         try {
             return couple.get().mailboxName != null && !couple.get().mailboxName.equals("");
 

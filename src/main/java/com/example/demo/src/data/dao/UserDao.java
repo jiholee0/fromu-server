@@ -102,7 +102,7 @@ public class UserDao {
         } catch (Exception exception) {
         exception.printStackTrace();
         throw new BaseException(DATABASE_ERROR);
-    }
+        }
     }
 
     // userCode 존재 여부
@@ -121,4 +121,16 @@ public class UserDao {
         return user.get().getUserId();
     }
 
+    @Transactional
+    public void saveRefreshToken(int userId, String refreshToken) throws BaseException {
+        Optional<User> user = Optional.of(userRepository.findById(userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        try {
+            user.get().saveRefreshToken(refreshToken);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
