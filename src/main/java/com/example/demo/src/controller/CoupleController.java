@@ -40,7 +40,10 @@ public class CoupleController {
      * [POST] /couples
      * return : coupleId, 본인 닉네임, 상대방 닉네임
      */
-    @Operation(method = "POST", description = "커플 생성 API", tags = "COUPLE", summary = "커플 생성 API")
+    @Operation(method = "POST",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+            "해당 유저와 특정 코드의 사용자를 커플로 매칭하는 api입니다.",
+            tags = "COUPLE", summary = "커플 생성 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -65,7 +68,10 @@ public class CoupleController {
      * 만난 날 설정 및 수정 API
      * [PATCH] /couples/firstMetDay
      */
-    @Operation(method = "PATCH", description = "만난 날 설정 및 수정 API", tags = "COUPLE", summary = "만난 날 설정 및 수정 API")
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+            "만난 날을 초기 설정하거나 수정하는 api입니다.",
+            tags = "COUPLE", summary = "만난 날 설정 및 수정 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -90,7 +96,10 @@ public class CoupleController {
      * 우편함 이름 설정 및 수정 API
      * [PATCH] /couples/mailbox
      */
-    @Operation(method = "PATCH", description = "우편함 이름 설정 및 수정 API", tags = "COUPLE", summary = "우편함 이름 설정 및 수정 API")
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+            "우편함 이름을 초기 설정하거나 수정하는 api입니다." ,
+            tags = "COUPLE", summary = "우편함 이름 설정 및 수정 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -116,7 +125,10 @@ public class CoupleController {
      * 커플 매칭 끊기 API
      * [PATCH] /couples/d
      */
-    @Operation(method = "PATCH", description = "커플 연결 끊기 API", tags = "COUPLE", summary = "커플 연결 끊기 API")
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+                    "해당 유저의 커플 매칭을 soft delete 형식으로 끊는 api입니다.",
+            tags = "COUPLE", summary = "커플 연결 끊기 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -140,7 +152,9 @@ public class CoupleController {
      * 커플 전체 조회 API
      * [GET] /couples
      */
-    @Operation(method = "GET", description = "커플 전체 조회 API" , tags = "COUPLE", summary = "커플 전체 조회 API")
+    @Operation(method = "GET",
+            description = "커플 객체 그대로 반환하는 api입니다." ,
+            tags = "COUPLE", summary = "커플 전체 조회 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다.")
@@ -160,7 +174,9 @@ public class CoupleController {
      * 커플 id로 커플 조회 API
      * [GET] /couples/:coupleId
      */
-    @Operation(method = "GET", description = "coupleId로 커플 조회 API" , tags = "COUPLE", summary = "coupleId로 커플 조회 API")
+    @Operation(method = "GET",
+            description = "커플 객체 그대로 반환하는 api입니다." ,
+            tags = "COUPLE", summary = "coupleId로 커플 조회 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
@@ -181,7 +197,9 @@ public class CoupleController {
      * 유저 id로 커플 조회 API
      * [GET] /couples/users/:userId
      */
-    @Operation(method = "GET", description = "userId로 커플 조회 API", tags = "COUPLE", summary = "userId로 커플 조회 API")
+    @Operation(method = "GET",
+            description = "커플 객체 그대로 반환하는 api입니다.",
+            tags = "COUPLE", summary = "userId로 커플 조회 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
@@ -203,7 +221,10 @@ public class CoupleController {
      * [GET] /couples/isMatch
      * return : 매칭 여부 / coupleId, 본인 닉네임, 상대방 닉네임
      */
-    @Operation(method = "PATCH", description = "매칭 여부 확인(새로고침) API", tags = "COUPLE", summary = "매칭 여부 확인(새로고침) API")
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+            "(매칭 여부, 커플 ID, 우편함 이름 설정 여부, 본인 닉네임, 상대방 닉네임) 을 반환하는 api입니다.",
+            tags = "COUPLE", summary = "매칭 여부 확인(새로고침) API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
