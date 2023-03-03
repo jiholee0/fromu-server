@@ -1,0 +1,14 @@
+package com.example.demo.src.data.dto.diarybook;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class PostDiarybookRes {
+    private int diarybookId;
+    private int coverNum;
+    private String name;
+}

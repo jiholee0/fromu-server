@@ -20,8 +20,11 @@ public class PostDiarybookReq {
 
     public Diarybook toEntity(int userId, int coupleId){
         return Diarybook.builder()
+                .coupleId(coupleId)
                 .coverNum(coverNum)
                 .name(name)
+                .recentUserId(userId)
+                .deleteFlag(false)
                 .build();
     }
 }
