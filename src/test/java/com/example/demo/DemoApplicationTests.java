@@ -20,17 +20,4 @@ class DemoApplicationTests {
     @Test
     void contextLoads() {
     }
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Test
-    void findAllTest() {
-        if(userRepository!=null){
-            List<User> userList = userRepository.findAll();
-            for(User u : userList) System.out.println("[FindAll]: " + u.getUserId() + " | " +u.getNickname());
-        }else {
-            System.out.println("no data");
-        }
-    }
 }
