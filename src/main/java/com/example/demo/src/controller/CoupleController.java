@@ -135,7 +135,8 @@ public class CoupleController {
             @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
     })
     @ResponseBody
-    @GetMapping BaseResponse<Boolean> checkMailbox(@Parameter @RequestBody String mailbox) {
+    @GetMapping("/mailbox")
+    public BaseResponse<Boolean> checkMailbox(@Parameter @RequestBody String mailbox) {
         try {
             return new BaseResponse<>(coupleService.checkMailbox(mailbox));
         } catch (BaseException exception) {
