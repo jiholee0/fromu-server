@@ -7,6 +7,7 @@ import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.dto.user.*;
 
 import com.example.demo.src.data.entity.User;
+import com.example.demo.utils.TokenService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,11 +29,13 @@ public class KakaoService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final UserDao userDao;
     private final CoupleDao coupleDao;
+    private final TokenService tokenService;
 
     @Autowired
-    public KakaoService(UserDao userDao, CoupleDao coupleDao) {
+    public KakaoService(UserDao userDao, CoupleDao coupleDao, TokenService tokenService) {
         this.userDao = userDao;
         this.coupleDao = coupleDao;
+        this.tokenService = tokenService;
     }
 
     // 토큰으로 카카오 API 호출
@@ -62,14 +65,17 @@ public class KakaoService {
             }
             if (userDao.checkEmail(email)) {
                 User user = userDao.getUserByEmail(email);
+                String refreshToken = tokenService.createRefreshToken(user.getUserId());
                 UserInfo userInfo = new UserInfo(
                         coupleDao.checkUserId(user.getUserId()),
                                 coupleDao.isSetMailboxName(user.getUserId()),
                                 user.getUserId(),
                                 null,
+                                refreshToken,
                                 email,
                                 user.getUserCode()
                         );
+                userDao.saveRefreshToken(user.getUserId(), refreshToken);
                 return new PostKakaoRes(true, userInfo);
             } else {
                 return new PostKakaoRes(false, null);

@@ -1,28 +1,31 @@
 package com.example.demo.utils;
 
 //import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.models.Operation;
 import lombok.extern.slf4j.Slf4j;
-import springfox.documentation.service.Operation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Tag;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 @Configuration
-@Slf4j
 public class Swagger3Config {
 
         @Bean
         public Docket api() {
             return new Docket(DocumentationType.OAS_30)
                     .useDefaultResponseMessages(false)  // Response 응답 메시지 디폴트값 적용 X
+                    .securityContexts(Arrays.asList(securityContext()))
+                    .securitySchemes(Arrays.asList(apiKey()))
                     .select()
                     .apis(RequestHandlerSelectors.any()) // 모든 RequestMapping URI 추출
                     .paths(PathSelectors.ant("/app/**")) // 경로 패턴 URI만 추출
@@ -30,8 +33,11 @@ public class Swagger3Config {
                     //.paths(PathSelectors.any())
                     .build()
                     .apiInfo(apiInfo())
-                    .tags(new Tag("UserController","User-Controller", 1),
-                            new Tag("CoupleController","Couple-Controller", 2));
+                    .tags(new Tag("TEST","테스트 API", 0),
+                            new Tag("USER","유저 등록/조회/수정/삭제 API", 1),
+                            new Tag("COUPLE","커플 등록/조회/수정/삭제 API", 2),
+                            new Tag("DIARYBOOK","일기장 등록/조회/수정/삭제 API", 3),
+                            new Tag("DIARY","일기 등록/조회/수정/삭제 API", 4));
 //                    .operationOrdering(new Comparator<Operation>() {
 //                        @Override
 //                        public int compare(Operation o1, Operation o2) {
@@ -56,4 +62,21 @@ public class Swagger3Config {
                     //.licenseUrl("3.39.249.248:8080")
                     .build();
         }
+
+    private SecurityContext securityContext() {
+        return SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .build();
+    }
+
+    private List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return Arrays.asList(new SecurityReference("X-ACCESS-TOKEN", authorizationScopes));
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("X-ACCESS-TOKEN", "Authorization", "header");
+    }
     }

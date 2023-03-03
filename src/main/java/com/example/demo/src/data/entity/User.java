@@ -29,9 +29,11 @@ public class User {
     @Column(length = 10)
     public String userCode;
     public boolean deleteFlag;
+    @Column
+    public String refreshToken;
 
     @Builder
-    public User(int userId, String email, String nickname, String birthday, String gender, String userCode, boolean deleteFlag) {
+    public User(int userId, String email, String nickname, String birthday, String gender, String userCode, boolean deleteFlag, String refreshToken) {
         this.userId = userId;
         this.email = email;
         this.nickname = nickname;
@@ -39,8 +41,10 @@ public class User {
         this.gender = gender;
         this.userCode = userCode;
         this.deleteFlag = deleteFlag;
+        this.refreshToken = refreshToken;
     }
 
     public void modifyNickname(String str) { this.nickname = str; }
     public void modifyBirthday(String str) { this.birthday = str; }
+    public void saveRefreshToken(String token) {this.refreshToken = token;}
 }

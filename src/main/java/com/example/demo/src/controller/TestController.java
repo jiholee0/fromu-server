@@ -1,5 +1,8 @@
 package com.example.demo.src.controller;
 
+import com.example.demo.config.BaseResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/app/test")
+@Tag(name = "TEST", description = "테스트 API")
 public class TestController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -21,6 +27,7 @@ public class TestController {
      * [GET] /test/log
      * @return String
      */
+    @Operation(method = "GET", description = "테스트 로그 API", tags = "TEST", summary = "테스트 로그 API")
     @ResponseBody
     @GetMapping("/log")
     public String getAll() {
@@ -38,5 +45,15 @@ public class TestController {
         logger.error("ERROR Level 테스트");
 
         return "Success Test";
+    }
+
+    /** 테스트 API
+     * [GET] /test
+     */
+    @Operation(method = "GET", description = "테스트 API", tags = "TEST", summary = "테스트 API")
+    @GetMapping("")
+    public BaseResponse<Date> test() {
+        Date date = new Date();
+        return new BaseResponse<>(date);
     }
 }

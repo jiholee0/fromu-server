@@ -29,6 +29,17 @@ public class TokenService {
                 .compact();
     }
 
+    public String createRefreshToken(int userId) {
+        Date now = new Date();
+        return Jwts.builder()
+                .setHeaderParam("type","jwt")
+                .claim("userId",userId)
+                .setIssuedAt(now)
+                .setExpiration(new Date(System.currentTimeMillis()+7*(1000*60*60*24*365))) // set Expire Time
+                .signWith(SignatureAlgorithm.HS256, Secret.JWT_SECRET_KEY)
+                .compact();
+    }
+
     public String getJwt(){
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
         return request.getHeader("X-ACCESS-TOKEN");
@@ -36,7 +47,7 @@ public class TokenService {
 
     public String getAccessToken() throws BaseException{
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-        String accessToken = request.getHeader("LOGIN-ACCESS-TOKEN");
+        String accessToken = request.getHeader("X-ACCESS-TOKEN");
         if(accessToken == null || accessToken.length() == 0){
             throw new BaseException(EMPTY_ACCESS_TOKEN);
         }
@@ -57,8 +68,6 @@ public class TokenService {
         } catch (Exception ignored) {
             throw new BaseException(INVALID_JWT);
         }
-
-        return claims.getBody().get("userId",Integer.class);
+        return claims.getBody().get("userId", Integer.class);
     }
-
 }
