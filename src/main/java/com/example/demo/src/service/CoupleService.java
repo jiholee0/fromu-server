@@ -72,4 +72,11 @@ public class CoupleService {
     public void deleteCouple(int userId) throws BaseException {
         coupleDao.deleteCouple(userId);
     }
+
+    public boolean checkMailbox(String mailbox) throws BaseException {
+        if (!isRegexNickname(mailbox)){
+            throw new BaseException(PATCH_COUPLES_INVALID_MAILBOX);
+        }
+        return coupleDao.checkMailbox(mailbox);
+    }
 }
