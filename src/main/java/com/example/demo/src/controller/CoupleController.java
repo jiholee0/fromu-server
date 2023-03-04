@@ -2,10 +2,7 @@ package com.example.demo.src.controller;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.data.dto.couple.CoupleRes;
-import com.example.demo.src.data.dto.couple.GetCoupleMatchRes;
-import com.example.demo.src.data.dto.couple.PatchCoupleRes;
-import com.example.demo.src.data.dto.couple.PostCoupleReq;
+import com.example.demo.src.data.dto.couple.*;
 import com.example.demo.src.data.entity.Couple;
 import com.example.demo.src.service.CoupleService;
 import com.example.demo.utils.TokenService;
@@ -83,11 +80,11 @@ public class CoupleController {
     })
     @ResponseBody
     @PatchMapping("/firstMetDay")
-    public BaseResponse<PatchCoupleRes> modifyFirstMetDay(@RequestBody String str) {
+    public BaseResponse<PatchCoupleRes> modifyFirstMetDay(@RequestBody PatchCoupleFirstMetDayReq patchCoupleReq) {
         try {
             int userIdByJwt = tokenService.getUserId();
-            coupleService.modifyFirstMetDay(userIdByJwt, str);
-            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, str));
+            coupleService.modifyFirstMetDay(userIdByJwt, patchCoupleReq.getFirstMetDay());
+            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, patchCoupleReq.getFirstMetDay()));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -112,11 +109,11 @@ public class CoupleController {
     })
     @ResponseBody
     @PatchMapping("/mailbox")
-    public BaseResponse<PatchCoupleRes> modifyMailbox(@RequestBody String str) {
+    public BaseResponse<PatchCoupleRes> modifyMailbox(@RequestBody PatchCoupleMailboxNameReq patchCoupleReq) {
         try{
             int userIdByJwt = tokenService.getUserId();
-            coupleService.modifyMailbox(userIdByJwt, str);
-            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, str));
+            coupleService.modifyMailbox(userIdByJwt, patchCoupleReq.getMailboxName());
+            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, patchCoupleReq.getMailboxName()));
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

@@ -310,11 +310,11 @@ public class UserController {
     })
     @ResponseBody
     @PatchMapping("/{typeNum}")
-    public BaseResponse<Integer> modifyUser(@Parameter(name = "typeNum", description = "1(닉네임) / 2(생일)", required = true) @PathVariable("typeNum") int type, @RequestBody String str) {
+    public BaseResponse<Integer> modifyUser(@Parameter(name = "typeNum", description = "1(닉네임) / 2(생일)", required = true) @PathVariable("typeNum") int type, @RequestBody PatchUserReq patchUserReq) {
         try {
             int userIdByJwt = tokenService.getUserId();
             if (type == 1 || type == 2) {
-                userService.modifyUser(userIdByJwt, type, str);
+                userService.modifyUser(userIdByJwt, type, patchUserReq.getString());
                 return new BaseResponse<>(userIdByJwt);
             } else {
                 throw new BaseException(INVALID_REQ_PARAM);
