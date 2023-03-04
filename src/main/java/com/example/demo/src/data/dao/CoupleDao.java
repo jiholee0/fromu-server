@@ -8,8 +8,6 @@ import com.example.demo.src.data.entity.Couple;
 import com.example.demo.src.data.entity.CoupleRepository;
 import com.example.demo.src.data.entity.User;
 import com.example.demo.src.data.entity.UserRepository;
-import com.fasterxml.jackson.databind.ser.Serializers;
-import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
