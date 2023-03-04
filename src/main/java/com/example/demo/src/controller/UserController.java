@@ -44,7 +44,7 @@ public class UserController {
             description = "Header-'X-ACCESS-TOKEN'에 소셜 로그인 accessToken 값을 넣어 " +
                     "(멤버 여부, 매칭 여부, 우편함 이름 설정 여부, 유저 ID, JWT, RefreshToken, 이메일, 유저 코드) 를 반환받는 api이며, " +
                     "JWT와 RefreshToken을 새로 발급합니다.",
-            tags = "USER", summary = "카카오 로그인 API")
+            tags = "USER", summary = "카카오 로그인 API - \uD83D\uDD12 소셜 로그인 accessToken")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2003", description = "accessToken을 입력해주세요."),
@@ -76,7 +76,7 @@ public class UserController {
             description = "Header-'X-ACCESS-TOKEN'에 소셜 로그인 accessToken 값을 넣어 " +
                     "(멤버 여부, 매칭 여부, 우편함 이름 설정 여부, 유저 ID, JWT, RefreshToken, 이메일, 유저 코드) 를 반환받는 api이며, " +
                     "JWT와 RefreshToken을 새로 발급합니다.",
-            tags = "USER", summary = "애플 로그인 API")
+            tags = "USER", summary = "애플 로그인 API - \uD83D\uDD12 소셜 로그인 accessToken")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2003", description = "accessToken을 입력해주세요."),
@@ -109,7 +109,7 @@ public class UserController {
             description = "Header-'X-ACCESS-TOKEN'에 소셜 로그인 accessToken 값을 넣어 " +
                     "(멤버 여부, 매칭 여부, 우편함 이름 설정 여부, 유저 ID, JWT, RefreshToken, 이메일, 유저 코드) 를 반환받는 api이며, " +
                     "JWT와 RefreshToken을 새로 발급합니다.",
-            tags = "USER", summary = "구글 로그인 API")
+            tags = "USER", summary = "구글 로그인 API - \uD83D\uDD12 소셜 로그인 accessToken")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2003", description = "accessToken을 입력해주세요."),
@@ -141,7 +141,7 @@ public class UserController {
             description = "Header-'X-ACCESS-TOKEN'에 refreshToken 값을 넣어 " +
                     "(매칭 여부, 우편함 이름 설정 여부, 유저 ID, JWT, RefreshToken, 이메일, 유저 코드) 를 반환받는 api이며, " +
                     "JWT와 RefreshToken을 새로 발급합니다.",
-            tags = "USER", summary = "Refresh Token 로그인 API")
+            tags = "USER", summary = "Refresh Token 로그인 API - \uD83D\uDD12 refreshToken")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -182,7 +182,7 @@ public class UserController {
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다.")
     })
     @ResponseBody
-    @PostMapping("/")
+    @PostMapping("")
     public BaseResponse<PostUserRes> createUser(@Parameter @RequestBody PostUserReq postUserReq) {
         try {
             PostUserRes postUserRes = userService.createUser(postUserReq);
@@ -268,7 +268,7 @@ public class UserController {
      */
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 해당 유저의 delete_flag 값을 true로 변환해주는 SOFT DELETE api입니다.",
-            tags = "USER", summary = "유저 삭제 API")
+            tags = "USER", summary = "유저 삭제 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -297,7 +297,7 @@ public class UserController {
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
             "경로 변수 typeNum에 따라 유저의 닉네임 또는 생일을 변경하는 api입니다.",
-            tags = "USER", summary = "유저 정보 변경(닉네임, 생일) API")
+            tags = "USER", summary = "유저 정보 변경(닉네임, 생일) API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
