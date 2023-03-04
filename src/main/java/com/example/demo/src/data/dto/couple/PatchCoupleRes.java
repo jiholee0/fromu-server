@@ -10,5 +10,4 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PatchCoupleRes {
     private int coupleId;
-    private Object after;
 }

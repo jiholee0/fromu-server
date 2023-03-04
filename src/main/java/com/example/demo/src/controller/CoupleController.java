@@ -84,7 +84,7 @@ public class CoupleController {
         try {
             int userIdByJwt = tokenService.getUserId();
             coupleService.modifyFirstMetDay(userIdByJwt, patchCoupleReq.getFirstMetDay());
-            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, patchCoupleReq.getFirstMetDay()));
+            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -113,7 +113,7 @@ public class CoupleController {
         try{
             int userIdByJwt = tokenService.getUserId();
             coupleService.modifyMailbox(userIdByJwt, patchCoupleReq.getMailboxName());
-            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, patchCoupleReq.getMailboxName()));
+            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt));
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
