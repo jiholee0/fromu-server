@@ -3,8 +3,7 @@ package com.example.demo.src.controller;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.data.dto.diarybook.PostDiarybookReq;
-import com.example.demo.src.data.dto.diarybook.PostDiarybookRes;
+import com.example.demo.src.data.dto.diarybook.*;
 import com.example.demo.src.data.entity.Diarybook;
 import com.example.demo.src.service.DiarybookService;
 import com.example.demo.utils.TokenService;
@@ -43,7 +42,7 @@ public class DiarybookController {
     @Operation(method = "POST",
         description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 일기장 정보(표지 번호, 이름)을 입력하여 "+
                 "해당 유저 커플의 일기장을 추가하는 api입니다.",
-        tags = "DIARYBOOK", summary = "일기장 등록 API")
+        tags = "DIARYBOOK", summary = "일기장 등록 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -52,7 +51,7 @@ public class DiarybookController {
             @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
     })
     @ResponseBody
-    @PostMapping("/")
+    @PostMapping("")
     public BaseResponse<PostDiarybookRes> createDiarybook(@Parameter @RequestBody PostDiarybookReq postDiarybookReq){
         try {
             int userIdByJwt = tokenService.getUserId();
@@ -64,34 +63,54 @@ public class DiarybookController {
     }
 
     /**
-     * 일기장 수정 API
-     * [PATCH] /diarybooks/:typeNum
-     * 표지 수정 : typeNum = 1
-     * 이름 수정 : typeNum = 2
+     * 일기장 표지 수정 API
+     * [PATCH] /diarybooks/coverNum
      */
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
-                    "경로 변수 typeNum에 따라 일기장의 표지 또는 이름을 변경하는 api입니다.",
-            tags = "DIARYBOOK", summary = "일기장 정보 변경(표지, 이름) API")
+                    "일기장의 표지를 변경하는 api입니다.",
+            tags = "DIARYBOOK", summary = "일기장 표지 변경 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
             @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
-            @ApiResponse(responseCode = "2004", description = "파라미터 값을 확인해주세요."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
             @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
     })
     @ResponseBody
-    @PatchMapping("/{typeNum}")
-    public BaseResponse<Integer> modifyUser(@Parameter(name = "typeNum", description = "1(표지) / 2(이름)", required = true) @PathVariable("typeNum") int type, @RequestBody Object object) {
+    @PatchMapping("/coverNum")
+    public BaseResponse<PatchDiarybookRes> modifyDiarybookCoverNum(@RequestBody PatchDiarybookCoverNumReq patchDiarybookReq) {
         try {
             int userIdByJwt = tokenService.getUserId();
-            if (type == 1 || type == 2) {
-                diarybookService.modifyDiarybook(userIdByJwt, type, object);
-                return new BaseResponse<>(userIdByJwt);
-            } else {
-                throw new BaseException(INVALID_REQ_PARAM);
-            }
+            int diarybookId = diarybookService.modifyDiarybookCoverNum(userIdByJwt, patchDiarybookReq);
+            return new BaseResponse<>(new PatchDiarybookRes(userIdByJwt, diarybookId));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 일기장 이름 수정 API
+     * [PATCH] /diarybooks/name
+     */
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+                    "일기장의 이름을 변경하는 api입니다.",
+            tags = "DIARYBOOK", summary = "일기장 이름 변경 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @PatchMapping("/name")
+    public BaseResponse<PatchDiarybookRes> modifyDiarybookName(@RequestBody PatchDiarybookNameReq patchDiarybookReq) {
+        try {
+            int userIdByJwt = tokenService.getUserId();
+            int diarybookId = diarybookService.modifyDiarybookName(userIdByJwt, patchDiarybookReq);
+            return new BaseResponse<>(new PatchDiarybookRes(userIdByJwt, diarybookId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -166,4 +185,27 @@ public class DiarybookController {
      * 일기장 삭제 API
      * [PATCH] /diarybooks/d
      */
+
+    /**
+     * 일기장 내지 첫장 추가 API
+     * [PATCH] /diarybooks/image
+     */
+    @Operation(method = "PATCH",
+    description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+            "일기장 내지 첫장을 추가 및 변경하는 api입니다.",
+    tags = "DIARYBOOK", summary = "일기장 내지 첫장 추가 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+
+    })
+    @ResponseBody
+    @PatchMapping("/image")
+    public BaseResponse<PatchDiarybookRes> setDiarybookImage(@RequestBody PatchDiarybookImageReq patchDiarybookReq){
+        try{
+            int userIdByJwt = tokenService.getUserId();
+            int diarybookId = diarybookService.setDiarybookImage(userIdByJwt, patchDiarybookReq);
+            return new BaseResponse<>(new PatchDiarybookRes(userIdByJwt, diarybookId));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }
