@@ -43,7 +43,7 @@ public class CoupleController {
     @Operation(method = "POST",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
             "해당 유저와 특정 코드의 사용자를 커플로 매칭하는 api입니다.",
-            tags = "COUPLE", summary = "커플 생성 API")
+            tags = "COUPLE", summary = "커플 생성 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -71,7 +71,7 @@ public class CoupleController {
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
             "만난 날을 초기 설정하거나 수정하는 api입니다.",
-            tags = "COUPLE", summary = "만난 날 설정 및 수정 API")
+            tags = "COUPLE", summary = "만난 날 설정 및 수정 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -99,7 +99,7 @@ public class CoupleController {
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
             "우편함 이름을 초기 설정하거나 수정하는 api입니다." ,
-            tags = "COUPLE", summary = "우편함 이름 설정 및 수정 API")
+            tags = "COUPLE", summary = "우편함 이름 설정 및 수정 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -151,7 +151,7 @@ public class CoupleController {
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
                     "해당 유저의 커플 매칭을 soft delete 형식으로 끊는 api입니다.",
-            tags = "COUPLE", summary = "커플 연결 끊기 API")
+            tags = "COUPLE", summary = "커플 연결 끊기 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -247,7 +247,7 @@ public class CoupleController {
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
             "(매칭 여부, 커플 ID, 우편함 이름 설정 여부, 본인 닉네임, 상대방 닉네임) 을 반환하는 api입니다.",
-            tags = "COUPLE", summary = "매칭 여부 확인(새로고침) API")
+            tags = "COUPLE", summary = "매칭 여부 확인(새로고침) API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
