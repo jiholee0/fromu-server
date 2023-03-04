@@ -5,6 +5,7 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.src.data.dto.couple.CoupleRes;
 import com.example.demo.src.data.dto.couple.GetCoupleMatchRes;
 import com.example.demo.src.data.dto.couple.PatchCoupleRes;
+import com.example.demo.src.data.dto.couple.PostCoupleReq;
 import com.example.demo.src.data.entity.Couple;
 import com.example.demo.src.service.CoupleService;
 import com.example.demo.utils.TokenService;
@@ -54,10 +55,10 @@ public class CoupleController {
     })
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<CoupleRes> createCouple(@RequestBody String partnerCode) {
+    public BaseResponse<CoupleRes> createCouple(@RequestBody PostCoupleReq postCoupleReq) {
         try {
             int userIdByJwt = tokenService.getUserId();
-            CoupleRes coupleRes = coupleService.createCouple(userIdByJwt, partnerCode);
+            CoupleRes coupleRes = coupleService.createCouple(userIdByJwt, postCoupleReq);
             return new BaseResponse<>(coupleRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
