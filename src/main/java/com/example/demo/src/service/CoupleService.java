@@ -5,6 +5,7 @@ import com.example.demo.src.data.dao.CoupleDao;
 import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.dto.couple.CoupleRes;
 import com.example.demo.src.data.dto.couple.GetCoupleMatchRes;
+import com.example.demo.src.data.dto.couple.PostCoupleReq;
 import com.example.demo.src.data.entity.Couple;
 import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class CoupleService {
     }
 
     // 커플 등록(POST)
-    public CoupleRes createCouple(int userId, String partnerCode) throws BaseException {
-        return coupleDao.createCouple(userId, partnerCode);
+    public CoupleRes createCouple(int userId, PostCoupleReq postCoupleReq) throws BaseException {
+        return coupleDao.createCouple(userId, postCoupleReq);
     }
 
     // Couple 전체 조회

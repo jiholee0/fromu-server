@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class PostCoupleReq {
+    private String partnerCode;
 
     public Couple toEntity(int userId1, int userId2) {
         return Couple.builder()

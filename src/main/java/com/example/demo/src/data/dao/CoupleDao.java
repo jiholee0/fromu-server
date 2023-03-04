@@ -9,6 +9,7 @@ import com.example.demo.src.data.entity.CoupleRepository;
 import com.example.demo.src.data.entity.User;
 import com.example.demo.src.data.entity.UserRepository;
 import com.fasterxml.jackson.databind.ser.Serializers;
+import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -28,9 +29,9 @@ public class CoupleDao {
 
     @Transactional
     // 커플 등록(POST)
-    public CoupleRes createCouple(int userId, String partnerCode) throws BaseException {
+    public CoupleRes createCouple(int userId, PostCoupleReq postCoupleReq) throws BaseException {
 
-        Optional<User> partner = userRepository.findByUserCode(partnerCode);
+        Optional<User> partner = userRepository.findByUserCode(postCoupleReq.getPartnerCode());
         if (!partner.isPresent()){
             throw new BaseException(NOT_EXIST_DATA);
         }
@@ -40,7 +41,6 @@ public class CoupleDao {
             throw new BaseException(POST_COUPLES_EXISTS_USER);
         }
         try {
-            PostCoupleReq postCoupleReq = new PostCoupleReq();
             Couple couple = postCoupleReq.toEntity(userId, partnerId);
             coupleRepository.save(couple);
             return new CoupleRes(
