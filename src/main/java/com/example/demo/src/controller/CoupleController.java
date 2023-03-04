@@ -83,8 +83,8 @@ public class CoupleController {
     public BaseResponse<PatchCoupleRes> modifyFirstMetDay(@RequestBody PatchCoupleFirstMetDayReq patchCoupleReq) {
         try {
             int userIdByJwt = tokenService.getUserId();
-            coupleService.modifyFirstMetDay(userIdByJwt, patchCoupleReq.getFirstMetDay());
-            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt));
+            int coupleId = coupleService.modifyFirstMetDay(userIdByJwt, patchCoupleReq.getFirstMetDay());
+            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, coupleId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -112,8 +112,8 @@ public class CoupleController {
     public BaseResponse<PatchCoupleRes> modifyMailbox(@RequestBody PatchCoupleMailboxNameReq patchCoupleReq) {
         try{
             int userIdByJwt = tokenService.getUserId();
-            coupleService.modifyMailbox(userIdByJwt, patchCoupleReq.getMailboxName());
-            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt));
+            int coupleId = coupleService.modifyMailbox(userIdByJwt, patchCoupleReq.getMailboxName());
+            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, coupleId));
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
@@ -159,11 +159,11 @@ public class CoupleController {
     })
     @ResponseBody
     @PatchMapping("/d")
-    public BaseResponse<Integer> deleteCouple() {
+    public BaseResponse<PatchCoupleRes> deleteCouple() {
         try {
             int userIdByJwt = tokenService.getUserId();
-            coupleService.deleteCouple(userIdByJwt);
-            return new BaseResponse<>(userIdByJwt);
+            int coupleId = coupleService.deleteCouple(userIdByJwt);
+            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, coupleId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }
@@ -245,7 +245,7 @@ public class CoupleController {
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
             "(매칭 여부, 커플 ID, 우편함 이름 설정 여부, 본인 닉네임, 상대방 닉네임) 을 반환하는 api입니다.",
-            tags = "COUPLE", summary = "매칭 여부 확인(새로고침) API - \uD83D\uDD12 JWT")
+            tags = "COUPLE", summary = "매칭 여부 확인(새로고침), 닉네임 정보 조회 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),

@@ -40,7 +40,7 @@ public class DiarybookDao {
     }
 
     @Transactional
-    public void modifyDiarybookCover(int userId, int coverNum) throws BaseException {
+    public int modifyDiarybookCover(int userId, int coverNum) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
@@ -49,6 +49,7 @@ public class DiarybookDao {
         ));
         try {
             diarybook.get().modifyDiarybookCover(coverNum);
+            return diarybook.get().diarybookId;
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
@@ -56,7 +57,7 @@ public class DiarybookDao {
     }
 
     @Transactional
-    public void modifyDiarybookName(int userId, String name) throws BaseException {
+    public int modifyDiarybookName(int userId, String name) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
@@ -65,10 +66,16 @@ public class DiarybookDao {
         ));
         try {
             diarybook.get().modifyDiarybookName(name);
+            return diarybook.get().getDiarybookId();
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    @Transactional
+    public int setDiarybookImage(int userId, String imageUrl) throws BaseException{
+        return 0;
     }
 
     @Transactional

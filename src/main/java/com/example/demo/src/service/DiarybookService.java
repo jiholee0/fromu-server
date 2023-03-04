@@ -2,8 +2,7 @@ package com.example.demo.src.service;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dao.DiarybookDao;
-import com.example.demo.src.data.dto.diarybook.PostDiarybookReq;
-import com.example.demo.src.data.dto.diarybook.PostDiarybookRes;
+import com.example.demo.src.data.dto.diarybook.*;
 import com.example.demo.src.data.entity.Diarybook;
 import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +43,17 @@ public class DiarybookService {
         return diarybookDao.getDiarybooks();
     }
 
-    // 일기장 수정
-    public void modifyDiarybook(int userId, int type, Object object) throws BaseException{
-        if (type == 1) {
-            diarybookDao.modifyDiarybookCover(userId, Integer.parseInt(object.toString()));
-        } else if(type==2) {
-            diarybookDao.modifyDiarybookName(userId, object.toString());
-        }
+    // 일기장 표지 수정
+    public int modifyDiarybookCoverNum(int userId, PatchDiarybookCoverNumReq patchDiarybookReq) throws BaseException{
+        return diarybookDao.modifyDiarybookCover(userId, patchDiarybookReq.getCoverNum());
+    }
+
+    public int modifyDiarybookName(int userId, PatchDiarybookNameReq patchDiarybookReq) throws BaseException{
+        return diarybookDao.modifyDiarybookName(userId, patchDiarybookReq.getName());
+    }
+
+    public int setDiarybookImage(int userId, PatchDiarybookImageReq patchDiarybookReq) throws BaseException{
+        return diarybookDao.setDiarybookImage(userId, patchDiarybookReq.getImageUrl());
     }
     // 일기장 삭제
 }

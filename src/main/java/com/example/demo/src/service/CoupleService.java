@@ -56,22 +56,22 @@ public class CoupleService {
         return coupleDao.getCoupleMatchRes(userId);
     }
 
-    public void modifyFirstMetDay(int userId, String str) throws BaseException{
+    public int modifyFirstMetDay(int userId, String str) throws BaseException{
         if (!isRegexDay(str)){
             throw new BaseException(PATCH_COUPLES_INVALID_FIRSTMETDAY);
         }
-        coupleDao.modifyFirstMetDay(userId, str);
+        return coupleDao.modifyFirstMetDay(userId, str);
     }
 
-    public void modifyMailbox(int userId, String str) throws BaseException{
+    public int modifyMailbox(int userId, String str) throws BaseException{
         if (!isRegexNickname(str)){
             throw new BaseException(PATCH_COUPLES_INVALID_MAILBOX);
         }
-        coupleDao.modifyMailbox(userId, str);
+        return coupleDao.modifyMailbox(userId, str);
     }
 
-    public void deleteCouple(int userId) throws BaseException {
-        coupleDao.deleteCouple(userId);
+    public int deleteCouple(int userId) throws BaseException {
+        return coupleDao.deleteCouple(userId);
     }
 
     public boolean checkMailbox(String mailbox) throws BaseException {

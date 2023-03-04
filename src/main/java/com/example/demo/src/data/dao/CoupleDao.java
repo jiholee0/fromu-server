@@ -124,12 +124,13 @@ public class CoupleDao {
     }
 
     @Transactional
-    public void modifyFirstMetDay(int userId, String str) throws BaseException{
+    public int modifyFirstMetDay(int userId, String str) throws BaseException{
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
         try {
             couple.get().modifyFirstMetDay(str);
+            return couple.get().getCoupleId();
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
@@ -137,7 +138,7 @@ public class CoupleDao {
     }
 
     @Transactional
-    public void modifyMailbox(int userId, String str) throws BaseException{
+    public int modifyMailbox(int userId, String str) throws BaseException{
         Optional<Couple> checkMailboxCouple = coupleRepository.findByMailboxName(str);
         if (checkMailboxCouple.isPresent()){
             throw new BaseException(PATCH_COUPLES_EXISTS_MAILBOX);
@@ -147,7 +148,7 @@ public class CoupleDao {
         ));
         try {
             couple.get().modifyMailbox(str);
-
+            return couple.get().getCoupleId();
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
@@ -155,12 +156,13 @@ public class CoupleDao {
     }
 
     @Transactional
-    public void deleteCouple(int userId) throws BaseException {
+    public int deleteCouple(int userId) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
         try {
             coupleRepository.deleteById(couple.get().coupleId);
+            return couple.get().getCoupleId();
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
