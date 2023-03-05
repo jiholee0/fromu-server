@@ -19,3 +19,23 @@ spring:
     url: jdbc:mysql://fromu-db.cckllmursbot.ap-northeast-2.rds.amazonaws.com/fromuDB?useSSL=false
     username: bella
     password: fromu1212
+
+cloud:
+  aws:
+    s3:
+      bucket: fromubucket
+    credentials:
+      access-key: AKIATFFCWWAN6MAYFHUU
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: ERROR

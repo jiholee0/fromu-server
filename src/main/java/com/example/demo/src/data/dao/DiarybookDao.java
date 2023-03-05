@@ -74,8 +74,20 @@ public class DiarybookDao {
     }
 
     @Transactional
-    public int setDiarybookImage(int userId, String imageUrl) throws BaseException{
-        return 0;
+    public int uploadDiarybookImage(int userId, String imageUrl) throws BaseException{
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
+        ));
+        try {
+            diarybook.get().uploadDiarybookImage(imageUrl);
+            return diarybook.get().getDiarybookId();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
