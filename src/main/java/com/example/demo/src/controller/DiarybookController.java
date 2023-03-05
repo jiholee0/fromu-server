@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -195,14 +196,18 @@ public class DiarybookController {
             "일기장 내지 첫장을 추가 및 변경하는 api입니다.",
     tags = "DIARYBOOK", summary = "일기장 내지 첫장 추가 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
-
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
     })
     @ResponseBody
     @PatchMapping("/image")
-    public BaseResponse<PatchDiarybookRes> setDiarybookImage(@RequestBody PatchDiarybookImageReq patchDiarybookReq){
+    public BaseResponse<PatchDiarybookRes> uploadDiarybookImage(@Parameter @RequestPart(value = "imageFile") MultipartFile imageFile){
         try{
             int userIdByJwt = tokenService.getUserId();
-            int diarybookId = diarybookService.setDiarybookImage(userIdByJwt, patchDiarybookReq);
+            int diarybookId = diarybookService.uploadDiarybookImage(userIdByJwt, imageFile);
             return new BaseResponse<>(new PatchDiarybookRes(userIdByJwt, diarybookId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

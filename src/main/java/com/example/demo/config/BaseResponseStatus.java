@@ -67,10 +67,14 @@ public enum BaseResponseStatus {
      * 4000 : Database, Server 오류
      */
     DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
-    NOT_EXIST_DATA(false, 4001, "데이터가 존재하지 않습니다.");
+    NOT_EXIST_DATA(false, 4001, "데이터가 존재하지 않습니다."),
+    NOT_EXIST_DATA_COUPLE(false, 4002, "데이터(커플)가 존재하지 않습니다."),
+    NOT_EXIST_DATA_DIARYBOOK(false, 4003, "데이터(일기장)가 존재하지 않습니다."),
 
 
     // 5000 : 필요시 만들어서 쓰세요
+    FAIL_TO_UPLOAD_FILE(false,5000,"파일 업로드에 실패했습니다.");
+
     // 6000 : 필요시 만들어서 쓰세요
 
 

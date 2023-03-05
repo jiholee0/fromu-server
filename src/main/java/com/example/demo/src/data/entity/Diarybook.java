@@ -41,6 +41,6 @@ public class Diarybook {
 
     public void modifyDiarybookName(String str) {this.name = str;}
     public void modifyDiarybookCover(int num) {this.coverNum = num;}
-    public void modifyImageUrl(String str){this.imageUrl = str;}
+    public void uploadDiarybookImage(String imageUrl){this.imageUrl = imageUrl;}
 
 }

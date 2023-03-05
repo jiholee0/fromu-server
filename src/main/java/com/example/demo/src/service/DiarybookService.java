@@ -4,24 +4,28 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dao.DiarybookDao;
 import com.example.demo.src.data.dto.diarybook.*;
 import com.example.demo.src.data.entity.Diarybook;
+import com.example.demo.utils.S3Uploader;
 import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
+import static com.example.demo.config.BaseResponseStatus.FAIL_TO_UPLOAD_FILE;
 import static com.example.demo.config.BaseResponseStatus.PATCH_COUPLES_INVALID_FIRSTMETDAY;
 import static com.example.demo.utils.ValidationRegex.isRegexDay;
 
 @Service
 public class DiarybookService {
     private final DiarybookDao diarybookDao;
-    private final TokenService tokenService;
+    private final S3Uploader s3Uploader;
 
     @Autowired
-    public DiarybookService(DiarybookDao diarybookDao, TokenService tokenService) {
+    public DiarybookService(DiarybookDao diarybookDao, S3Uploader s3Uploader) {
         this.diarybookDao = diarybookDao;
-        this.tokenService = tokenService;
+        this.s3Uploader = s3Uploader;
     }
 
     // 일기장 등록
@@ -52,8 +56,16 @@ public class DiarybookService {
         return diarybookDao.modifyDiarybookName(userId, patchDiarybookReq.getName());
     }
 
-    public int setDiarybookImage(int userId, PatchDiarybookImageReq patchDiarybookReq) throws BaseException{
-        return diarybookDao.setDiarybookImage(userId, patchDiarybookReq.getImageUrl());
+    public int uploadDiarybookImage(int userId, MultipartFile imageUrl) throws BaseException{
+        String fileUrl = "";
+        if(imageUrl != null){
+            try{
+                fileUrl = s3Uploader.upload(imageUrl, "images"); // S3 버킷의 images 디렉토리 안에 저장됨
+            }catch (BaseException | IOException exception){
+                throw new BaseException(FAIL_TO_UPLOAD_FILE);
+            }
+        }
+        return diarybookDao.uploadDiarybookImage(userId, fileUrl);
     }
     // 일기장 삭제
 }
