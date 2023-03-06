@@ -5,6 +5,8 @@ import com.example.demo.src.data.dto.diarybook.PostDiarybookReq;
 import com.example.demo.src.data.dto.diarybook.PostDiarybookRes;
 import com.example.demo.src.data.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import software.amazon.ion.Timestamp;
 
@@ -16,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.example.demo.config.BaseResponseStatus.*;
-
 
 @Repository
 public class DiarybookDao {
@@ -108,6 +109,12 @@ public class DiarybookDao {
     }
 
     @Transactional
+    public boolean isExistDiarybook(int coupleId){
+        Optional<Diarybook> diarybook = diarybookRepository.findByCoupleId(coupleId);
+        return diarybook.isPresent();
+    }
+
+    @Transactional
     public Diarybook getDiarybookByDiarybookId(int diarybookId) throws BaseException {
         Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findById(diarybookId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
@@ -128,8 +135,8 @@ public class DiarybookDao {
         Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
         ));
-        if(diarybook.get().getTurnUserId()!=userId){
-            throw new BaseException(PATCH_DIARYBOOKS_NOT_TURN_TO_PASS);
+        if(!diarybook.get().isWriteFlag()){
+            throw new BaseException(PATCH_DIARYBOOKS_NOT_WRITE_DIARY);
         }
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR, 1);
@@ -137,7 +144,7 @@ public class DiarybookDao {
         int partnerId;
         if (couple.get().getUserId1()==userId) {partnerId=couple.get().getUserId2();}
         else {partnerId = couple.get().getUserId1();}
-        diarybook.get().updateDiary(partnerId,turnTime); // 작성할 차례인 userId, 작성 가능 시간
+        diarybook.get().passDiary(partnerId,turnTime); // 작성할 차례인 userId, 작성 가능 시간
         return diarybook.get().getDiarybookId();
     }
 }

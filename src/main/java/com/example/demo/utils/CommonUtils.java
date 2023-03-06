@@ -9,8 +9,6 @@ import java.time.LocalTime;
 import java.util.Date;
 
 import static com.example.demo.config.BaseResponseStatus.FAIL_TO_CAL_DDAY;
-import static com.example.demo.config.BaseResponseStatus.FAIL_TO_CAL_DDAY_BY_NULL;
-
 
 public class CommonUtils {
     public static String createUserCode(){
@@ -27,7 +25,7 @@ public class CommonUtils {
         } catch (ParseException exception){
             throw new BaseException(FAIL_TO_CAL_DDAY);
         } catch (NullPointerException exception){
-            throw new BaseException(FAIL_TO_CAL_DDAY_BY_NULL);
+            return 0;
         }
 
     }

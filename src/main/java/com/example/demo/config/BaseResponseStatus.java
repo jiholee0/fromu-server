@@ -39,6 +39,7 @@ public enum BaseResponseStatus {
     // [POST] /diaries
     POST_DIARIES_NOT_TURN(false,2030,"아직 상대방이 일기장을 작성하지 않았습니다."),
     POST_DIARIES_NOT_YET(false,2031,"아직 일기장이 오지 않았습니다."),
+    POST_DIARIES_ALREADY_WRITE(false,2032,"일기를 이미 작성하였습니다."),
 
     // [PATCH] /users
     PATCH_USERS_INVALID_NICKNAME(false,2050, "닉네임 형식을 확인해주세요."),
@@ -49,6 +50,7 @@ public enum BaseResponseStatus {
     PATCH_COUPLES_INVALID_MAILBOX(false, 2061, "우편함 이름 형식을 확인해주세요."),
     PATCH_COUPLES_EXISTS_MAILBOX(false,2062,"중복된 우편함 이름입니다."),
     PATCH_DIARYBOOKS_NOT_TURN_TO_PASS(false,2070,"일기장이 해당 유저에게 없습니다."),
+    PATCH_DIARYBOOKS_NOT_WRITE_DIARY(false,2071,"아직 일기를 작성하지 않아 일기장을 보낼 수 없습니다."),
 
 
 
@@ -67,8 +69,6 @@ public enum BaseResponseStatus {
     FAIL_TO_FIND_AVALIABLE_RSA(false,3004,"사용 가능한 공개키가 없습니다."),
     FAIL_TO_RESPONSE_GOOGLE(false, 3005, "구글 api 호출 응답 정보를 불러오는데 실패하였습니다."),
     FAIL_TO_CAL_DDAY(false,3010,"dday 계산에 실패하였습니다."),
-    FAIL_TO_CAL_DDAY_BY_NULL(false,3011,"만난 날짜가 설정되지 않았습니다."),
-
 
     /**
      * 4000 : Database, Server 오류

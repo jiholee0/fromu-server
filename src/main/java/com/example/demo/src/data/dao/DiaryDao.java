@@ -31,6 +31,9 @@ public class DiaryDao {
         Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
         ));
+        if(diarybook.get().isWriteFlag()){
+            throw new BaseException(POST_DIARIES_ALREADY_WRITE);
+        }
         if(diarybook.get().getTurnUserId()!=userId){
             throw new BaseException(POST_DIARIES_NOT_TURN);
         }
@@ -40,6 +43,7 @@ public class DiaryDao {
         try {
             Diary diary = postDiaryReq.toEntity(diarybook.get().getDiarybookId(),userId, imageUrl);
             diaryRepository.save(diary);
+            diarybook.get().writeDiary();
             return diary.getDiaryId();
         } catch (Exception exception){
             exception.printStackTrace();

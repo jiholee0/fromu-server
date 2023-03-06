@@ -43,7 +43,11 @@ public class ViewController {
      */
     @Operation(method = "GET",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 홈 화면의 모든 데이터를 조회하는 api입니다. "+
-                    "닉네임, 연인 닉네임, dDay, 일기장 상태(일기장이 나에게 없으면 0 / 나에게 있으면 1 / 오는 중이면 2), 일기장 정보(일기장 상태가 0이면 NULL)",
+                    "닉네임, 연인 닉네임, dDay, 일기장 상태(일기장이 생성되지 않았으면 0 / " +
+                    "일기장이 나에게 있으면 1 / " +
+                    "일기장이 오는 중이면 2 / " +
+                    "일기장이 가는 중이면 3 / " +
+                    "일기장이 상대한테 있으면 4), 일기장 정보(일기장 상태가 0이면 NULL, writeFlag로 일기 작성 여부 판별)",
             tags = "VIEW", summary = "메인 뷰 조회 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
@@ -51,8 +55,7 @@ public class ViewController {
             @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
             @ApiResponse(responseCode = "3010", description = "dday 계산에 실패하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
-            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다."),
-            @ApiResponse(responseCode = "4003", description = "일기장이 존재하지 않습니다.")
+            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다.")
     })
     @ResponseBody
     @GetMapping("/main")
