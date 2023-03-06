@@ -35,10 +35,11 @@ public class Diarybook {
     public Date turnTime;
     @Column
     public String imageUrl;
+    public boolean writeFlag;
     public boolean deleteFlag;
 
     @Builder
-    public Diarybook(int diarybookId, int coupleId, int coverNum, String name, int turnUserId, Date turnTime, String imageUrl, boolean deleteFlag) {
+    public Diarybook(int diarybookId, int coupleId, int coverNum, String name, int turnUserId, Date turnTime, String imageUrl,boolean writeFlag, boolean deleteFlag) {
         this.diarybookId = diarybookId;
         this.coupleId = coupleId;
         this.coverNum = coverNum;
@@ -47,13 +48,18 @@ public class Diarybook {
         this.turnTime = turnTime;
         this.imageUrl = imageUrl;
         this.deleteFlag = deleteFlag;
+        this.writeFlag = writeFlag;
     }
 
     public void modifyDiarybookName(String str) {this.name = str;}
     public void modifyDiarybookCover(int num) {this.coverNum = num;}
     public void uploadDiarybookImage(String imageUrl){this.imageUrl = imageUrl;}
-    public void updateDiary(int userId, Date turnTime){
-        this.turnUserId=userId;
+    public void passDiary(int userId, Date turnTime){
+        this.turnUserId = userId;
         this.turnTime = turnTime;
+        this.writeFlag = false;
+    }
+    public void writeDiary(){
+        this.writeFlag = true;
     }
 }

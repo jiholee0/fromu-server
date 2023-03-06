@@ -16,18 +16,14 @@ public class DiarybookDto {
     private int diarybookId;
     private int coverNum;
     private String name;
-    private int turnUserId;
-    private String turnTime;
     private String imageUrl;
-    private boolean deleteFlag;
+    private boolean writeFlag;
 
-    public DiarybookDto(int diarybookId, int coverNum, String name, int turnUserId, String turnTime, String imageUrl, boolean deleteFlag) {
+    public DiarybookDto(int diarybookId, int coverNum, String name, String imageUrl, boolean writeFlag) {
         this.diarybookId = diarybookId;
         this.coverNum = coverNum;
         this.name = name;
-        this.turnUserId = turnUserId;
-        this.turnTime = turnTime;
         this.imageUrl = imageUrl;
-        this.deleteFlag = deleteFlag;
+        this.writeFlag = writeFlag;
     }
 }

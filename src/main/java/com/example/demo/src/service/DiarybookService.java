@@ -7,6 +7,8 @@ import com.example.demo.src.data.entity.Diarybook;
 import com.example.demo.utils.S3Uploader;
 import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +18,7 @@ import java.util.List;
 import static com.example.demo.config.BaseResponseStatus.FAIL_TO_UPLOAD_FILE;
 import static com.example.demo.config.BaseResponseStatus.PATCH_COUPLES_INVALID_FIRSTMETDAY;
 import static com.example.demo.utils.ValidationRegex.isRegexDay;
+
 
 @Service
 public class DiarybookService {
@@ -72,4 +75,5 @@ public class DiarybookService {
     public int passDiarybook(int userId) throws BaseException {
         return diarybookDao.passDiarybook(userId);
     }
+
 }

@@ -40,38 +40,32 @@ public class ViewService {
         } else {
             partnerNickname = userDao.getUser(couple.getUserId1()).getNickname();
         }
-        Diarybook diarybook = diarybookDao.getDiarybookByCoupleId(couple.getCoupleId());
-
-        try {
-            int diarybookStatus = 0;
-            Date date = new Date();
-            if(diarybook.getTurnUserId()==userId){
-                if(diarybook.getTurnTime()==null || date.after(diarybook.getTurnTime())){
-                    diarybookStatus = 1;
-                }
-                else {diarybookStatus = 2;}
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                return new MainViewRes(nickname,
-                        partnerNickname,
-                        CommonUtils.calDDay(couple.getFirstMetDay()),
-                        diarybookStatus,
-                        new DiarybookDto(diarybook.getDiarybookId(),
-                                diarybook.getCoverNum(),
-                                diarybook.getName(),
-                                diarybook.getTurnUserId(),
-                                sdf.format(diarybook.getTurnTime()),
-                                diarybook.getImageUrl(),
-                                diarybook.isDeleteFlag())
-                );
-            } else{
-                return new MainViewRes(nickname,
-                        partnerNickname,
-                        CommonUtils.calDDay(couple.getFirstMetDay()),
-                        diarybookStatus,
-                        null);
-            }
-        } catch (NullPointerException nullPointerException){
-            throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+        int diarybookStatus = 0;
+        if(!diarybookDao.isExistDiarybook(couple.getCoupleId())){
+            return new MainViewRes(nickname, partnerNickname, CommonUtils.calDDay(couple.getFirstMetDay()),diarybookStatus,null);
         }
+        Diarybook diarybook = diarybookDao.getDiarybookByCoupleId(couple.getCoupleId());
+        Date date = new Date();
+        if(diarybook.getTurnUserId()==userId){
+            if(diarybook.getTurnTime()==null || date.after(diarybook.getTurnTime())){
+                diarybookStatus = 1;
+            }
+            else {diarybookStatus = 2;}
+        } else{
+            if(diarybook.getTurnTime()==null || date.after(diarybook.getTurnTime())){
+                diarybookStatus = 4;
+            } else {diarybookStatus = 3;}
+        }
+        return new MainViewRes(nickname,
+                partnerNickname,
+                CommonUtils.calDDay(couple.getFirstMetDay()),
+                diarybookStatus,
+                new DiarybookDto(diarybook.getDiarybookId(),
+                        diarybook.getCoverNum(),
+                        diarybook.getName(),
+                        diarybook.getImageUrl(),
+                        diarybook.isWriteFlag()
+                )
+        );
     }
 }

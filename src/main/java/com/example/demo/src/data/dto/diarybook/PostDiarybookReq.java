@@ -24,6 +24,7 @@ public class PostDiarybookReq {
                 .coverNum(coverNum)
                 .name(name)
                 .turnUserId(userId)
+                .writeFlag(false)
                 .deleteFlag(false)
                 .build();
     }
