@@ -56,11 +56,11 @@ public class DiarybookService {
         return diarybookDao.modifyDiarybookName(userId, patchDiarybookReq.getName());
     }
 
-    public int uploadDiarybookImage(int userId, MultipartFile imageUrl) throws BaseException{
+    public int uploadDiarybookImage(int userId, MultipartFile imageFile) throws BaseException{
         String fileUrl = "";
-        if(imageUrl != null){
+        if(imageFile != null){
             try{
-                fileUrl = s3Uploader.upload(imageUrl, "images"); // S3 버킷의 images 디렉토리 안에 저장됨
+                fileUrl = s3Uploader.upload(imageFile, "images/diarybooks"); // S3 버킷의 images 디렉토리 안에 저장됨
             }catch (BaseException | IOException exception){
                 throw new BaseException(FAIL_TO_UPLOAD_FILE);
             }
@@ -68,4 +68,8 @@ public class DiarybookService {
         return diarybookDao.uploadDiarybookImage(userId, fileUrl);
     }
     // 일기장 삭제
+
+    public int passDiarybook(int userId) throws BaseException {
+        return diarybookDao.passDiarybook(userId);
+    }
 }

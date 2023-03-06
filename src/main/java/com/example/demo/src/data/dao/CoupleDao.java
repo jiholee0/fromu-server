@@ -99,7 +99,7 @@ public class CoupleDao {
     // userId로 커플 조회
     public Couple getCoupleByUserId(int userId) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
         try {
             return couple.get();

@@ -18,8 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static com.example.demo.config.BaseResponseStatus.INVALID_REQ_PARAM;
-
 @RestController
 @RequestMapping("/app/diarybooks")
 @Tag(name = "DIARYBOOK", description = "일기장 등록/조회/수정/삭제 API")
@@ -147,7 +145,8 @@ public class DiarybookController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
-            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다."),
+            @ApiResponse(responseCode = "4003", description = "일기장이 존재하지 않습니다.")
     })
     @ResponseBody
     @GetMapping("/couples/{coupleId}")
@@ -200,7 +199,9 @@ public class DiarybookController {
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
             @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
-            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
+            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "4003", description = "일기장이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "5000", description = "파일 업로드에 실패했습니다.")
     })
     @ResponseBody
     @PatchMapping("/image")
@@ -208,6 +209,35 @@ public class DiarybookController {
         try{
             int userIdByJwt = tokenService.getUserId();
             int diarybookId = diarybookService.uploadDiarybookImage(userIdByJwt, imageFile);
+            return new BaseResponse<>(new PatchDiarybookRes(userIdByJwt, diarybookId));
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 일기장 전송하기 API
+     * [PATCH] /diarybooks/pass
+     */
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+                    "일기장을 전송하는 api입니다.",
+            tags = "DIARYBOOK", summary = "일기장 전송 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "2070", description = "일기장이 해당 유저에게 없습니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "4003", description = "일기장이 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @PatchMapping("/pass")
+    public BaseResponse<PatchDiarybookRes> passDiarybook(){
+        try{
+            int userIdByJwt = tokenService.getUserId();
+            int diarybookId = diarybookService.passDiarybook(userIdByJwt);
             return new BaseResponse<>(new PatchDiarybookRes(userIdByJwt, diarybookId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

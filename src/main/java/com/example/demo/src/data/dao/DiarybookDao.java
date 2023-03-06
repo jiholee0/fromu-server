@@ -6,9 +6,12 @@ import com.example.demo.src.data.dto.diarybook.PostDiarybookRes;
 import com.example.demo.src.data.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import software.amazon.ion.Timestamp;
 
 import javax.transaction.Transactional;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +22,6 @@ import static com.example.demo.config.BaseResponseStatus.*;
 public class DiarybookDao {
     @Autowired
     DiarybookRepository diarybookRepository;
-    @Autowired
-    UserRepository userRepository;
     @Autowired
     CoupleRepository coupleRepository;
 
@@ -96,7 +97,7 @@ public class DiarybookDao {
     @Transactional
     public Diarybook getDiarybookByCoupleId(int coupleId) throws BaseException {
         Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findByCoupleId(coupleId).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
+                () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
         ));
         try {
             return diarybook.get();
@@ -117,5 +118,26 @@ public class DiarybookDao {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    @Transactional
+    public int passDiarybook(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
+        ));
+        if(diarybook.get().getTurnUserId()!=userId){
+            throw new BaseException(PATCH_DIARYBOOKS_NOT_TURN_TO_PASS);
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, 1);
+        Date turnTime = new Date(cal.getTimeInMillis());
+        int partnerId;
+        if (couple.get().getUserId1()==userId) {partnerId=couple.get().getUserId2();}
+        else {partnerId = couple.get().getUserId1();}
+        diarybook.get().updateDiary(partnerId,turnTime); // 작성할 차례인 userId, 작성 가능 시간
+        return diarybook.get().getDiarybookId();
     }
 }
