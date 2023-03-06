@@ -23,7 +23,7 @@ public class PostDiarybookReq {
                 .coupleId(coupleId)
                 .coverNum(coverNum)
                 .name(name)
-                .recentUserId(userId)
+                .turnUserId(userId)
                 .deleteFlag(false)
                 .build();
     }

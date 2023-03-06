@@ -224,7 +224,8 @@ public class CoupleController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
-            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다."),
+            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다.")
     })
     @ResponseBody
     @GetMapping("/users/{userId}")

@@ -36,6 +36,10 @@ public enum BaseResponseStatus {
     // [POST] /couples
     POST_COUPLES_EXISTS_USER(false,2020,"이미 커플 매칭이 완료된 유저입니다."),
 
+    // [POST] /diaries
+    POST_DIARIES_NOT_TURN(false,2030,"아직 상대방이 일기장을 작성하지 않았습니다."),
+    POST_DIARIES_NOT_YET(false,2031,"아직 일기장이 오지 않았습니다."),
+
     // [PATCH] /users
     PATCH_USERS_INVALID_NICKNAME(false,2050, "닉네임 형식을 확인해주세요."),
     PATCH_USERS_INVALID_BIRTHDAY(false, 2051, "생일 형식을 확인해주세요."),
@@ -44,6 +48,8 @@ public enum BaseResponseStatus {
     PATCH_COUPLES_INVALID_FIRSTMETDAY(false, 2060, "만난 날 형식을 확인해주세요."),
     PATCH_COUPLES_INVALID_MAILBOX(false, 2061, "우편함 이름 형식을 확인해주세요."),
     PATCH_COUPLES_EXISTS_MAILBOX(false,2062,"중복된 우편함 이름입니다."),
+    PATCH_DIARYBOOKS_NOT_TURN_TO_PASS(false,2070,"일기장이 해당 유저에게 없습니다."),
+
 
 
 
@@ -60,7 +66,8 @@ public enum BaseResponseStatus {
     FAIL_TO_RESPONSE_APPLE(false, 3003, "애플 api 호출 응답 정보를 불러오는데 실패하였습니다."),
     FAIL_TO_FIND_AVALIABLE_RSA(false,3004,"사용 가능한 공개키가 없습니다."),
     FAIL_TO_RESPONSE_GOOGLE(false, 3005, "구글 api 호출 응답 정보를 불러오는데 실패하였습니다."),
-
+    FAIL_TO_CAL_DDAY(false,3010,"dday 계산에 실패하였습니다."),
+    FAIL_TO_CAL_DDAY_BY_NULL(false,3011,"만난 날짜가 설정되지 않았습니다."),
 
 
     /**
@@ -68,8 +75,8 @@ public enum BaseResponseStatus {
      */
     DATABASE_ERROR(false, 4000, "데이터베이스 연결에 실패하였습니다."),
     NOT_EXIST_DATA(false, 4001, "데이터가 존재하지 않습니다."),
-    NOT_EXIST_DATA_COUPLE(false, 4002, "데이터(커플)가 존재하지 않습니다."),
-    NOT_EXIST_DATA_DIARYBOOK(false, 4003, "데이터(일기장)가 존재하지 않습니다."),
+    NOT_EXIST_DATA_COUPLE(false, 4002, "커플이 존재하지 않습니다."),
+    NOT_EXIST_DATA_DIARYBOOK(false, 4003, "일기장이 존재하지 않습니다."),
 
 
     // 5000 : 필요시 만들어서 쓰세요
