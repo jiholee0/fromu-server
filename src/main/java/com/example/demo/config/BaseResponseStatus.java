@@ -35,11 +35,14 @@ public enum BaseResponseStatus {
 
     // [POST] /couples
     POST_COUPLES_EXISTS_USER(false,2020,"이미 커플 매칭이 완료된 유저입니다."),
+    POST_DIARYBOOKS_EXISTS_COUPLE(false,2021,"이미 일기장이 존재합니다."),
 
     // [POST] /diaries
     POST_DIARIES_NOT_TURN(false,2030,"아직 상대방이 일기장을 작성하지 않았습니다."),
     POST_DIARIES_NOT_YET(false,2031,"아직 일기장이 오지 않았습니다."),
     POST_DIARIES_ALREADY_WRITE(false,2032,"일기를 이미 작성하였습니다."),
+
+
 
     // [PATCH] /users
     PATCH_USERS_INVALID_NICKNAME(false,2050, "닉네임 형식을 확인해주세요."),
