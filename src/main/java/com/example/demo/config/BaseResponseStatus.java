@@ -77,6 +77,7 @@ public enum BaseResponseStatus {
     NOT_EXIST_DATA(false, 4001, "데이터가 존재하지 않습니다."),
     NOT_EXIST_DATA_COUPLE(false, 4002, "커플이 존재하지 않습니다."),
     NOT_EXIST_DATA_DIARYBOOK(false, 4003, "일기장이 존재하지 않습니다."),
+    NOT_EXIST_DATA_DIARY(false, 4004, "일기가 존재하지 않습니다."),
 
 
     // 5000 : 필요시 만들어서 쓰세요

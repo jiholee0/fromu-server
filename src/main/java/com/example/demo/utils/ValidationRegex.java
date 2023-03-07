@@ -69,5 +69,12 @@ public class ValidationRegex {
         Matcher matcher = pattern.matcher(gender);
         return matcher.find();
     }
+
+    public static boolean isRegexMonth(String month) {
+        String regex = "^[1-9]|1[012]$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(month);
+        return matcher.find();
+    }
 }
 

@@ -17,6 +17,9 @@ public class CommonUtils {
 
     public static int calDDay(String firstMetDay) throws BaseException {
         try{
+            if(firstMetDay == null || firstMetDay.equals("")){
+                return 0;
+            }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
             Date firstMetDate = sdf.parse(firstMetDay);
             Date today = new Date();

@@ -18,13 +18,14 @@ public class DiaryReq {
         this.weather = weather;
     }
 
-    public Diary toEntity(int diarybookId, int userId, String imageUrl){
+    public Diary toEntity(int diarybookId, int userId, String imageUrl, String date){
         return Diary.builder()
                 .diarybookId(diarybookId)
                 .content(content)
                 .weather(weather)
                 .userId(userId)
                 .imageUrl(imageUrl)
+                .date(date)
                 .deleteFlag(false)
                 .build();
     }

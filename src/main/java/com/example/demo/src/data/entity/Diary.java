@@ -26,22 +26,29 @@ public class Diary {
     public String imageUrl;
     @Column
     public int weather;
+    public String date;
     public boolean deleteFlag;
 
     @Builder
-    public Diary(int diaryId, int diarybookId, int userId, String content, String imageUrl, int weather, boolean deleteFlag){
+    public Diary(int diaryId, int diarybookId, int userId, String content, String imageUrl, int weather, String date, boolean deleteFlag){
         this.diaryId = diaryId;
         this.diarybookId = diarybookId;
         this.userId = userId;
         this.content = content;
         this.imageUrl = imageUrl;
         this.weather = weather;
+        this.date = date;
         this.deleteFlag = deleteFlag;
     }
 
-    public void modifyDiary(String content, String imageUrl, int weather){
+    public void modifyDiaryAll(String content, String imageUrl, int weather){
         this.content = content;
         this.imageUrl = imageUrl;
+        this.weather = weather;
+    }
+
+    public void modifyDiaryExceptImage(String content, int weather){
+        this.content = content;
         this.weather = weather;
     }
 }
