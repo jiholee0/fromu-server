@@ -29,7 +29,7 @@ public class DiarybookDao {
     @Transactional
     public int createDiarybook(int userId, PostDiarybookReq postDiarybookReq) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
         try{
             Diarybook diarybook = postDiarybookReq.toEntity(userId, couple.get().getCoupleId());
@@ -44,10 +44,10 @@ public class DiarybookDao {
     @Transactional
     public int modifyDiarybookCover(int userId, int coverNum) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
         Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
+                () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
         ));
         try {
             diarybook.get().modifyDiarybookCover(coverNum);
@@ -61,10 +61,10 @@ public class DiarybookDao {
     @Transactional
     public int modifyDiarybookName(int userId, String name) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
         Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
+                () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
         ));
         try {
             diarybook.get().modifyDiarybookName(name);
@@ -117,7 +117,7 @@ public class DiarybookDao {
     @Transactional
     public Diarybook getDiarybookByDiarybookId(int diarybookId) throws BaseException {
         Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findById(diarybookId).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
+                () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
         ));
         try {
             return diarybook.get();

@@ -7,10 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DiaryRes {
+public class DiaryInfo {
     private int diaryId;
     private String content;
-    private String imageUrl;
-    private int weather;
     private String date;
 }

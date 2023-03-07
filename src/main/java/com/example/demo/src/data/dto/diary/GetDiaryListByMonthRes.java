@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class DiaryRes {
-    private int diaryId;
-    private String content;
-    private String imageUrl;
-    private int weather;
-    private String date;
+public class GetDiaryListByMonthRes {
+    private String month;
+    private List<DiaryInfo> diaryInfoList;
 }
