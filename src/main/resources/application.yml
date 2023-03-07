@@ -25,8 +25,8 @@ cloud:
     s3:
       bucket: fromubucket
     credentials:
-      access-key: AKIATFFCWWAN6MAYFHUU
-      secret-key: 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
+      access-key:
+      secret-key:
     region:
       static: ap-northeast-2
       auto: false
