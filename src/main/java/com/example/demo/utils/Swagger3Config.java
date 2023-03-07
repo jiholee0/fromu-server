@@ -38,7 +38,8 @@ public class Swagger3Config {
                             new Tag("USER","유저 등록/조회/수정/삭제 API", 2),
                             new Tag("COUPLE","커플 등록/조회/수정/삭제 API", 3),
                             new Tag("DIARYBOOK","일기장 등록/조회/수정/삭제 API", 4),
-                            new Tag("DIARY","일기 등록/조회/수정/삭제 API", 5));
+                            new Tag("DIARY","일기 등록/조회/수정/삭제 API", 5),
+                            new Tag("PUSH", "푸시 알람 API",10));
 //                    .operationOrdering(new Comparator<Operation>() {
 //                        @Override
 //                        public int compare(Operation o1, Operation o2) {

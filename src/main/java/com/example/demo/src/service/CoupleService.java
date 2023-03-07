@@ -70,6 +70,10 @@ public class CoupleService {
         return coupleDao.modifyMailbox(userId, str);
     }
 
+    public int modifyPushMessage(int userId, String str) throws BaseException{
+        return coupleDao.modifyPushMessage(userId, str);
+    }
+
     public int deleteCouple(int userId) throws BaseException {
         return coupleDao.deleteCouple(userId);
     }

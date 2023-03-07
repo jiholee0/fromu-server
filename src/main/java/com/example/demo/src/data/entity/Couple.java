@@ -25,6 +25,8 @@ public class Couple {
     public String mailboxName;
     @Column(length = 8)
     public String firstMetDay;
+    @Column(length=40)
+    public String pushMessage;
     public boolean deleteFlag;
 
     @Builder
@@ -35,8 +37,10 @@ public class Couple {
         this.mailboxName = mailboxName;
         this.firstMetDay = firstMetDay;
         this.deleteFlag = deleteFlag;
+        this.pushMessage = "오늘 너의 하루가 궁금해 :)";
     }
 
     public void modifyFirstMetDay(String str) { this.firstMetDay = str;}
     public void modifyMailbox(String str) {this.mailboxName = str;}
+    public void modifyPushMessage(String str){this.pushMessage = str;}
 }

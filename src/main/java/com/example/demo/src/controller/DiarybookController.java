@@ -229,6 +229,7 @@ public class DiarybookController {
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
             @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
             @ApiResponse(responseCode = "2070", description = "일기장이 해당 유저에게 없습니다."),
+            @ApiResponse(responseCode = "2071", description = "아직 일기를 작성하지 않아 일기장을 보낼 수 없습니다."),
             @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
             @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다."),
             @ApiResponse(responseCode = "4003", description = "일기장이 존재하지 않습니다.")

@@ -69,6 +69,7 @@ public enum BaseResponseStatus {
     FAIL_TO_FIND_AVALIABLE_RSA(false,3004,"사용 가능한 공개키가 없습니다."),
     FAIL_TO_RESPONSE_GOOGLE(false, 3005, "구글 api 호출 응답 정보를 불러오는데 실패하였습니다."),
     FAIL_TO_CAL_DDAY(false,3010,"dday 계산에 실패하였습니다."),
+    FAIL_TO_PUSH_MESSAGE(false,3050,"푸시 알람 전송을 실패하였습니다."),
 
     /**
      * 4000 : Database, Server 오류

@@ -156,6 +156,20 @@ public class CoupleDao {
     }
 
     @Transactional
+    public int modifyPushMessage(int userId, String str) throws BaseException{
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        try {
+            couple.get().modifyPushMessage(str);
+            return couple.get().getCoupleId();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    @Transactional
     public int deleteCouple(int userId) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
@@ -192,6 +206,13 @@ public class CoupleDao {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
         }
+    }
 
+    @Transactional
+    public String getPushMessage(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        return couple.get().getPushMessage();
     }
 }
