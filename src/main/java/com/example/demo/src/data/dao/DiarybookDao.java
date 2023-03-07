@@ -31,6 +31,8 @@ public class DiarybookDao {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
+        Optional<Diarybook> checkDiarybook = diarybookRepository.findByCoupleId(couple.get().getCoupleId());
+        if(checkDiarybook.isPresent()) throw new BaseException(POST_DIARYBOOKS_EXISTS_COUPLE);
         try{
             Diarybook diarybook = postDiarybookReq.toEntity(userId, couple.get().getCoupleId());
             diarybookRepository.save(diarybook);
