@@ -120,6 +120,33 @@ public class CoupleController {
     }
 
     /**
+     * 푸시 알람 메세지 설정 및 수정 API
+     * [PATCH] /couples/pushMessage
+     */
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+                    "푸시 알람 메세지를 수정하는 api입니다." ,
+            tags = "COUPLE", summary = "푸시 알람 메세지 설정 및 수정 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @PatchMapping("/pushMessage")
+    public BaseResponse<PatchCoupleRes> modifyPushMessage(@RequestBody PatchCouplePushMessageReq patchCoupleReq) {
+        try{
+            int userIdByJwt = tokenService.getUserId();
+            int coupleId = coupleService.modifyPushMessage(userIdByJwt, patchCoupleReq.getMessage());
+            return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, coupleId));
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
      * 우편함 이름 중복확인 API
      * [GET] /couples/mailbox
      */

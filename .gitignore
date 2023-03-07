@@ -30,6 +30,7 @@
 
 # AWS User-specific
 .idea/**/aws.xml
+src/main/resources/application.yml
 
 # Generated files
 .idea/**/contentModel.xml
