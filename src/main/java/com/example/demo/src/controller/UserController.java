@@ -162,6 +162,33 @@ public class UserController {
     }
 
     /**
+     * Device Token 저장 API
+     * [PATCH] /users/deviceToken
+     */
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+                    "해당 유저 데이터에 device token 정보를 저장하는 api입니다.",
+            tags = "USER", summary = "Device Token 저장 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @PatchMapping("/deviceToken")
+    public BaseResponse<PatchDeviceTokenRes> saveDeviceToken(@Parameter @RequestBody PatchDeviceTokenReq patchDeviceTokenReq) throws BaseException {
+        try {
+            int userIdByJwt= tokenService.getUserId();
+            PatchDeviceTokenRes patchDeviceTokenRes = userService.saveDeviceToken(userIdByJwt, patchDeviceTokenReq.getDeviceToken());
+            return new BaseResponse<>(patchDeviceTokenRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
      * 회원가입 API
      * [POST] /users
      */

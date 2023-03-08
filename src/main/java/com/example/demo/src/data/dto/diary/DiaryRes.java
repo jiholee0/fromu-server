@@ -9,8 +9,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DiaryRes {
     private int diaryId;
+    private String writerNickname;
     private String content;
     private String imageUrl;
     private int weather;
     private String date;
+    private int day;
 }

@@ -73,6 +73,8 @@ public enum BaseResponseStatus {
     FAIL_TO_RESPONSE_GOOGLE(false, 3005, "구글 api 호출 응답 정보를 불러오는데 실패하였습니다."),
     FAIL_TO_CAL_DDAY(false,3010,"dday 계산에 실패하였습니다."),
     FAIL_TO_PUSH_MESSAGE(false,3050,"푸시 알람 전송을 실패하였습니다."),
+    NOT_EXIST_DEVICE_TOKEN(false, 3051, "device token이 존재하지 않습니다."),
+
 
     /**
      * 4000 : Database, Server 오류

@@ -73,7 +73,7 @@ public class DiaryController {
      */
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 일기(내용, 사진(null 가능), 날씨)를 입력하여 "+
-                    "해당 유저 커플의 일기를 수정하는 api입니다. 수정한 diaryId와 수정한 결과(내용, 사진, 날씨)를 return하며, " +
+                    "해당 유저 커플의 일기를 수정하는 api입니다. 수정한 diaryId와 수정한 결과(내용, 사진, 날씨), 날짜, 요일, 작성자 닉네임을 return하며, " +
                     "사진이 NULL인 경우에는 기존 저장되어 있는 사진을 return합니다.",
             tags = "DIARY", summary = "일기 수정 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
@@ -81,6 +81,7 @@ public class DiaryController {
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
             @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
             @ApiResponse(responseCode = "2002", description = "권한이 없는 유저의 접근입니다."),
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다."),
             @ApiResponse(responseCode = "4004", description = "일기가 존재하지 않습니다."),
             @ApiResponse(responseCode = "5000", description = "파일 업로드에 실패했습니다.")
     })
@@ -104,10 +105,11 @@ public class DiaryController {
      * [GET] /diaries/:diaryId
      */
     @Operation(method = "GET",
-    description = "diaryId로 일기를 조회하는 api입니다. 일기 Id, 내용, 사진 url, 날씨, 작성 날짜(ex : 20230305)를 return합니다.",
+    description = "diaryId로 일기를 조회하는 api입니다. 일기 Id, 내용, 사진 url, 날씨, 날짜(ex : 20230305), 요일(ex : 1(월)~7(일)), 작성자 nickname을 return합니다.",
             tags = "DIARY", summary = "diaryId로 일기 조회 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다."),
             @ApiResponse(responseCode = "4004", description = "일기가 존재하지 않습니다.")
     })
     @ResponseBody
@@ -178,12 +180,12 @@ public class DiaryController {
     }
 
     /**
-     * diarybookId로 모든 일기 내림차순으로 조회 API(최근 순)
+     * diarybookId로 모든 일기 오름차순으로 조회 API
      * [GET] /diaries/all/:diarybookId
      */
     @Operation(method = "GET",
-            description = "diarybookId로 모든 일기를 내림차순으로 조회하는 api입니다. 해당 일기장에 작성된 일기 ID를 모두 return합니다.",
-            tags = "DIARY", summary = "diarybookId로 모든 일기 내림차순으로 조회 API(최근 순)")
+            description = "diarybookId로 모든 일기를 오름차순으로 조회하는 api입니다. 해당 일기장에 작성된 일기 ID를 모두 return합니다.",
+            tags = "DIARY", summary = "diarybookId로 모든 일기 오름차순으로 조회 API(최근 순)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4003", description = "일기장이 존재하지 않습니다.")

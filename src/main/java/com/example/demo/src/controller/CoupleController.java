@@ -5,6 +5,7 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.src.data.dto.couple.*;
 import com.example.demo.src.data.entity.Couple;
 import com.example.demo.src.service.CoupleService;
+import com.example.demo.src.service.PushService;
 import com.example.demo.utils.TokenService;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,11 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
-
-import static com.example.demo.utils.CommonUtils.*;
-import static com.example.demo.config.BaseResponseStatus.*;
 
 @RestController
 @RequestMapping("/app/couples")

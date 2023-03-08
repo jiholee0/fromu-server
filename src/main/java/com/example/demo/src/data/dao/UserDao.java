@@ -2,6 +2,7 @@ package com.example.demo.src.data.dao;
 
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.data.dto.user.PatchDeviceTokenRes;
 import com.example.demo.src.data.dto.user.PostUserReq;
 import com.example.demo.src.data.entity.User;
 import com.example.demo.src.data.entity.UserRepository;
@@ -128,6 +129,20 @@ public class UserDao {
         ));
         try {
             user.get().saveRefreshToken(refreshToken);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    @Transactional
+    public PatchDeviceTokenRes saveDeviceToken(int userId, String str) throws BaseException {
+        Optional<User> user = Optional.of(userRepository.findById(userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        try {
+            user.get().saveDeviceToken(str);
+            return new PatchDeviceTokenRes(user.get().getUserId(), user.get().getDeviceToken());
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);

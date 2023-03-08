@@ -31,9 +31,11 @@ public class User {
     public boolean deleteFlag;
     @Column
     public String refreshToken;
+    @Column
+    public String deviceToken;
 
     @Builder
-    public User(int userId, String email, String nickname, String birthday, String gender, String userCode, boolean deleteFlag, String refreshToken) {
+    public User(int userId, String email, String nickname, String birthday, String gender, String userCode, boolean deleteFlag, String refreshToken, String deviceToken) {
         this.userId = userId;
         this.email = email;
         this.nickname = nickname;
@@ -42,9 +44,11 @@ public class User {
         this.userCode = userCode;
         this.deleteFlag = deleteFlag;
         this.refreshToken = refreshToken;
+        this.deviceToken = deviceToken;
     }
 
     public void modifyNickname(String str) { this.nickname = str; }
     public void modifyBirthday(String str) { this.birthday = str; }
     public void saveRefreshToken(String token) {this.refreshToken = token;}
+    public void saveDeviceToken(String token) {this.deviceToken = token;}
 }

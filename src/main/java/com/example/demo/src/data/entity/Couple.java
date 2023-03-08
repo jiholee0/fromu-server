@@ -27,6 +27,7 @@ public class Couple {
     public String firstMetDay;
     @Column(length=40)
     public String pushMessage;
+
     public boolean deleteFlag;
 
     @Builder

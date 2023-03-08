@@ -69,4 +69,12 @@ public class ViewController {
         }
     }
 
+    /**
+     * 우편함 뷰 API
+     * [GET] /views/mailbox
+     */
+    /**
+     * MailboxViewRes : coupleId, mailboxName, newLetterId
+     */
+
 }
