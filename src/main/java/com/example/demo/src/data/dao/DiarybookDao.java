@@ -1,6 +1,7 @@
 package com.example.demo.src.data.dao;
 
 import com.example.demo.config.BaseException;
+import com.example.demo.src.data.dto.diarybook.GetFirstPageRes;
 import com.example.demo.src.data.dto.diarybook.PostDiarybookReq;
 import com.example.demo.src.data.dto.diarybook.PostDiarybookRes;
 import com.example.demo.src.data.entity.*;
@@ -148,5 +149,24 @@ public class DiarybookDao {
         else {partnerId = couple.get().getUserId1();}
         diarybook.get().passDiary(partnerId,turnTime); // 작성할 차례인 userId, 작성 가능 시간
         return diarybook.get().getDiarybookId();
+    }
+
+    @Transactional
+    public GetFirstPageRes getFirstPage(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
+        ));
+        try {
+            return new GetFirstPageRes(
+                    diarybook.get().getDiarybookId(),
+                    diarybook.get().getName(),
+                    diarybook.get().getImageUrl());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

@@ -130,6 +130,9 @@ public class UserService {
             throw new BaseException(PATCH_USERS_INVALID_BIRTHDAY);
         }
         userDao.modifyUser(userId, type, str);
+    }
 
+    public PatchDeviceTokenRes saveDeviceToken(int userId, String str) throws  BaseException {
+        return userDao.saveDeviceToken(userId, str);
     }
 }

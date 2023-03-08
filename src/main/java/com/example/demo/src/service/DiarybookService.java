@@ -76,4 +76,7 @@ public class DiarybookService {
         return diarybookDao.passDiarybook(userId);
     }
 
+    public GetFirstPageRes getFirstPage(int userId) throws BaseException {
+        return diarybookDao.getFirstPage(userId);
+    }
 }

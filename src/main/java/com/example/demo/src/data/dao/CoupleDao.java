@@ -30,12 +30,12 @@ public class CoupleDao {
     public CoupleRes createCouple(int userId, PostCoupleReq postCoupleReq) throws BaseException {
 
         Optional<User> partner = userRepository.findByUserCode(postCoupleReq.getPartnerCode());
-        if (!partner.isPresent()){
+        if (!partner.isPresent()) {
             throw new BaseException(NOT_EXIST_DATA);
         }
         int partnerId = partner.get().getUserId();
         Optional<Couple> checkPartner = coupleRepository.findByUserId1OrUserId2(partnerId, partnerId);
-        if (checkPartner.isPresent()){
+        if (checkPartner.isPresent()) {
             throw new BaseException(POST_COUPLES_EXISTS_USER);
         }
         try {
@@ -69,7 +69,7 @@ public class CoupleDao {
                 return new GetCoupleMatchRes(false, null);
             }
             boolean isSetMailboxName = couple.get().mailboxName != null && !couple.get().mailboxName.equals("");
-            if(couple.get().getUserId1() == userId){
+            if (couple.get().getUserId1() == userId) {
                 coupleRes = new CoupleRes(
                         couple.get().getCoupleId(),
                         isSetMailboxName,
@@ -93,7 +93,9 @@ public class CoupleDao {
 
     @Transactional
     // 커플 전체 조회
-    public List<Couple> getCouples(){ return coupleRepository.findAll(); }
+    public List<Couple> getCouples() {
+        return coupleRepository.findAll();
+    }
 
     @Transactional
     // userId로 커플 조회
@@ -124,7 +126,7 @@ public class CoupleDao {
     }
 
     @Transactional
-    public int modifyFirstMetDay(int userId, String str) throws BaseException{
+    public int modifyFirstMetDay(int userId, String str) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
@@ -138,9 +140,9 @@ public class CoupleDao {
     }
 
     @Transactional
-    public int modifyMailbox(int userId, String str) throws BaseException{
+    public int modifyMailbox(int userId, String str) throws BaseException {
         Optional<Couple> checkMailboxCouple = coupleRepository.findByMailboxName(str);
-        if (checkMailboxCouple.isPresent()){
+        if (checkMailboxCouple.isPresent()) {
             throw new BaseException(PATCH_COUPLES_EXISTS_MAILBOX);
         }
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
@@ -156,7 +158,7 @@ public class CoupleDao {
     }
 
     @Transactional
-    public int modifyPushMessage(int userId, String str) throws BaseException{
+    public int modifyPushMessage(int userId, String str) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
@@ -187,7 +189,7 @@ public class CoupleDao {
     @Transactional
     public boolean isSetMailboxName(int userId) throws BaseException {
         Optional<Couple> couple = coupleRepository.findByUserId1OrUserId2(userId, userId);
-        if(!couple.isPresent()) return false;
+        if (!couple.isPresent()) return false;
         try {
             return couple.get().mailboxName != null && !couple.get().mailboxName.equals("");
 
@@ -202,7 +204,7 @@ public class CoupleDao {
         try {
             Optional<Couple> couple = coupleRepository.findByMailboxName(mailbox);
             return couple.isPresent();
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
         }
@@ -214,5 +216,22 @@ public class CoupleDao {
                 () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
         return couple.get().getPushMessage();
+    }
+
+    @Transactional
+    public String getPartnerDeviceToken(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        int partnerId;
+        if (userId == couple.get().getUserId1()) {
+            partnerId = couple.get().getUserId2();
+        } else {
+            partnerId = couple.get().getUserId1();
+        }
+        Optional<User> user = Optional.of(userRepository.findById(partnerId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        return user.get().getDeviceToken();
     }
 }

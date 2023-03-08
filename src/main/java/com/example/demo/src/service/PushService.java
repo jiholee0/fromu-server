@@ -5,6 +5,7 @@ import com.example.demo.src.data.dao.CoupleDao;
 import com.example.demo.src.data.dao.DiaryDao;
 import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.dto.push.FcmMessage;
+import com.example.demo.src.data.dto.push.PushMsgRes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.example.demo.config.BaseResponseStatus.FAIL_TO_PUSH_MESSAGE;
+import static com.example.demo.config.BaseResponseStatus.NOT_EXIST_DEVICE_TOKEN;
 
 @Component
 @Service
@@ -40,6 +42,14 @@ public class PushService {
 
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/fromu-9ec65/messages:send";
 
+    public void sendMessageToPartner(int userId, String title, String body) throws BaseException{
+        String targetToken = coupleDao.getPartnerDeviceToken(userId);
+        if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
+        sendMessageTo(
+                targetToken,
+                title,
+                body);
+    }
     public void sendMessageTo(String targetToken, String title, String body) throws BaseException {
         try{
             String message = makeMessage(targetToken, title, body);

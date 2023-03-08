@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.*;
 
 import static com.example.demo.config.BaseResponseStatus.*;
@@ -23,6 +25,8 @@ public class DiaryDao {
     DiarybookRepository diarybookRepository;
     @Autowired
     CoupleRepository coupleRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional
     public int createDiary(int userId, DiaryReq postDiaryReq, String imageUrl) throws BaseException {
@@ -67,7 +71,17 @@ public class DiaryDao {
         } else{
             diary.get().modifyDiaryExceptImage(postDiaryReq.getContent(), postDiaryReq.getWeather());
         }
-        return new DiaryRes(diaryId, diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), diary.get().getDate());
+        Optional<User> user = Optional.of(userRepository.findById(diary.get().getUserId())).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        );
+        String writerNickname = user.get().getNickname();
+        String date = diary.get().getDate();
+
+        LocalDate localDate = LocalDate.of(
+                Integer.parseInt(date.substring(0,5)),
+                Integer.parseInt(date.substring(5,7)),
+                Integer.parseInt(date.substring(7,9)));
+        return new DiaryRes(diaryId, writerNickname, diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), date,localDate.getDayOfWeek().getValue());
     }
 
     @Transactional
@@ -75,7 +89,17 @@ public class DiaryDao {
         Optional<Diary> diary = Optional.of(diaryRepository.findById(diaryId)).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_DIARY)
         );
-        return new DiaryRes(diaryId, diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), diary.get().getDate());
+        Optional<User> user = Optional.of(userRepository.findById(diary.get().getUserId())).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        );
+        String writerNickname = user.get().getNickname();
+        String date = diary.get().getDate();
+
+        LocalDate localDate = LocalDate.of(
+                Integer.parseInt(date.substring(0,5)),
+                Integer.parseInt(date.substring(5,7)),
+                Integer.parseInt(date.substring(7,9)));
+        return new DiaryRes(diaryId, writerNickname, diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), date,localDate.getDayOfWeek().getValue());
     }
 
     @Transactional
@@ -119,7 +143,7 @@ public class DiaryDao {
         for(Diary diary : diaryList){
             diaryIdList.add(diary.getDiaryId());
         }
-        Collections.reverse(diaryIdList);
+        // Collections.reverse(diaryIdList); // 내림차순
         return diaryIdList;
     }
 

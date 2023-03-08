@@ -189,13 +189,13 @@ public class DiarybookController {
      */
 
     /**
-     * 일기장 내지 첫장 추가 API
+     * 일기장 내지 첫장 추가 및 변경 API
      * [PATCH] /diarybooks/image
      */
     @Operation(method = "PATCH",
     description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
             "일기장 내지 첫장을 추가 및 변경하는 api입니다.",
-    tags = "DIARYBOOK", summary = "일기장 내지 첫장 추가 API - \uD83D\uDD12 JWT")
+    tags = "DIARYBOOK", summary = "일기장 내지 첫장 추가 및 변경 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -244,6 +244,34 @@ public class DiarybookController {
             return new BaseResponse<>(new PatchDiarybookRes(userIdByJwt, diarybookId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 첫장 내지 조회 API
+     * [GET] /diarybooks/firstPage
+     */
+    @Operation(method = "GET",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 " +
+                    "일기장 내지 첫장을 조회하는 api입니다.",
+            tags = "DIARYBOOK", summary = "일기장 내지 첫장 조회 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "4003", description = "일기장이 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @GetMapping("/firstPage")
+    public BaseResponse<GetFirstPageRes> getFirstPage() {
+        try {
+            int userIdByJwt = tokenService.getUserId();
+            GetFirstPageRes firstPage = diarybookService.getFirstPage(userIdByJwt);
+            return new BaseResponse<>(firstPage);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
         }
     }
 }
