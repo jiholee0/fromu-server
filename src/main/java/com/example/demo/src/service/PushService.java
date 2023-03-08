@@ -56,11 +56,11 @@ public class PushService {
 
 
             Response response = client.newCall(request).execute();
-
+            System.out.println(response.body().string());
             if(response.code()!=200){
                 throw new BaseException(FAIL_TO_PUSH_MESSAGE);
             }
-            System.out.println(response.body().string());
+
 
         } catch (IOException exception){
             exception.printStackTrace();
@@ -74,12 +74,15 @@ public class PushService {
             FcmMessage fcmMessage = FcmMessage.builder()
                     .message(FcmMessage.Message.builder()
                             .token(targetToken)
-                            .notification(FcmMessage.Notification.builder()
+                            .data(FcmMessage.Data.builder()
                                     .title(title)
                                     .body(body)
-                                    .image(null)
-                                    .build()
-                            ).build()).validateOnly(false).build();
+                                    .build())
+//                            .notification(FcmMessage.Notification.builder()
+//                                    .title(title)
+//                                    .body(body)
+//                                    .build())
+                            .build()).validateOnly(false).build();
 
             return objectMapper.writeValueAsString(fcmMessage);
         } catch(JsonParseException | JsonProcessingException exception){

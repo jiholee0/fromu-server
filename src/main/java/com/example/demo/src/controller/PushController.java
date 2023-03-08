@@ -57,4 +57,10 @@ public class PushController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    /**
+     * FCM 토큰 저장 API
+     * [POST] /push/token
+     */
+
 }
