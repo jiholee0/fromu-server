@@ -58,7 +58,8 @@ public class DiaryController {
     })
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<Integer> createDiary(@Parameter @RequestPart DiaryReq postDiaryReq, @Parameter(required = false) @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
+    public BaseResponse<Integer> createDiary(@Parameter(required = true) @RequestPart DiaryReq postDiaryReq,
+                                             @Parameter(required = false) @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
         try{
             int userIdByJwt = tokenService.getUserId();
             int diaryId = diaryService.createDiary(userIdByJwt, postDiaryReq, imageFile);
@@ -88,7 +89,7 @@ public class DiaryController {
     @ResponseBody
     @PatchMapping("/{diaryId}")
     public BaseResponse<DiaryRes> modifyDiary(@PathVariable("diaryId") int diaryId,
-                                                  @Parameter(required = true) @RequestBody DiaryReq patchDiaryReq,
+                                                  @Parameter(required = true) @RequestPart DiaryReq patchDiaryReq,
                                                   @Parameter(required = false) @RequestPart(value = "imageFile", required = false) MultipartFile imageFile)
     {
         try{
