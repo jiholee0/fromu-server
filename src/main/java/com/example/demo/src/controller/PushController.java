@@ -18,7 +18,7 @@ import static com.example.demo.config.BaseResponseStatus.NOT_EXIST_DEVICE_TOKEN;
 
 @RestController
 @RequestMapping("/app/push")
-@Tag(name = "PUSH", description = "푸시 알람 API")
+@Tag(name = "PUSH", description = "푸시 알림(쿡찌르기) API")
 public class PushController {
     @Autowired
     private final PushService pushService;
@@ -66,7 +66,7 @@ public class PushController {
 
     @Operation(method = "POST",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 상대방에게 푸시 알람을 주는 api입니다.",
-            tags = "PUSH", summary = "\'진짜\' 푸시 알람 API - \uD83D\uDD12 JWT")
+            tags = "PUSH", summary = "쿡찌르기 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),

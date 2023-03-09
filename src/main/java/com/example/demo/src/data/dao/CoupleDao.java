@@ -234,4 +234,12 @@ public class CoupleDao {
         ));
         return user.get().getDeviceToken();
     }
+
+    @Transactional
+    public Couple getRandomCouple(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        return coupleRepository.findRandomCouple(couple.get().getCoupleId());
+    }
 }

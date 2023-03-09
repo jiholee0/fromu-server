@@ -42,6 +42,8 @@ public enum BaseResponseStatus {
     POST_DIARIES_NOT_YET(false,2031,"아직 일기장이 오지 않았습니다."),
     POST_DIARIES_ALREADY_WRITE(false,2032,"일기를 이미 작성하였습니다."),
     POST_DIARIES_INVALID_WEATHER(false,2033,"날씨 형식을 확인해주세요."),
+    // [POST] /letters
+    POST_LETTERS_ALREADY_REPLY(false,2035,"이미 답장이 존재합니다."),
 
 
 
@@ -86,6 +88,7 @@ public enum BaseResponseStatus {
     NOT_EXIST_DATA_COUPLE(false, 4002, "커플이 존재하지 않습니다."),
     NOT_EXIST_DATA_DIARYBOOK(false, 4003, "일기장이 존재하지 않습니다."),
     NOT_EXIST_DATA_DIARY(false, 4004, "일기가 존재하지 않습니다."),
+    NOT_EXIST_DATA_LETTER(false, 4005, "편지가 존재하지 않습니다."),
 
 
     // 5000 : 필요시 만들어서 쓰세요
