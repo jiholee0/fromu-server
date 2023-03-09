@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,8 +60,8 @@ public class DiaryController {
             @ApiResponse(responseCode = "5000", description = "파일 업로드에 실패했습니다.")
     })
     @ResponseBody
-    @PostMapping("")
-    public BaseResponse<Integer> createDiary(@Parameter(required = true) @RequestPart DiaryReq postDiaryReq,
+    @PostMapping(value = "",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public BaseResponse<Integer> createDiary(@Parameter(required = true) @RequestPart(value = "postDiaryReq", required = true) DiaryReq postDiaryReq,
                                              @Parameter(required = false) @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
         try{
             if(postDiaryReq.getWeather().equalsIgnoreCase("SUNNY") || postDiaryReq.getWeather().equalsIgnoreCase("CLOUD") || postDiaryReq.getWeather().equalsIgnoreCase("RAINY")) {
