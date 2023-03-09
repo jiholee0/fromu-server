@@ -41,6 +41,7 @@ public enum BaseResponseStatus {
     POST_DIARIES_NOT_TURN(false,2030,"아직 상대방이 일기장을 작성하지 않았습니다."),
     POST_DIARIES_NOT_YET(false,2031,"아직 일기장이 오지 않았습니다."),
     POST_DIARIES_ALREADY_WRITE(false,2032,"일기를 이미 작성하였습니다."),
+    POST_DIARIES_INVALID_WEATHER(false,2033,"날씨 형식을 확인해주세요."),
 
 
 
@@ -55,6 +56,7 @@ public enum BaseResponseStatus {
     PATCH_DIARYBOOKS_NOT_TURN_TO_PASS(false,2070,"일기장이 해당 유저에게 없습니다."),
     PATCH_DIARYBOOKS_NOT_WRITE_DIARY(false,2071,"아직 일기를 작성하지 않아 일기장을 보낼 수 없습니다."),
 
+    PATCH_DIARIES_INVALID_WEATHER(false,2072,"날씨 형식을 확인해주세요."),
 
 
 
