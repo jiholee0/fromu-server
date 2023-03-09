@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Locale;
 
-import static com.example.demo.config.BaseResponseStatus.INVALID_REQ_PARAM;
+import static com.example.demo.config.BaseResponseStatus.*;
 import static com.example.demo.utils.ValidationRegex.isRegexMonth;
 
 @RestController
@@ -41,13 +42,14 @@ public class DiaryController {
      * [POST] /diaries
      */
     @Operation(method = "POST",
-            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 일기(내용, 사진, 날씨)를 입력하여 "+
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 일기(내용, 사진, 날씨-'SUNNY/CLOUD/RAINY)를 입력하여 "+
                     "해당 유저 커플의 일기를 추가하는 api입니다.",
             tags = "DIARY", summary = "일기 등록 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
             @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "2023", description = "날씨 형식을 확인해주세요."),
             @ApiResponse(responseCode = "2030", description = "아직 상대방이 일기장을 작성하지 않았습니다."),
             @ApiResponse(responseCode = "2031", description = "아직 일기장이 오지 않았습니다."),
             @ApiResponse(responseCode = "2032", description = "일기를 이미 작성하였습니다."),
@@ -61,9 +63,12 @@ public class DiaryController {
     public BaseResponse<Integer> createDiary(@Parameter(required = true) @RequestPart DiaryReq postDiaryReq,
                                              @Parameter(required = false) @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
         try{
-            int userIdByJwt = tokenService.getUserId();
-            int diaryId = diaryService.createDiary(userIdByJwt, postDiaryReq, imageFile);
-            return new BaseResponse<>(diaryId);
+            if(postDiaryReq.getWeather().equalsIgnoreCase("SUNNY") || postDiaryReq.getWeather().equalsIgnoreCase("CLOUD") || postDiaryReq.getWeather().equalsIgnoreCase("RAINY")) {
+                int userIdByJwt = tokenService.getUserId();
+                int diaryId = diaryService.createDiary(userIdByJwt, postDiaryReq, imageFile);
+                return new BaseResponse<>(diaryId);
+            }
+            throw new BaseException(POST_DIARIES_INVALID_WEATHER);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
@@ -82,6 +87,7 @@ public class DiaryController {
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
             @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
             @ApiResponse(responseCode = "2002", description = "권한이 없는 유저의 접근입니다."),
+            @ApiResponse(responseCode = "2072", description = "날씨 형식을 확인해주세요."),
             @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다."),
             @ApiResponse(responseCode = "4004", description = "일기가 존재하지 않습니다."),
             @ApiResponse(responseCode = "5000", description = "파일 업로드에 실패했습니다.")
@@ -93,9 +99,12 @@ public class DiaryController {
                                                   @Parameter(required = false) @RequestPart(value = "imageFile", required = false) MultipartFile imageFile)
     {
         try{
-            int userIdByJwt = tokenService.getUserId();
-            DiaryRes patchDiaryRes = diaryService.modifyDiary(userIdByJwt, diaryId, patchDiaryReq, imageFile);
-            return new BaseResponse<>(patchDiaryRes);
+            if(patchDiaryReq.getWeather().equalsIgnoreCase("SUNNY") || patchDiaryReq.getWeather().equalsIgnoreCase("CLOUD") || patchDiaryReq.getWeather().equalsIgnoreCase("RAINY")) {
+                int userIdByJwt = tokenService.getUserId();
+                DiaryRes patchDiaryRes = diaryService.modifyDiary(userIdByJwt, diaryId, patchDiaryReq, imageFile);
+                return new BaseResponse<>(patchDiaryRes);
+            }
+            throw new BaseException(PATCH_DIARIES_INVALID_WEATHER);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
