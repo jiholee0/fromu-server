@@ -5,6 +5,7 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.src.data.dto.diary.DiaryReq;
 import com.example.demo.src.data.dto.diary.DiaryRes;
 import com.example.demo.src.data.dto.diarybook.*;
+import com.example.demo.src.data.dto.view.MailboxViewRes;
 import com.example.demo.src.data.dto.view.MainViewRes;
 import com.example.demo.src.data.entity.Diarybook;
 import com.example.demo.src.service.CoupleService;
@@ -74,7 +75,29 @@ public class ViewController {
      * [GET] /views/mailbox
      */
     /**
-     * MailboxViewRes : coupleId, mailboxName, newLetterId
+     * MailboxViewRes : coupleId, mailboxName, newLetterId(새로운 편지가 없으면 0)
      */
+    @Operation(method = "GET",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 우편함 화면의 데이터를 조회하는 api입니다. "+
+                    "커플 id(coupleId), 우편함 이름(mailboxName), 읽지 않은 편지 중 제일 최근 편지 id(newLetterId) : 새로운 편지가 없으면 0",
+            tags = "VIEW", summary = "메인 뷰 조회 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @GetMapping("/mailbox")
+    public BaseResponse<MailboxViewRes> mailboxView(){
+        try{
+            int userIdByJwt = tokenService.getUserId();
+            MailboxViewRes mailboxViewRes = viewService.mailboxView(userIdByJwt);
+            return new BaseResponse<>(mailboxViewRes);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
 }

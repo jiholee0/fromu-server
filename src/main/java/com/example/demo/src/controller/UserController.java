@@ -350,4 +350,8 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    /**
+     * 로그아웃
+     */
 }

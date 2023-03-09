@@ -6,6 +6,7 @@ import com.example.demo.src.data.dao.CoupleDao;
 import com.example.demo.src.data.dao.DiarybookDao;
 import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.dto.view.DiarybookDto;
+import com.example.demo.src.data.dto.view.MailboxViewRes;
 import com.example.demo.src.data.dto.view.MainViewRes;
 import com.example.demo.src.data.entity.Couple;
 import com.example.demo.src.data.entity.Diarybook;
@@ -67,5 +68,11 @@ public class ViewService {
                         diarybook.isWriteFlag()
                 )
         );
+    }
+
+    public MailboxViewRes mailboxView(int userId) throws BaseException {
+        Couple couple = coupleDao.getCoupleByUserId(userId);
+        int newLetterId = 0; //letterDao.getNewLetterId(userId);
+        return new MailboxViewRes(couple.getCoupleId(), couple.getMailboxName(), newLetterId);
     }
 }
