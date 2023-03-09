@@ -12,7 +12,7 @@ public class DiaryRes {
     private String writerNickname;
     private String content;
     private String imageUrl;
-    private int weather;
+    private String weather;
     private String date;
     private int day;
 }

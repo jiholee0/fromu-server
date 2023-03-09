@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DiaryReq {
     private String content;
-    private int weather;
+    private String weather;
 
     @Builder
-    public DiaryReq(String content, int weather){
+    public DiaryReq(String content, String weather){
         this.content = content;
         this.weather = weather;
     }
