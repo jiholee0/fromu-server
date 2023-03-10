@@ -1,5 +1,6 @@
 package com.example.demo.src.data.dto.diary;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ public class DiaryRes {
     private int diaryId;
     private String writerNickname;
     private String content;
+    @ApiModelProperty(allowableValues = "null")
     private String imageUrl;
     private String weather;
     private String date;

@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "couple")
-@SQLDelete(sql = "UPDATE couple SET delete_flag = true WHERE couple_id = ?")
 @NoArgsConstructor
 public class Couple {
     @Id

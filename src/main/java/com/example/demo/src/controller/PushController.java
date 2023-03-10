@@ -58,14 +58,14 @@ public class PushController {
                     pushMsgReq.getTargetToken(),
                     title,
                     body);
-            return new BaseResponse<>(new PushMsgRes(userIdByJwt, title, body));
+            return new BaseResponse<>(new PushMsgRes(userIdByJwt, title, body, true));
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
     }
 
     @Operation(method = "POST",
-            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 상대방에게 푸시 알람을 주는 api입니다.",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 상대방에게 푸시 알람을 주는 api입니다. 개수가 부족하면 success=false입니다.",
             tags = "PUSH", summary = "쿡찌르기 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
@@ -86,8 +86,8 @@ public class PushController {
             if(body == null || body.equals("")) {
                 body = "오늘 너의 하루가 궁금해 :)";
             }
-            pushService.sendMessageToPartner(userIdByJwt, title, body);
-            return new BaseResponse<>(new PushMsgRes(userIdByJwt, title, body));
+            boolean success = pushService.sendMessageToPartner(userIdByJwt, title, body);
+            return new BaseResponse<>(new PushMsgRes(userIdByJwt, title, body, success));
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

@@ -163,7 +163,8 @@ public class DiarybookDao {
             return new GetFirstPageRes(
                     diarybook.get().getDiarybookId(),
                     diarybook.get().getName(),
-                    diarybook.get().getImageUrl());
+                    diarybook.get().getImageUrl(),
+                    diarybook.get().isWriteFlag());
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);

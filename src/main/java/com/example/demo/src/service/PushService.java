@@ -2,16 +2,12 @@ package com.example.demo.src.service;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dao.CoupleDao;
-import com.example.demo.src.data.dao.DiaryDao;
-import com.example.demo.src.data.dao.UserDao;
+import com.example.demo.src.data.dao.ShopDao;
 import com.example.demo.src.data.dto.push.FcmMessage;
-import com.example.demo.src.data.dto.push.PushMsgRes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.gson.JsonParseException;
-import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -21,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 import static com.example.demo.config.BaseResponseStatus.FAIL_TO_PUSH_MESSAGE;
 import static com.example.demo.config.BaseResponseStatus.NOT_EXIST_DEVICE_TOKEN;
@@ -31,24 +25,27 @@ import static com.example.demo.config.BaseResponseStatus.NOT_EXIST_DEVICE_TOKEN;
 @Service
 public class PushService {
     private final CoupleDao coupleDao;
+    private final ShopDao shopDao;
     private final ObjectMapper objectMapper;
 
 
     @Autowired
-    public PushService(CoupleDao coupleDao, ObjectMapper objectMapper){
+    public PushService(CoupleDao coupleDao, ShopDao shopDao, ObjectMapper objectMapper){
         this.coupleDao = coupleDao;
+        this.shopDao = shopDao;
         this.objectMapper = objectMapper;
     }
 
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/fromu-9ec65/messages:send";
 
-    public void sendMessageToPartner(int userId, String title, String body) throws BaseException{
+    public boolean sendMessageToPartner(int userId, String title, String body) throws BaseException{
         String targetToken = coupleDao.getPartnerDeviceToken(userId);
         if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
         sendMessageTo(
                 targetToken,
                 title,
                 body);
+        return shopDao.push(userId);
     }
     public void sendMessageTo(String targetToken, String title, String body) throws BaseException {
         try{

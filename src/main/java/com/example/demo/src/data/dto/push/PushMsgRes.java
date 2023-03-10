@@ -11,4 +11,5 @@ public class PushMsgRes {
     private int userId;
     private String title;
     private String body;
+    private boolean success;
 }

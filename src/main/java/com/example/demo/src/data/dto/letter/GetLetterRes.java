@@ -1,5 +1,7 @@
 package com.example.demo.src.data.dto.letter;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +15,7 @@ import java.util.Date;
 public class GetLetterRes {
     private int letterId;
     private String mailboxName;
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private Date time;
     private boolean readFlag;
 }

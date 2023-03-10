@@ -12,24 +12,24 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostLetterReq {
     private String content;
-    private int stamp;
+    private int stampNum;
 
     @Builder
-    public PostLetterReq(String content, int stamp){
+    public PostLetterReq(String content, int stampNum){
         this.content = content;
-        this.stamp = stamp;
+        this.stampNum = stampNum;
     }
 
-    public Letter toEntity(int refLetterId, int writerUserId, int sendCoupleId, int receiveCoupleId){
+    public Letter toEntity(int refLetterId, int writerUserId, int sendCoupleId, int receiveCoupleId, Date date){
         return Letter.builder()
                 .content(content)
-                .stamp(stamp)
+                .stampNum(stampNum)
                 .refLetterId(refLetterId)
                 .writerUserId(writerUserId)
                 .sendCoupleId(sendCoupleId)
                 .receiveCoupleId(receiveCoupleId)
                 .score(-1)
-                .createDate(new Date())
+                .createDate(date)
                 .readFlag(false)
                 .reportFlag(false)
                 .build();
