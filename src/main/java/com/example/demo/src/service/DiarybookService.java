@@ -2,13 +2,11 @@ package com.example.demo.src.service;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dao.DiarybookDao;
+import com.example.demo.src.data.dao.ShopDao;
 import com.example.demo.src.data.dto.diarybook.*;
 import com.example.demo.src.data.entity.Diarybook;
 import com.example.demo.utils.S3Uploader;
-import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,18 +14,18 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.example.demo.config.BaseResponseStatus.FAIL_TO_UPLOAD_FILE;
-import static com.example.demo.config.BaseResponseStatus.PATCH_COUPLES_INVALID_FIRSTMETDAY;
-import static com.example.demo.utils.ValidationRegex.isRegexDay;
 
 
 @Service
 public class DiarybookService {
     private final DiarybookDao diarybookDao;
+    private final ShopDao shopDao;
     private final S3Uploader s3Uploader;
 
     @Autowired
-    public DiarybookService(DiarybookDao diarybookDao, S3Uploader s3Uploader) {
+    public DiarybookService(DiarybookDao diarybookDao, ShopDao shopDao, S3Uploader s3Uploader) {
         this.diarybookDao = diarybookDao;
+        this.shopDao = shopDao;
         this.s3Uploader = s3Uploader;
     }
 
@@ -73,7 +71,9 @@ public class DiarybookService {
     // 일기장 삭제
 
     public int passDiarybook(int userId) throws BaseException {
-        return diarybookDao.passDiarybook(userId);
+        int diarybookId = diarybookDao.passDiarybook(userId);
+        shopDao.getFromByPassDiarybook(userId);
+        return diarybookId;
     }
 
     public GetFirstPageRes getFirstPage(int userId) throws BaseException {

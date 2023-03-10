@@ -178,11 +178,11 @@ public class UserController {
     })
     @ResponseBody
     @PatchMapping("/deviceToken")
-    public BaseResponse<PatchDeviceTokenRes> saveDeviceToken(@Parameter @RequestBody PatchDeviceTokenReq patchDeviceTokenReq) throws BaseException {
+    public BaseResponse<PatchUserRes> saveDeviceToken(@Parameter @RequestBody PatchDeviceTokenReq patchDeviceTokenReq) throws BaseException {
         try {
             int userIdByJwt= tokenService.getUserId();
-            PatchDeviceTokenRes patchDeviceTokenRes = userService.saveDeviceToken(userIdByJwt, patchDeviceTokenReq.getDeviceToken());
-            return new BaseResponse<>(patchDeviceTokenRes);
+            PatchUserRes patchUserRes = userService.saveDeviceToken(userIdByJwt, patchDeviceTokenReq.getDeviceToken());
+            return new BaseResponse<>(patchUserRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

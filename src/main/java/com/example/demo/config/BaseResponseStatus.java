@@ -55,10 +55,12 @@ public enum BaseResponseStatus {
     PATCH_COUPLES_INVALID_FIRSTMETDAY(false, 2060, "만난 날 형식을 확인해주세요."),
     PATCH_COUPLES_INVALID_MAILBOX(false, 2061, "우편함 이름 형식을 확인해주세요."),
     PATCH_COUPLES_EXISTS_MAILBOX(false,2062,"중복된 우편함 이름입니다."),
+    PATCH_COUPLES_INVALID_STAMPNUM(false,2063,"우표 번호가 유효하지 않습니다."),
     PATCH_DIARYBOOKS_NOT_TURN_TO_PASS(false,2070,"일기장이 해당 유저에게 없습니다."),
     PATCH_DIARYBOOKS_NOT_WRITE_DIARY(false,2071,"아직 일기를 작성하지 않아 일기장을 보낼 수 없습니다."),
 
     PATCH_DIARIES_INVALID_WEATHER(false,2072,"날씨 형식을 확인해주세요."),
+    PATCH_LETTER_INVALID_SCORE(false,2080,"점수는 1~5 사이의 값이어야 합니다."),
 
 
 
@@ -78,6 +80,10 @@ public enum BaseResponseStatus {
     FAIL_TO_CAL_DDAY(false,3010,"dday 계산에 실패하였습니다."),
     FAIL_TO_PUSH_MESSAGE(false,3050,"푸시 알람 전송을 실패하였습니다."),
     NOT_EXIST_DEVICE_TOKEN(false, 3051, "device token이 존재하지 않습니다."),
+    NOT_ENOUGH_STAMP(false,3060,"우표가 없습니다."),
+    NOT_ENOUGH_FROM(false,3061,"프롬이 부족합니다."),
+    FAIL_TO_SCORE_INVALID_COUPLE(false,3070,"권한이 없는 커플의 접근입니다."),
+    FAIL_TO_SCORE_ALREADY(false,3071,"이미 별점을 남겼습니다."),
 
 
     /**
@@ -89,6 +95,9 @@ public enum BaseResponseStatus {
     NOT_EXIST_DATA_DIARYBOOK(false, 4003, "일기장이 존재하지 않습니다."),
     NOT_EXIST_DATA_DIARY(false, 4004, "일기가 존재하지 않습니다."),
     NOT_EXIST_DATA_LETTER(false, 4005, "편지가 존재하지 않습니다."),
+    NOT_EXIST_DATA_FROM(false, 4006, "프롬 현황이 존재하지 않습니다."),
+    NOT_EXIST_DATA_STAMP(false, 4007, "우표 현황이 존재하지 않습니다."),
+    NOT_EXIST_DATA_PUSH(false, 4008, "쿡찌르기 현황이 존재하지 않습니다."),
 
 
     // 5000 : 필요시 만들어서 쓰세요

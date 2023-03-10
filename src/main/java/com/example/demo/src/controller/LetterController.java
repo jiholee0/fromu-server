@@ -2,10 +2,7 @@ package com.example.demo.src.controller;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.data.dto.letter.GetLetterRes;
-import com.example.demo.src.data.dto.letter.PatchReadLetterRes;
-import com.example.demo.src.data.dto.letter.PostLetterReq;
-import com.example.demo.src.data.dto.letter.PostLetterRes;
+import com.example.demo.src.data.dto.letter.*;
 import com.example.demo.src.service.LetterService;
 import com.example.demo.utils.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.example.demo.config.BaseResponseStatus.INVALID_REQ_PARAM;
+import static com.example.demo.config.BaseResponseStatus.PATCH_LETTER_INVALID_SCORE;
 
 @RestController
 @RequestMapping("app/letters")
@@ -39,13 +38,13 @@ public class LetterController {
      * [POST] /letters
      */
     /**
-     * PostLetterReq : content, stamp(int)
+     * PostLetterReq : content, stampNum(int)
      * PostLetterRes : letterId, sendMailboxName, receiveMailboxName
      * ERROR : JWT 관련, 우표 보유 현황 체크, 이외의 데이터 부재 에러
      */
     @Operation(method = "POST",
-            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 편지(내용, 우표 번호)를 입력하여 "+
-                    "임의의 커플에게 편지를 보내는 api입니다.",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 편지(내용, 우표 번호-1~6)를 입력하여 "+
+                    "임의의 커플에게 편지를 보내는 api입니다. 선택한 우표의 개수가 차감됩니다.",
             tags = "LETTER", summary = "편지 쓰기 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
@@ -107,13 +106,13 @@ public class LetterController {
      */
     /**
      * PathVariable : letterId
-     * PatchLetterRes : stamp, content, sendMailboxName, receiveMailboxName, time,
+     * PatchLetterRes : stampNum, content, sendMailboxName, receiveMailboxName, time,
      *              status(내가 받은 편지면 0 | 내가 보낸 편지면 1 | 답장 편지면 2)
      * ERROR : JWT 관련, 이외의 데이터 부재 에러
      */
     @Operation(method = "GET",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 letterId로 편지를 조회하는 api입니다." +
-                    "letterId, stamp, content, sendMailboxName, receiveMailboxName, time, " +
+                    "letterId, stampNum(1~6), content, sendMailboxName, receiveMailboxName, time(yyyy-MM-dd HH:mm:ss), " +
                     "status(내가 받은 편지면 0 : 신고하기 / 답장하기 | 내가 보낸 편지면 1 | 답장 편지면 2 : 신고하기 / 별점 남기기), replyFlag(답장 여부), scoreFlag(감사인사 여부)",
             tags = "LETTER", summary = "편지 1개 조회/읽음 처리 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
@@ -188,30 +187,34 @@ public class LetterController {
      * PostScoreReq : score
      * PostScoreRes : coupleId, fromNum
      */
-//    @Operation(method = "GET",
-//            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 letterId를 입력하여 특정 편지에 별점을 주는 api입니다. "+
-//                    "coupleId, fromNum을 return합니다.",
-//            tags = "LETTER", summary = "별점 주기 API - \uD83D\uDD12 JWT")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
-//            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
-//            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
-//            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
-//            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다."),
-//            @ApiResponse(responseCode = "5000", description = "파일 업로드에 실패했습니다.")
-//    })
-//    @ResponseBody
-//    @GetMapping("/{letterId}/score")
-//    public BaseResponse<GetScoreRes> score(@PathVariable("letterId") int letterId,
-//                                           @Parameter(required = true) @RequestBody PostScoreRes postScoreRes){
-//        try{
-//            int userIdByJwt = tokenService.getUserId();
-//            GetScoreRes getScoreRes = letterService.scoreLetter(userIdByJwt, letterId, postScoreRes);
-//            return new BaseResponse<>(getScoreRes);
-//        } catch (BaseException exception){
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//    }
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 letterId를 입력하여 특정 편지에 별점을 주는 api입니다. ",
+            tags = "LETTER", summary = "별점 주기 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다."),
+            @ApiResponse(responseCode = "5000", description = "파일 업로드에 실패했습니다.")
+    })
+    @ResponseBody
+    @PatchMapping("/{letterId}/score")
+    public BaseResponse<PatchScoreRes> scoreLetter(@PathVariable("letterId") int letterId,
+                                             @Parameter(required = true) @RequestBody PatchScoreReq patchScoreReq){
+        try{
+            int userIdByJwt = tokenService.getUserId();
+            if(patchScoreReq.getScore()>=0&&patchScoreReq.getScore()<=5){
+                PatchScoreRes patchScoreRes = letterService.scoreLetter(userIdByJwt, letterId, patchScoreReq.getScore());
+                return new BaseResponse<>(patchScoreRes);
+            }
+            else {
+                throw new BaseException(PATCH_LETTER_INVALID_SCORE);
+            }
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
     /**
      * 신고하기 API
@@ -246,10 +249,6 @@ public class LetterController {
 //            return new BaseResponse<>(exception.getStatus());
 //        }
 //    }
-
-    /**
-     *
-     */
 
 
 }

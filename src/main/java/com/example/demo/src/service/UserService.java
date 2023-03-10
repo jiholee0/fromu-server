@@ -132,7 +132,7 @@ public class UserService {
         userDao.modifyUser(userId, type, str);
     }
 
-    public PatchDeviceTokenRes saveDeviceToken(int userId, String str) throws  BaseException {
+    public PatchUserRes saveDeviceToken(int userId, String str) throws  BaseException {
         return userDao.saveDeviceToken(userId, str);
     }
 }

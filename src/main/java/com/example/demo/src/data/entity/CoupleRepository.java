@@ -18,6 +18,6 @@ public interface CoupleRepository extends JpaRepository<Couple, Integer> {
     @Where(clause = "delete_flag = false")
     Optional<Couple> findByMailboxName(String str);
 
-    @Query(value = "SELECT * FROM couple where couple_id not in :coupleId order by RAND() limit 1",nativeQuery = true)
+    @Query(value = "SELECT * FROM couple where couple_id not in(:coupleId) order by RAND(now()) limit 1",nativeQuery = true)
     Couple findRandomCouple(@Param(value = "coupleId") int coupleId);
 }

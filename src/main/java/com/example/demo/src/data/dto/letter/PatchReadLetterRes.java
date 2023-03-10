@@ -1,5 +1,6 @@
 package com.example.demo.src.data.dto.letter;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,7 @@ public class PatchReadLetterRes {
     private String content;
     private String sendMailboxName;
     private String receiveMailboxName;
-    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private Date time;
     private int status;
     private boolean replyFalg;
