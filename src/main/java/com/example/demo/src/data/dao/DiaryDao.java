@@ -78,9 +78,9 @@ public class DiaryDao {
         String date = diary.get().getDate();
 
         LocalDate localDate = LocalDate.of(
-                Integer.parseInt(date.substring(0,5)),
-                Integer.parseInt(date.substring(5,7)),
-                Integer.parseInt(date.substring(7,9)));
+                Integer.parseInt(date.substring(0,4)),
+                Integer.parseInt(date.substring(4,6)),
+                Integer.parseInt(date.substring(6,8)));
         return new DiaryRes(diaryId, writerNickname, diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), date,localDate.getDayOfWeek().getValue());
     }
 
