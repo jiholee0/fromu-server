@@ -104,15 +104,9 @@ public class LetterController {
      * 편지 1개 조회 API
      * [PATCH] /letters/:letterId/read
      */
-    /**
-     * PathVariable : letterId
-     * PatchLetterRes : stampNum, content, sendMailboxName, receiveMailboxName, time,
-     *              status(내가 받은 편지면 0 | 내가 보낸 편지면 1 | 답장 편지면 2)
-     * ERROR : JWT 관련, 이외의 데이터 부재 에러
-     */
     @Operation(method = "GET",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 letterId로 편지를 조회하는 api입니다." +
-                    "letterId, stampNum(1~6), content, sendMailboxName, receiveMailboxName, time(yyyy-MM-dd HH:mm:ss), " +
+                    "letterId, stampNum(1~6 / 개발자가 준 편지면 0), content, sendMailboxName, receiveMailboxName, time(yyyy-MM-dd HH:mm:ss), " +
                     "status(내가 받은 편지면 0 : 신고하기 / 답장하기 | 내가 보낸 편지면 1 | 답장 편지면 2 : 신고하기 / 별점 남기기), replyFlag(답장 여부), scoreFlag(감사인사 여부)",
             tags = "LETTER", summary = "편지 1개 조회/읽음 처리 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
@@ -136,14 +130,8 @@ public class LetterController {
     }
 
     /**
-     * 우편함 조회 API
+     * 편지함 조회 API
      * [GET] /letters/mailbox?type={type}
-     */
-    /**
-     * QueryString : type(받은 편지함이면 0 | 보낸 편지함이면 1)
-     * GetMailboxRes : List<letterId, mailboxName, time, readFlag>
-     * ERROR : JWT 관련, type에러, 이외의 데이터 부재 에러
-     * 받은 편지함 조회 시 report_flag = false 인 것만 가져오기
      */
     @Operation(method = "GET",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 "+
@@ -182,11 +170,6 @@ public class LetterController {
      * 별점 주기 API
      * [PATCH] /letters/:letterId/score
      */
-    /**
-     * PathVariable : letterId
-     * PostScoreReq : score
-     * PostScoreRes : coupleId, fromNum
-     */
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 letterId를 입력하여 특정 편지에 별점을 주는 api입니다. ",
             tags = "LETTER", summary = "별점 주기 API - \uD83D\uDD12 JWT")
@@ -220,35 +203,27 @@ public class LetterController {
      * 신고하기 API
      * [POST] /letters/:letterId/report
      */
-    /**
-     * PathVariable : letterId
-     * PostReportReq : content
-     * PostReportRes : reportId
-     */
-//    @Operation(method = "GET",
-//            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 letterId, content를 입력하여 특정 편지를 신고하는 api입니다. "+
-//                    "reportId를 return 합니다. ",
-//            tags = "LETTER", summary = "신고하기 API - \uD83D\uDD12 JWT")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
-//            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
-//            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
-//            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
-//            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다."),
-//            @ApiResponse(responseCode = "5000", description = "파일 업로드에 실패했습니다.")
-//    })
-//    @ResponseBody
-//    @GetMapping("/{letterId}/report")
-//    public BaseResponse<GetReportRes> score(@PathVariable("letterId") int letterId,
-//                                            @Parameter(required = true) @RequestBody PostReportRes postReportRes){
-//        try{
-//            int userIdByJwt = tokenService.getUserId();
-//            GetReportRes getReportRes = letterService.report(userIdByJwt, letterId, postReportRes);
-//            return new BaseResponse<>(getReportRes);
-//        } catch (BaseException exception){
-//            return new BaseResponse<>(exception.getStatus());
-//        }
-//    }
-
-
+    @Operation(method = "POST",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 letterId, content를 입력하여 특정 편지를 신고하는 api입니다. "+
+                    "reportId를 return 합니다. ",
+            tags = "LETTER", summary = "신고하기 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @PostMapping("/{letterId}/report")
+    public BaseResponse<Integer> score(@PathVariable("letterId") int letterId,
+                                            @Parameter(required = true) @RequestBody PostReportReq postReportReq){
+        try{
+            int userIdByJwt = tokenService.getUserId();
+            int reportId = letterService.report(userIdByJwt, letterId, postReportReq);
+            return new BaseResponse<>(reportId);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }

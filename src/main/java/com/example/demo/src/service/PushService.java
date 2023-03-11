@@ -40,12 +40,15 @@ public class PushService {
 
     public boolean sendMessageToPartner(int userId, String title, String body) throws BaseException{
         String targetToken = coupleDao.getPartnerDeviceToken(userId);
-        if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
-        sendMessageTo(
-                targetToken,
-                title,
-                body);
-        return shopDao.push(userId);
+        if(shopDao.push(userId)){
+            if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
+            sendMessageTo(
+                    targetToken,
+                    title,
+                    body);
+            return true;
+        }
+        return false;
     }
     public void sendMessageTo(String targetToken, String title, String body) throws BaseException {
         try{

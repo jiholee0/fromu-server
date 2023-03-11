@@ -2,13 +2,12 @@ package com.example.demo.src.service;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dao.CoupleDao;
+import com.example.demo.src.data.dao.LetterDao;
 import com.example.demo.src.data.dao.ShopDao;
-import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.dto.couple.CoupleRes;
 import com.example.demo.src.data.dto.couple.GetCoupleMatchRes;
 import com.example.demo.src.data.dto.couple.PostCoupleReq;
 import com.example.demo.src.data.entity.Couple;
-import com.example.demo.utils.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,17 +21,20 @@ import static com.example.demo.utils.ValidationRegex.isRegexNickname;
 public class CoupleService {
     private final CoupleDao coupleDao;
     private final ShopDao shopDao;
+    private final LetterDao letterDao;
 
     @Autowired
-    public CoupleService(CoupleDao coupleDao, ShopDao shopDao) {
+    public CoupleService(CoupleDao coupleDao, ShopDao shopDao, LetterDao letterDao) {
         this.coupleDao = coupleDao;
         this.shopDao = shopDao;
+        this.letterDao = letterDao;
     }
 
     // 커플 등록(POST)
     public CoupleRes createCouple(int userId, PostCoupleReq postCoupleReq) throws BaseException {
         CoupleRes coupleRes = coupleDao.createCouple(userId, postCoupleReq);
         shopDao.init(coupleRes.getCoupleId());
+        letterDao.init(coupleRes.getCoupleId());
         return coupleRes;
     }
 

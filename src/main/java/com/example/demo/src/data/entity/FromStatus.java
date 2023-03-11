@@ -32,6 +32,7 @@ public class FromStatus {
         return this.fromCount;
     }
 
-    public int useFrom(int count){this.fromCount -= count; return this.fromCount;}
+    public void useFrom(int count){this.fromCount -= count;
+    }
     public int getFrom(int count){this.fromCount += count; return this.fromCount;}
 }

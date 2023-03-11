@@ -10,12 +10,10 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     @NotNull List<User> findAll();
-    Optional<User> findById(int userId);
-    @Where(clause = "delete_flag = false")
-    Optional<User> findByEmail(String email);
-    @Where(clause = "delete_flag = false")
-    Optional<User> findByUserCode(String userCode);
-
-    @Query(value = "SELECT u.nickname FROM User u WHERE u.userId = :userId")
-    String findNicknameByUserId(@Param("userId") int userId);
+    @Query(value = "select * from user where delete_flag = false and user_id = :userId", nativeQuery = true)
+    Optional<User> findById(@Param(value = "userId") int userId);
+    @Query(value = "select * from user where delete_flag = false and email = :email", nativeQuery = true)
+    Optional<User> findByEmail(@Param(value = "email")String email);
+    @Query(value = "select * from user where delete_flag = false and userCode = :userCode", nativeQuery = true)
+    Optional<User> findByUserCode(@Param(value = "userCode")String userCode);
 }

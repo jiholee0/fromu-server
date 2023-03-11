@@ -290,12 +290,12 @@ public class UserController {
     }
 
     /**
-     * 유저삭제 API (soft delete)
+     * 유저삭제 API
      * [PATCH] /users/d
      */
     @Operation(method = "PATCH",
-            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 해당 유저의 delete_flag 값을 true로 변환해주는 SOFT DELETE api입니다.",
-            tags = "USER", summary = "유저 삭제 API - \uD83D\uDD12 JWT")
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 해당 유저를 탈퇴시키는 api입니다.(soft delete)",
+            tags = "USER", summary = "탈퇴하기 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
@@ -352,6 +352,30 @@ public class UserController {
     }
 
     /**
-     * 로그아웃
+     * 로그아웃 API
+     * [PATCH] /users/logout
      */
+    @Operation(method = "PATCH",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 로그아웃 처리하는 api입니다.",
+            tags = "USER", summary = "로그아웃 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @PatchMapping("/logout")
+    public BaseResponse<PatchUserRes> logout() {
+        try {
+            int userIdByJwt = tokenService.getUserId();
+            userService.logout(userIdByJwt);
+            return new BaseResponse<>(new PatchUserRes(userIdByJwt));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
 }

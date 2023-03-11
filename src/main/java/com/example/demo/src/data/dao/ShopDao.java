@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.criteria.From;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -93,7 +94,11 @@ public class ShopDao {
         Optional<FromStatus> fromStatus = Optional.of(fromStatusRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_FROM)
         ));
+        Optional<PushStatus> pushStatus = Optional.of(pushStatusRepository.findByUserId(userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_PUSH)
+        ));
         fromStatus.get().getFrom(1);
+        pushStatus.get().charge();
         return fromStatus.get().getFromCount();
     }
 
@@ -105,7 +110,7 @@ public class ShopDao {
         try {
             FromStatus fromStatus = new FromStatus(coupleId,0,false);
             fromStatusRepository.save(fromStatus);
-            StampStatus stampStatus = new StampStatus(coupleId,1,1,1,0,0,0);
+            StampStatus stampStatus = new StampStatus(coupleId,3,0,0,0,0,0);
             stampStatusRepository.save(stampStatus);
             PushStatus pushStatus1 = new PushStatus(couple.get().getUserId1(),15);
             PushStatus pushStatus2 = new PushStatus(couple.get().getUserId2(),15);
@@ -139,7 +144,7 @@ public class ShopDao {
                 () -> new BaseException(NOT_EXIST_DATA_PUSH)
         ));
         LocalDateTime createdTime = pushStatus.get().getChargeTime().toInstant()
-                .atZone(ZoneId.of("KST"))
+                .atZone(ZoneId.of("Asia/Seoul"))
                 .toLocalDateTime();;
         LocalDateTime scheduledTime = createdTime.plusHours(12);
         LocalDateTime currentTime = LocalDateTime.now();
@@ -155,12 +160,23 @@ public class ShopDao {
                 () -> new BaseException(NOT_EXIST_DATA_PUSH)
         ));
         LocalDateTime createdTime = pushStatus.get().getChargeTime().toInstant()
-                .atZone(ZoneId.of("KST"))
+                .atZone(ZoneId.of("Asia/Seoul"))
                 .toLocalDateTime();;
         LocalDateTime scheduledTime = createdTime.plusMinutes(1);
         LocalDateTime currentTime = LocalDateTime.now();
         if (scheduledTime.isBefore(currentTime)) {
             pushStatus.get().charge();
         }
+    }
+
+    @Transactional
+    public int getFromByUserId(int userId) throws BaseException{
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        Optional<FromStatus> fromStatus = Optional.of(fromStatusRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_FROM)
+        ));
+        return fromStatus.get().getFromCount();
     }
 }

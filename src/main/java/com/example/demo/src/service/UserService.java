@@ -135,4 +135,8 @@ public class UserService {
     public PatchUserRes saveDeviceToken(int userId, String str) throws  BaseException {
         return userDao.saveDeviceToken(userId, str);
     }
+
+    public void logout(int userId) throws BaseException {
+
+    }
 }
