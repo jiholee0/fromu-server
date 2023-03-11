@@ -55,4 +55,8 @@ public class LetterService {
         Map<Integer, Integer> coupleFromCount = shopDao.scoreLetter(coupleId.get(0), coupleId.get(1), score);
         return new PatchScoreRes(coupleId.get(0), coupleFromCount.get(0), coupleId.get(1), coupleFromCount.get(1));
     }
+
+    public int report(int userId, int letterId, PostReportReq postReportReq) throws BaseException {
+        return letterDao.report(userId, letterId, postReportReq);
+    }
 }

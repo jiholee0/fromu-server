@@ -27,10 +27,11 @@ public class PushStatus {
         this.pushCount = pushCount;
     }
 
-    public int push(){this.pushCount -= 1; return this.pushCount;}
-    public int charge(){
+    public void push(){
+        this.pushCount -= 1;
+    }
+    public void charge(){
         this.pushCount = 15;
-        return this.pushCount;
     }
     public void startCharge(){
         this.chargeTime = new Date();

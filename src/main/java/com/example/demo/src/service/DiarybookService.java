@@ -68,7 +68,6 @@ public class DiarybookService {
         }
         return diarybookDao.uploadDiarybookImage(userId, fileUrl);
     }
-    // 일기장 삭제
 
     public int passDiarybook(int userId) throws BaseException {
         int diarybookId = diarybookDao.passDiarybook(userId);

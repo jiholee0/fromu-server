@@ -1,34 +1,33 @@
 package com.example.demo.src.service;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.config.BaseResponseStatus;
-import com.example.demo.src.data.dao.CoupleDao;
-import com.example.demo.src.data.dao.DiarybookDao;
-import com.example.demo.src.data.dao.UserDao;
+import com.example.demo.src.data.dao.*;
 import com.example.demo.src.data.dto.view.DiarybookDto;
 import com.example.demo.src.data.dto.view.MailboxViewRes;
 import com.example.demo.src.data.dto.view.MainViewRes;
 import com.example.demo.src.data.entity.Couple;
 import com.example.demo.src.data.entity.Diarybook;
+import com.example.demo.src.data.entity.FromStatus;
 import com.example.demo.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
 public class ViewService {
     private final DiarybookDao diarybookDao;
     private final CoupleDao coupleDao;
+    private final ShopDao shopDao;
+    private final LetterDao letterDao;
     private final UserDao userDao;
 
     @Autowired
-    public ViewService(DiarybookDao diarybookDao, CoupleDao coupleDao, UserDao userDao){
-
+    public ViewService(DiarybookDao diarybookDao, CoupleDao coupleDao, ShopDao shopDao, LetterDao letterDao, UserDao userDao){
         this.diarybookDao = diarybookDao;
         this.coupleDao = coupleDao;
+        this.shopDao = shopDao;
+        this.letterDao = letterDao;
         this.userDao = userDao;
     }
 
@@ -65,14 +64,17 @@ public class ViewService {
                         diarybook.getCoverNum(),
                         diarybook.getName(),
                         diarybook.getImageUrl(),
-                        diarybook.isWriteFlag()
-                )
+                        diarybook.isWriteFlag())
         );
     }
 
     public MailboxViewRes mailboxView(int userId) throws BaseException {
         Couple couple = coupleDao.getCoupleByUserId(userId);
-        int newLetterId = 0; //letterDao.getNewLetterId(userId);
+        int newLetterId = letterDao.getNewLetterId(userId);
         return new MailboxViewRes(couple.getCoupleId(), couple.getMailboxName(), newLetterId);
+    }
+
+    public int getFrom(int userId) throws BaseException {
+        return shopDao.getFromByUserId(userId);
     }
 }

@@ -15,7 +15,6 @@ import java.util.Date;
 @Getter
 @Entity
 @Table(name="diarybook")
-@SQLDelete(sql = "UPDATE diarybook SET delete_flag = true WHERE diarybook_id = ?")
 @NoArgsConstructor
 public class Diarybook {
     @Id
