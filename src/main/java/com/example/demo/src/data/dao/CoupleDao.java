@@ -8,10 +8,12 @@ import com.example.demo.src.data.entity.Couple;
 import com.example.demo.src.data.entity.CoupleRepository;
 import com.example.demo.src.data.entity.User;
 import com.example.demo.src.data.entity.UserRepository;
+import com.example.demo.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +68,7 @@ public class CoupleDao {
             CoupleRes coupleRes = null;
             Optional<Couple> couple = coupleRepository.findByUserId1OrUserId2(userId, userId);
             if (!couple.isPresent()) {
-                return new GetCoupleMatchRes(false, null);
+                return new GetCoupleMatchRes(false, null,0);
             }
             boolean isSetMailboxName = couple.get().mailboxName != null && !couple.get().mailboxName.equals("");
             if (couple.get().getUserId1() == userId) {
@@ -84,7 +86,8 @@ public class CoupleDao {
                         userRepository.findById(couple.get().getUserId1()).get().getNickname()
                 );
             }
-            return new GetCoupleMatchRes(true, coupleRes);
+            int dDay = CommonUtils.calDDay( couple.get().getFirstMetDay());
+            return new GetCoupleMatchRes(true, coupleRes, dDay);
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
@@ -235,11 +238,29 @@ public class CoupleDao {
         return user.get().getDeviceToken();
     }
 
+
     @Transactional
     public Couple getRandomCouple(int userId) throws BaseException {
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
         return coupleRepository.findRandomCouple(couple.get().getCoupleId());
+    }
+
+    @Transactional
+    public String getPartnerNickname(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        int partnerId;
+        if (userId == couple.get().getUserId1()) {
+            partnerId = couple.get().getUserId2();
+        } else {
+            partnerId = couple.get().getUserId1();
+        }
+        Optional<User> user = Optional.of(userRepository.findById(partnerId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        return user.get().getNickname();
     }
 }
