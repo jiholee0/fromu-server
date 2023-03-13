@@ -5,15 +5,21 @@ import com.example.demo.src.data.dao.DiarybookDao;
 import com.example.demo.src.data.dao.ShopDao;
 import com.example.demo.src.data.dto.diarybook.*;
 import com.example.demo.src.data.entity.Diarybook;
+import com.example.demo.src.data.entity.PushStatus;
 import com.example.demo.utils.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.demo.config.BaseResponseStatus.FAIL_TO_UPLOAD_FILE;
+import static com.example.demo.config.BaseResponseStatus.NOT_EXIST_DATA_PUSH;
 
 
 @Service

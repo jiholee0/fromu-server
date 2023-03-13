@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.data.dto.letter.*;
 import com.example.demo.src.service.LetterService;
+import com.example.demo.src.service.PushService;
 import com.example.demo.utils.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 import static com.example.demo.config.BaseResponseStatus.INVALID_REQ_PARAM;
 import static com.example.demo.config.BaseResponseStatus.PATCH_LETTER_INVALID_SCORE;

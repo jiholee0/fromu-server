@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name="diary")
 @SQLDelete(sql = "UPDATE diary SET delete_flag = true WHERE diary_id = ?")
+@Where(clause = "delete_flag = false")
 @NoArgsConstructor
 public class Diary {
     @Id
