@@ -137,8 +137,8 @@ public class DiaryController {
      * [GET] /diaries/:diaryId
      */
     @Operation(method = "GET",
-    description = "diaryId로 일기를 조회하는 api입니다. 일기 Id, 내용, 사진 url, 날씨, 날짜(ex : 20230305), 요일(ex : 1(월)~7(일)), 작성자 nickname을 return합니다.",
-            tags = "DIARY", summary = "diaryId로 일기 조회 API")
+    description =  "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 diaryId로 일기를 조회하는 api입니다. 일기 Id, 내용, 사진 url, 날씨, 날짜(ex : 20230305), 요일(ex : 1(월)~7(일)), 작성자 nickname을 return합니다.",
+            tags = "DIARY", summary = "diaryId로 일기 조회 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다."),
@@ -148,6 +148,7 @@ public class DiaryController {
     @GetMapping("/{diaryId}")
     public BaseResponse<DiaryRes> getDiaryByDiaryId(@PathVariable("diaryId") int diaryId){
         try{
+            int userIdByJwt = tokenService.getUserId();
             DiaryRes patchDiaryRes = diaryService.getDiaryByDiaryId(diaryId);
             return new BaseResponse<>(patchDiaryRes);
         } catch (BaseException exception){
@@ -161,7 +162,7 @@ public class DiaryController {
      */
     @Operation(method = "GET",
             description = "diarybookId로 일기 월챕터를 조회하는 api입니다. 해당 일기장에 일기가 작성된 년월(ex : 202303, 202302)을 내림차순으로 return합니다.",
-            tags = "DIARY", summary = "diarybookId로 일기 월챕터 조회 API")
+            tags = "DIARY", summary = "diarybookId로 일기 월챕터 조회 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4003", description = "일기장이 존재하지 않습니다.")
@@ -170,6 +171,7 @@ public class DiaryController {
     @GetMapping("/monthList/{diarybookId}")
     public BaseResponse<List<String>> getDiaryMonth(@PathVariable("diarybookId") int diarybookId){
         try{
+            int userIdByJwt = tokenService.getUserId();
             List<String> monthList = diaryService.getMonthList(diarybookId);
             return new BaseResponse<>(monthList);
         } catch (BaseException exception){
@@ -184,7 +186,7 @@ public class DiaryController {
     @Operation(method = "GET",
             description = "diarybookId로 월별 일기 list를 조회하는 api입니다. month 값을 쿼리 스트링으로 넣어주세요.(ex : 202303) " +
                     "month 값이 없는 경우 error가 발생하므로 유의해주세요.",
-            tags = "DIARY", summary = "diarybookId로 월별 일기 list 조회")
+            tags = "DIARY", summary = "diarybookId로 월별 일기 list 조회 - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "2004", description = "파라미터 값을 확인해주세요."),
@@ -195,6 +197,7 @@ public class DiaryController {
     public BaseResponse<GetDiaryListByMonthRes> getDiaryListByMonth(@PathVariable("diarybookId") int diarybookId,
                                                                         @Parameter(required = true) @RequestParam(required = true) String month){
         try {
+            int userIdByJwt = tokenService.getUserId();
             GetDiaryListByMonthRes diaryList;
             if (month == null) {
                 throw new BaseException(INVALID_REQ_PARAM);
@@ -217,7 +220,7 @@ public class DiaryController {
      */
     @Operation(method = "GET",
             description = "diarybookId로 모든 일기를 오름차순으로 조회하는 api입니다. 해당 일기장에 작성된 일기 ID를 모두 return합니다.",
-            tags = "DIARY", summary = "diarybookId로 모든 일기 오름차순으로 조회 API(최근 순)")
+            tags = "DIARY", summary = "diarybookId로 모든 일기 오름차순으로 조회 API(최근 순) - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
             @ApiResponse(responseCode = "4003", description = "일기장이 존재하지 않습니다.")
@@ -226,6 +229,7 @@ public class DiaryController {
     @GetMapping("/all/{diarybookId}")
     public BaseResponse<List<Integer>> getDiaries(@PathVariable("diarybookId") int diarybookId){
         try{
+            int userIdByJwt = tokenService.getUserId();
             List<Integer> diaryIdList = diaryService.getDiaries(diarybookId);
             return new BaseResponse<>(diaryIdList);
         } catch (BaseException exception){
