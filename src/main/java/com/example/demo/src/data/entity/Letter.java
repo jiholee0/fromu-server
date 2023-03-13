@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Getter
 @Entity
 @Table(name = "letter")
+@Where(clause = "report_flag = false")
 @NoArgsConstructor
 public class Letter {
     @Id

@@ -37,7 +37,7 @@ public class Couple {
         this.mailboxName = mailboxName;
         this.firstMetDay = firstMetDay;
         this.deleteFlag = deleteFlag;
-        this.pushMessage = "오늘 너의 하루가 궁금해 :)";
+        this.pushMessage = "빨리 일기장 내놔ㅡㅅㅡ";
     }
 
     public void modifyFirstMetDay(String str) { this.firstMetDay = str;}

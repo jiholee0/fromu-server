@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user")
 @SQLDelete(sql = "UPDATE user SET delete_flag = true WHERE user_id = ?")
+@Where(clause = "delete_flag = false")
 @NoArgsConstructor
 public class User {
     @Id
