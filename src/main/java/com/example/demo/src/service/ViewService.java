@@ -7,12 +7,12 @@ import com.example.demo.src.data.dto.view.MailboxViewRes;
 import com.example.demo.src.data.dto.view.MainViewRes;
 import com.example.demo.src.data.entity.Couple;
 import com.example.demo.src.data.entity.Diarybook;
-import com.example.demo.src.data.entity.FromStatus;
 import com.example.demo.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ViewService {
@@ -76,5 +76,9 @@ public class ViewService {
 
     public int getFrom(int userId) throws BaseException {
         return shopDao.getFromByUserId(userId);
+    }
+
+    public List<Integer> getStamp(int userId) throws BaseException {
+        return shopDao.getStampByUserId(userId);
     }
 }

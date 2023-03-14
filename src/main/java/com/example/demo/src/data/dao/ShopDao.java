@@ -1,24 +1,18 @@
 package com.example.demo.src.data.dao;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.controller.PushController;
 import com.example.demo.src.data.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.From;
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
 @Repository
-
+@EnableScheduling
 public class ShopDao {
 
     @Autowired
@@ -29,6 +23,7 @@ public class ShopDao {
     PushStatusRepository pushStatusRepository;
     @Autowired
     CoupleRepository coupleRepository;
+    private int setUserId = 0;
 
     @Transactional
     public int buyStamp(int userId, int stampNum) throws BaseException{
@@ -128,8 +123,9 @@ public class ShopDao {
         ));
         if(pushStatus.get().getPushCount()<=0){
             pushStatus.get().startCharge();
-            //charge(userId);
-            chargeTest(userId);
+            //charge();
+            setUserId(userId);
+            //chargeTest();
             return false;
         } else{
             pushStatus.get().push();
@@ -137,37 +133,28 @@ public class ShopDao {
         }
     }
 
-    @Transactional
-    @Scheduled(fixedDelay = 12 * 60 * 60 * 1000) // 12시간 후에 실행
-    public void charge(int userId) throws BaseException {
-        Optional<PushStatus> pushStatus = Optional.of(pushStatusRepository.findByUserId(userId).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA_PUSH)
-        ));
-        LocalDateTime createdTime = pushStatus.get().getChargeTime().toInstant()
-                .atZone(ZoneId.of("Asia/Seoul"))
-                .toLocalDateTime();;
-        LocalDateTime scheduledTime = createdTime.plusHours(12);
-        LocalDateTime currentTime = LocalDateTime.now();
-        if (scheduledTime.isBefore(currentTime)) {
-            pushStatus.get().charge();
-        }
+//    @Transactional
+//    @Scheduled(initialDelay = 12 * 60 * 60 * 1000) // 12시간 후에 실행
+//    public void charge(int userId) throws BaseException {
+//        Optional<PushStatus> pushStatus = Optional.of(pushStatusRepository.findByUserId(userId).orElseThrow(
+//                () -> new BaseException(NOT_EXIST_DATA_PUSH)
+//        ));
+//        pushStatus.get().charge();
+//    }
+
+//    @Transactional
+//    @Scheduled(initialDelay = 60 * 1000) // 1분 후에 실행
+//    public void chargeTest() throws BaseException {
+//        Optional<PushStatus> pushStatus = Optional.of(pushStatusRepository.findByUserId(this.setUserId).orElseThrow(
+//                () -> new BaseException(NOT_EXIST_DATA_PUSH)
+//        ));
+//        pushStatus.get().charge();
+//    }
+
+    public void setUserId(int userId){
+        this.setUserId = userId;
     }
 
-    @Transactional
-    @Scheduled(fixedDelay = (1/60) * 60 * 60 * 1000) // 1분 후에 실행
-    public void chargeTest(int userId) throws BaseException {
-        Optional<PushStatus> pushStatus = Optional.of(pushStatusRepository.findByUserId(userId).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA_PUSH)
-        ));
-        LocalDateTime createdTime = pushStatus.get().getChargeTime().toInstant()
-                .atZone(ZoneId.of("Asia/Seoul"))
-                .toLocalDateTime();;
-        LocalDateTime scheduledTime = createdTime.plusMinutes(1);
-        LocalDateTime currentTime = LocalDateTime.now();
-        if (scheduledTime.isBefore(currentTime)) {
-            pushStatus.get().charge();
-        }
-    }
 
     @Transactional
     public int getFromByUserId(int userId) throws BaseException{
@@ -178,5 +165,23 @@ public class ShopDao {
                 () -> new BaseException(NOT_EXIST_DATA_FROM)
         ));
         return fromStatus.get().getFromCount();
+    }
+
+    @Transactional
+    public List<Integer> getStampByUserId(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        Optional<StampStatus> stampStatus = Optional.of(stampStatusRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_STAMP)
+        ));
+        List<Integer> stampList = new ArrayList<>();
+        stampList.add(stampStatus.get().getStampCount1());
+        stampList.add(stampStatus.get().getStampCount2());
+        stampList.add(stampStatus.get().getStampCount3());
+        stampList.add(stampStatus.get().getStampCount4());
+        stampList.add(stampStatus.get().getStampCount5());
+        stampList.add(stampStatus.get().getStampCount6());
+        return stampList;
     }
 }
