@@ -4,6 +4,8 @@ package com.example.demo.src.data.dao;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dto.user.PatchUserRes;
 import com.example.demo.src.data.dto.user.PostUserReq;
+import com.example.demo.src.data.entity.Couple;
+import com.example.demo.src.data.entity.CoupleRepository;
 import com.example.demo.src.data.entity.User;
 import com.example.demo.src.data.entity.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class UserDao {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private CoupleRepository coupleRepository;
 
     @Transactional
     // 회원가입(POST)
@@ -76,6 +80,8 @@ public class UserDao {
 
     @Transactional
     public void deleteUser(int userId) throws BaseException {
+        Optional<Couple> couple = coupleRepository.findByUserId1OrUserId2(userId, userId);
+        couple.ifPresent(value -> coupleRepository.deleteById(value.getCoupleId()));
         try {
             userRepository.deleteById(userId);
         } catch (IllegalArgumentException exception){
