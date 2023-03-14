@@ -30,13 +30,15 @@ public class LetterService {
         Couple receiveCouple = coupleDao.getRandomCouple(userId);
         if(postLetterReq.getStampNum()>=1 && postLetterReq.getStampNum() <=6){
             shopDao.useStamp(userId,postLetterReq.getStampNum());
-            return letterDao.sendLetter(userId, postLetterReq, receiveCouple);
+            String partnerNickname = coupleDao.getPartnerNickname(userId);
+            return letterDao.sendLetter(userId, postLetterReq, receiveCouple, partnerNickname);
         }
         throw new BaseException(PATCH_COUPLES_INVALID_STAMPNUM);
     }
 
     public PostLetterRes sendLetterReply(int userId, int letterId, PostLetterReq postLetterReq) throws BaseException {
-        return letterDao.sendLetterReply(userId, letterId, postLetterReq);
+        String partnerNickname = coupleDao.getPartnerNickname(userId);
+        return letterDao.sendLetterReply(userId, letterId, postLetterReq, partnerNickname);
     }
 
     public PatchReadLetterRes readLetter(int userId, int letterId) throws BaseException {

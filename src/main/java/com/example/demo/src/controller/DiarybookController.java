@@ -6,6 +6,7 @@ import com.example.demo.config.BaseResponse;
 import com.example.demo.src.data.dto.diarybook.*;
 import com.example.demo.src.data.entity.Diarybook;
 import com.example.demo.src.service.DiarybookService;
+import com.example.demo.src.service.PushService;
 import com.example.demo.utils.TokenService;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,10 +26,13 @@ public class DiarybookController {
     @Autowired
     private final DiarybookService diarybookService;
     @Autowired
+    private final PushService pushService;
+    @Autowired
     private final TokenService tokenService;
 
-    public DiarybookController(DiarybookService diarybookService, TokenService tokenService) {
+    public DiarybookController(DiarybookService diarybookService, PushService pushService, TokenService tokenService) {
         this.diarybookService = diarybookService;
+        this.pushService = pushService;
         this.tokenService = tokenService;
     }
 
@@ -241,6 +245,8 @@ public class DiarybookController {
         try{
             int userIdByJwt = tokenService.getUserId();
             int diarybookId = diarybookService.passDiarybook(userIdByJwt);
+            pushService.sendMessageToPartnerFree(userIdByJwt,"두근두근","일기장이 내게로 오고 있어");
+            //pushService.sendMessageToPartnerFreeAfterHour(userIdByJwt,"드디어...!", "일기장이 나에게 왔어. 연인의 일기를 보러 가볼까?");
             return new BaseResponse<>(new PatchDiarybookRes(userIdByJwt, diarybookId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

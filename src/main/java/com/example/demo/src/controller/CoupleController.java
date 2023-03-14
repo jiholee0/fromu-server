@@ -24,10 +24,13 @@ public class CoupleController {
     private final CoupleService coupleService;
     @Autowired
     private final TokenService tokenService;
+    @Autowired
+    private final PushService pushService;
 
-    public CoupleController(CoupleService coupleService, TokenService tokenService) {
+    public CoupleController(CoupleService coupleService, TokenService tokenService, PushService pushService) {
         this.coupleService = coupleService;
         this.tokenService = tokenService;
+        this.pushService = pushService;
     }
 
     /**
@@ -53,6 +56,7 @@ public class CoupleController {
         try {
             int userIdByJwt = tokenService.getUserId();
             CoupleRes coupleRes = coupleService.createCouple(userIdByJwt, postCoupleReq);
+            pushService.sendMessageToPartnerFree(userIdByJwt,"꺄아","성공적으로 연인과 매칭되었어!");
             return new BaseResponse<>(coupleRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -81,6 +85,7 @@ public class CoupleController {
         try {
             int userIdByJwt = tokenService.getUserId();
             int coupleId = coupleService.modifyFirstMetDay(userIdByJwt, patchCoupleReq.getFirstMetDay());
+            pushService.sendMessageToPartnerFree(userIdByJwt,"생각만 해도 설레는 그 날","우리의 첫 시작일이 등록되었어!");
             return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, coupleId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
@@ -110,6 +115,7 @@ public class CoupleController {
         try{
             int userIdByJwt = tokenService.getUserId();
             int coupleId = coupleService.modifyMailbox(userIdByJwt, patchCoupleReq.getMailboxName());
+            pushService.sendMessageToPartnerFree(userIdByJwt,"FROMU","우리 우편함 이름이 "+patchCoupleReq.getMailboxName()+"으로 결정되었어!");
             return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, coupleId));
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
@@ -312,6 +318,7 @@ public class CoupleController {
         try {
             int userIdByJwt = tokenService.getUserId();
             int coupleId = coupleService.buyStamp(userIdByJwt, stampNum);
+            pushService.sendMessageToPartnerFree(userIdByJwt,"FROMU","새로운 우표를 구매했어!");
             return new BaseResponse<>(new PatchCoupleRes(userIdByJwt, coupleId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

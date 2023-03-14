@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dto.letter.*;
 import com.example.demo.src.data.entity.*;
 import com.example.demo.src.service.LetterService;
+import com.example.demo.src.service.PushService;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,23 +25,28 @@ public class LetterDao {
     CoupleRepository coupleRepository;
     @Autowired
     ReportRepository reportRepository;
+    @Autowired
+    PushService pushService;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     Date date = new Date();
 
     @Transactional
-    public PostLetterRes sendLetter(int userId, PostLetterReq postLetterReq, Couple receiveCouple) throws BaseException {
+    public PostLetterRes sendLetter(int userId, PostLetterReq postLetterReq, Couple receiveCouple, String partnerNickname) throws BaseException {
         Optional<Couple> sendCouple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
         date = new Date();
         Letter letter = postLetterReq.toEntity(0,userId,sendCouple.get().getCoupleId(),receiveCouple.getCoupleId(), date);
         letterRepository.save(letter);
+        pushService.sendMessageToPartnerFree(userId,"신속하게 배달하겠습니다! -집배원-",partnerNickname+"(이)가 우리의 이야기를 편지로 보냈어!");
+        pushService.sendMessageFree(receiveCouple.getUserId1(),"띵동! 편지 왔습니다! -집배원-","다른 커플이 우리에게 편지를 보냈어!");
+        pushService.sendMessageFree(receiveCouple.getUserId2(),"띵동! 편지 왔습니다! -집배원-","다른 커플이 우리에게 편지를 보냈어!");
         return new PostLetterRes(letter.getLetterId(),sendCouple.get().getMailboxName(),receiveCouple.getMailboxName());
     }
 
     @Transactional
-    public PostLetterRes sendLetterReply(int userId, int letterId, PostLetterReq postLetterReq) throws BaseException {
+    public PostLetterRes sendLetterReply(int userId, int letterId, PostLetterReq postLetterReq, String partnerNickname) throws BaseException {
         Optional<Couple> sendCouple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
@@ -56,6 +62,9 @@ public class LetterDao {
         date = new Date();
         Letter letter = postLetterReq.toEntity(letterId,userId,sendCouple.get().getCoupleId(),receiveCouple.get().getCoupleId(), date);
         letterRepository.save(letter);
+        pushService.sendMessageToPartnerFree(userId,"신속하게 배달하겠습니다! -집배원-",partnerNickname+"(이)가 답장을 보냈어!");
+        pushService.sendMessageFree(receiveCouple.get().getUserId1(),"띵동! 편지 왔습니다! -집배원- ",sendCouple.get().getMailboxName()+"에서 편지가 도착했어!");
+        pushService.sendMessageFree(receiveCouple.get().getUserId2(),"띵동! 편지 왔습니다! -집배원- ",sendCouple.get().getMailboxName()+"에서 편지가 도착했어!");
         return new PostLetterRes(letter.getLetterId(),sendCouple.get().getMailboxName(),receiveCouple.get().getMailboxName());
     }
 
@@ -137,16 +146,21 @@ public class LetterDao {
         Optional<Letter> letter = Optional.of(letterRepository.findById(letterId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_LETTER)
         ));
-        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
+        Optional<Couple> giveScoreCouple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
-        if(letter.get().getReceiveCoupleId()!=couple.get().getCoupleId()){
+        if(letter.get().getReceiveCoupleId()!=giveScoreCouple.get().getCoupleId()){
             throw new BaseException(FAIL_TO_SCORE_INVALID_COUPLE);
         }
+        Optional<Couple> receiveScoreCouple = Optional.of(coupleRepository.findById(letter.get().getReceiveCoupleId()).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
         if(letter.get().getScore()!=-1){
             throw new BaseException(FAIL_TO_SCORE_ALREADY);
         }
         letter.get().score(score);
+        pushService.sendMessageFree(receiveScoreCouple.get().getUserId1(),"꾸벅...",giveScoreCouple.get().getMailboxName()+"이 우리에게 감사 인사를 했어");
+        pushService.sendMessageFree(receiveScoreCouple.get().getUserId2(),"꾸벅...",giveScoreCouple.get().getMailboxName()+"이 우리에게 감사 인사를 했어");
         Map<Integer, Integer> map = new HashMap<>();
         map.put(0,letter.get().getReceiveCoupleId());
         map.put(1,letter.get().getSendCoupleId());
