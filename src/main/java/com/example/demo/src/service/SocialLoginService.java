@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -205,8 +206,8 @@ public class SocialLoginService {
             HttpEntity<MultiValueMap<String, String>> postLoginReq = new HttpEntity<>(headers);
             RestTemplate rt = new RestTemplate();
             ResponseEntity<String> response = rt.exchange(
-                    "https://www.googleapis.com/oauth2/v2/userinfo",
-                    HttpMethod.POST,
+                    "https://www.googleapis.com/userinfo/v2/me",
+                    HttpMethod.GET,
                     postLoginReq,
                     String.class
             );
@@ -236,7 +237,7 @@ public class SocialLoginService {
             } else {
                 return new PostSocialLoginRes(false, null);
             }
-        } catch (JsonProcessingException e) {
+        } catch (JsonProcessingException | HttpClientErrorException e) {
             e.printStackTrace();
             throw new BaseException(FAIL_TO_RESPONSE_GOOGLE);
         }
