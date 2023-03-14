@@ -2,26 +2,18 @@ package com.example.demo.src.controller;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.data.dto.diary.DiaryReq;
-import com.example.demo.src.data.dto.diary.DiaryRes;
-import com.example.demo.src.data.dto.diarybook.*;
 import com.example.demo.src.data.dto.view.MailboxViewRes;
 import com.example.demo.src.data.dto.view.MainViewRes;
-import com.example.demo.src.data.entity.Diarybook;
-import com.example.demo.src.service.CoupleService;
-import com.example.demo.src.service.DiarybookService;
 import com.example.demo.src.service.ViewService;
 import com.example.demo.utils.TokenService;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/app/view")
@@ -117,6 +109,32 @@ public class ViewController {
             int userIdByJwt = tokenService.getUserId();
             int fromCount = viewService.getFrom(userIdByJwt);
             return new BaseResponse<>(fromCount);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 우표 수 조회 API
+     * [GET] /views/stampCount
+     */
+    @Operation(method = "GET",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 우표 수를 조회하는 api입니다. 1번부터 6번까지 우표의 개수를 순서대로 return합니다. ",
+            tags = "VIEW", summary = "우표 수 조회 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @GetMapping("/stampCount")
+    public BaseResponse<List<Integer>> getStamp(){
+        try{
+            int userIdByJwt = tokenService.getUserId();
+            List<Integer> stampViewRes = viewService.getStamp(userIdByJwt);
+            return new BaseResponse<>(stampViewRes);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
