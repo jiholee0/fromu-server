@@ -84,7 +84,7 @@ public class PushController {
             String title = "띵동-!";
             String body = pushService.getPushMessage(userIdByJwt);
             if(body == null || body.equals("")) {
-                body = "오늘 너의 하루가 궁금해 :)";
+                body = "빨리 일기장 내놔 ㅡㅅㅡ";
             }
             boolean success = pushService.sendMessageToPartner(userIdByJwt, title, body);
             return new BaseResponse<>(new PushMsgRes(userIdByJwt, title, body, success));

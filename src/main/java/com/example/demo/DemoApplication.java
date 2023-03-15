@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.TimeZone;
+@EnableScheduling
 @SpringBootApplication
 public class DemoApplication {
     static {

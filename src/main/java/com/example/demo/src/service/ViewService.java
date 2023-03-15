@@ -5,8 +5,10 @@ import com.example.demo.src.data.dao.*;
 import com.example.demo.src.data.dto.view.DiarybookDto;
 import com.example.demo.src.data.dto.view.MailboxViewRes;
 import com.example.demo.src.data.dto.view.MainViewRes;
+import com.example.demo.src.data.dto.view.NoticeViewRes;
 import com.example.demo.src.data.entity.Couple;
 import com.example.demo.src.data.entity.Diarybook;
+import com.example.demo.src.data.entity.NoticeRepository;
 import com.example.demo.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,5 +82,9 @@ public class ViewService {
 
     public List<Integer> getStamp(int userId) throws BaseException {
         return shopDao.getStampByUserId(userId);
+    }
+
+    public List<NoticeViewRes> getNotice(int userId) throws BaseException {
+        return coupleDao.getNotice(userId);
     }
 }

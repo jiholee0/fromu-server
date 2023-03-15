@@ -3,7 +3,9 @@ package com.example.demo.src.service;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dao.CoupleDao;
 import com.example.demo.src.data.dao.ShopDao;
+import com.example.demo.src.data.dao.UserDao;
 import com.example.demo.src.data.dto.push.FcmMessage;
+import com.example.demo.src.data.entity.PushStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -12,27 +14,38 @@ import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Optional;
 
-import static com.example.demo.config.BaseResponseStatus.FAIL_TO_PUSH_MESSAGE;
-import static com.example.demo.config.BaseResponseStatus.NOT_EXIST_DEVICE_TOKEN;
+import static com.example.demo.config.BaseResponseStatus.*;
 
-@Component
 @Service
+@EnableScheduling
 public class PushService {
     private final CoupleDao coupleDao;
     private final ShopDao shopDao;
+    private final UserDao userDao;
     private final ObjectMapper objectMapper;
+
+    private int setUserId = 0;
+    private String setTitle = "";
+    private String setBody = "";
 
 
     @Autowired
-    public PushService(CoupleDao coupleDao, ShopDao shopDao, ObjectMapper objectMapper){
+    public PushService(CoupleDao coupleDao, ShopDao shopDao, UserDao userDao, ObjectMapper objectMapper){
         this.coupleDao = coupleDao;
         this.shopDao = shopDao;
+        this.userDao = userDao;
         this.objectMapper = objectMapper;
     }
 
@@ -50,6 +63,53 @@ public class PushService {
         }
         return false;
     }
+
+    public void sendMessageToPartnerFree(int userId, String title, String body) throws BaseException{
+        String targetToken = coupleDao.getPartnerDeviceToken(userId);
+        if(shopDao.push(userId)){
+            if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
+            sendMessageTo(
+                    targetToken,
+                    title,
+                    body);
+        }
+    }
+
+//    @Scheduled(initialDelay = 60 * 60 * 1000) // 1시간 후에 실행
+//    public boolean sendMessageToPartnerFreeAfterHour(int userId, String title, String body) throws BaseException{
+//        String targetToken = coupleDao.getPartnerDeviceToken(userId);
+//        if(shopDao.push(userId)){
+//            if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
+//            sendMessageTo(
+//                    targetToken,
+//                    title,
+//                    body);
+//            return true;
+//        }
+//        return false;
+//    }
+
+//    @Scheduled(initialDelay = 60 * 1000) // 1분 후에 실행
+//    public Date testScheduled() throws BaseException{
+//        return new Date();
+//    }
+
+    public void set(int userId, String title, String body){
+        this.setUserId = userId;
+        this.setTitle = title;
+        this.setBody = body;
+    }
+
+    public boolean sendMessageFree(int userId, String title, String body) throws BaseException{
+        String targetToken = userDao.getUser(userId).getDeviceToken();
+        if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
+        sendMessageTo(
+                targetToken,
+                title,
+                body);
+        return true;
+    }
+
     public void sendMessageTo(String targetToken, String title, String body) throws BaseException {
         try{
             String message = makeMessage(targetToken, title, body);

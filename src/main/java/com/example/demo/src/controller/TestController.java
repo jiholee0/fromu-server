@@ -1,6 +1,8 @@
 package com.example.demo.src.controller;
 
+import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.service.PushService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -18,9 +20,12 @@ import java.util.Date;
 @Tag(name = "TEST", description = "테스트 API")
 public class TestController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final PushService pushService;
 
     @Autowired
-    public TestController() {}
+    public TestController(PushService pushService) {
+        this.pushService = pushService;
+    }
 
     /**
      * 로그 테스트 API
@@ -56,4 +61,15 @@ public class TestController {
         Date date = new Date();
         return new BaseResponse<>(date);
     }
+
+    /**
+     * scheduled 테스트 API
+     */
+//    @Operation(method = "GET", description = "테스트 API : 1분 후의 시간을 출력하는지 테스트하는 api입니다.", tags = "TEST", summary = "테스트 API")
+//    @GetMapping("/scheduled")
+//    public BaseResponse<Date> testScheduled() throws BaseException {
+//        Date date = new Date();
+//        // date = pushService.testScheduled();
+//        return new BaseResponse<>(date);
+//    }
 }
