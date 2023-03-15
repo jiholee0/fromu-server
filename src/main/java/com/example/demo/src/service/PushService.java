@@ -54,7 +54,7 @@ public class PushService {
     public boolean sendMessageToPartner(int userId, String title, String body) throws BaseException{
         String targetToken = coupleDao.getPartnerDeviceToken(userId);
         if(shopDao.push(userId)){
-            if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
+            if(targetToken == null || targetToken.equals("")) return false;
             sendMessageTo(
                     targetToken,
                     title,
@@ -64,15 +64,14 @@ public class PushService {
         return false;
     }
 
-    public void sendMessageToPartnerFree(int userId, String title, String body) throws BaseException{
+    public boolean sendMessageToPartnerFree(int userId, String title, String body) throws BaseException{
         String targetToken = coupleDao.getPartnerDeviceToken(userId);
-        if(shopDao.push(userId)){
-            if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
-            sendMessageTo(
-                    targetToken,
-                    title,
-                    body);
-        }
+        if(targetToken == null || targetToken.equals("")) return false;
+        sendMessageTo(
+                targetToken,
+                title,
+                body);
+        return true;
     }
 
 //    @Scheduled(initialDelay = 60 * 60 * 1000) // 1시간 후에 실행
@@ -102,7 +101,7 @@ public class PushService {
 
     public boolean sendMessageFree(int userId, String title, String body) throws BaseException{
         String targetToken = userDao.getUser(userId).getDeviceToken();
-        if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
+        if(targetToken == null || targetToken.equals("")) return false;
         sendMessageTo(
                 targetToken,
                 title,
