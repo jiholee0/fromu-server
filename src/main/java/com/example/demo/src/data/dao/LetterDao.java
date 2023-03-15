@@ -27,6 +27,8 @@ public class LetterDao {
     ReportRepository reportRepository;
     @Autowired
     PushService pushService;
+    @Autowired
+    NoticeRepository noticeRepository;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     Date date = new Date();
@@ -39,6 +41,10 @@ public class LetterDao {
         date = new Date();
         Letter letter = postLetterReq.toEntity(0,userId,sendCouple.get().getCoupleId(),receiveCouple.getCoupleId(), date);
         letterRepository.save(letter);
+        Notice notice = new Notice(sendCouple.get().getCoupleId(),receiveCouple.getMailboxName()+"으로 편지를 성공적으로 보냈어!", date);
+        noticeRepository.save(notice);
+        notice = new Notice(receiveCouple.getCoupleId(),sendCouple.get().getMailboxName()+"에서 편지가 도착했어!", date);
+        noticeRepository.save(notice);
         pushService.sendMessageToPartnerFree(userId,"신속하게 배달하겠습니다! -집배원-",partnerNickname+"(이)가 우리의 이야기를 편지로 보냈어!");
         pushService.sendMessageFree(receiveCouple.getUserId1(),"띵동! 편지 왔습니다! -집배원-","다른 커플이 우리에게 편지를 보냈어!");
         pushService.sendMessageFree(receiveCouple.getUserId2(),"띵동! 편지 왔습니다! -집배원-","다른 커플이 우리에게 편지를 보냈어!");
@@ -62,6 +68,10 @@ public class LetterDao {
         date = new Date();
         Letter letter = postLetterReq.toEntity(letterId,userId,sendCouple.get().getCoupleId(),receiveCouple.get().getCoupleId(), date);
         letterRepository.save(letter);
+        Notice notice = new Notice(sendCouple.get().getCoupleId(),receiveCouple.get().getMailboxName()+"으로 답장을 보냈어. 답장해줘서 고마워 :)", date);
+        noticeRepository.save(notice);
+        notice = new Notice(receiveCouple.get().getCoupleId(),sendCouple.get().getMailboxName()+"이 우리에게 답장을 보냈어!", date);
+        noticeRepository.save(notice);
         pushService.sendMessageToPartnerFree(userId,"신속하게 배달하겠습니다! -집배원-",partnerNickname+"(이)가 답장을 보냈어!");
         pushService.sendMessageFree(receiveCouple.get().getUserId1(),"띵동! 편지 왔습니다! -집배원- ",sendCouple.get().getMailboxName()+"에서 편지가 도착했어!");
         pushService.sendMessageFree(receiveCouple.get().getUserId2(),"띵동! 편지 왔습니다! -집배원- ",sendCouple.get().getMailboxName()+"에서 편지가 도착했어!");
@@ -159,6 +169,10 @@ public class LetterDao {
             throw new BaseException(FAIL_TO_SCORE_ALREADY);
         }
         letter.get().score(score);
+        Notice notice = new Notice(giveScoreCouple.get().getCoupleId(),receiveScoreCouple.get().getMailboxName()+"에게 감사 인사를 했어.", date);
+        noticeRepository.save(notice);
+        notice = new Notice(receiveScoreCouple.get().getCoupleId(),giveScoreCouple.get().getMailboxName()+"이 우리에게 감사 인사를 했어.", date);
+        noticeRepository.save(notice);
         pushService.sendMessageFree(receiveScoreCouple.get().getUserId1(),"꾸벅...",giveScoreCouple.get().getMailboxName()+"이 우리에게 감사 인사를 했어");
         pushService.sendMessageFree(receiveScoreCouple.get().getUserId2(),"꾸벅...",giveScoreCouple.get().getMailboxName()+"이 우리에게 감사 인사를 했어");
         Map<Integer, Integer> map = new HashMap<>();

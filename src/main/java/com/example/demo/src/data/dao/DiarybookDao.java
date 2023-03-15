@@ -5,6 +5,7 @@ import com.example.demo.src.data.dto.diarybook.GetFirstPageRes;
 import com.example.demo.src.data.dto.diarybook.PostDiarybookReq;
 import com.example.demo.src.data.dto.diarybook.PostDiarybookRes;
 import com.example.demo.src.data.entity.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,12 @@ public class DiarybookDao {
     DiarybookRepository diarybookRepository;
     @Autowired
     CoupleRepository coupleRepository;
+    @Autowired
+    NoticeRepository noticeRepository;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    Date date = new Date();
+
 
     @Transactional
     public int createDiarybook(int userId, PostDiarybookReq postDiarybookReq) throws BaseException {
@@ -37,6 +44,9 @@ public class DiarybookDao {
         try{
             Diarybook diarybook = postDiarybookReq.toEntity(userId, couple.get().getCoupleId());
             diarybookRepository.save(diarybook);
+            date = new Date();
+            Notice notice = new Notice(couple.get().getCoupleId(),"우리만의 교환일기, "+postDiarybookReq.getName()+"이 만들어졌어!", date);
+            noticeRepository.save(notice);
             return diarybook.getDiarybookId();
         } catch (Exception exception){
             exception.printStackTrace();
@@ -54,6 +64,9 @@ public class DiarybookDao {
         ));
         try {
             diarybook.get().modifyDiarybookCover(coverNum);
+            date = new Date();
+            Notice notice = new Notice(couple.get().getCoupleId(),diarybook.get().getName()+"의 표지가 편집되었어!", date);
+            noticeRepository.save(notice);
             return diarybook.get().diarybookId;
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -71,6 +84,9 @@ public class DiarybookDao {
         ));
         try {
             diarybook.get().modifyDiarybookName(name);
+            date = new Date();
+            Notice notice = new Notice(couple.get().getCoupleId(),diarybook.get().getName()+"의 이름이 편집되었어!", date);
+            noticeRepository.save(notice);
             return diarybook.get().getDiarybookId();
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -88,6 +104,9 @@ public class DiarybookDao {
         ));
         try {
             diarybook.get().uploadDiarybookImage(imageUrl);
+            date = new Date();
+            Notice notice = new Notice(couple.get().getCoupleId(),diarybook.get().getName()+"의 내지가 편집되었어!", date);
+            noticeRepository.save(notice);
             return diarybook.get().getDiarybookId();
         } catch (Exception exception) {
             exception.printStackTrace();

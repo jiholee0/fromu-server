@@ -4,18 +4,15 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dto.couple.CoupleRes;
 import com.example.demo.src.data.dto.couple.GetCoupleMatchRes;
 import com.example.demo.src.data.dto.couple.PostCoupleReq;
-import com.example.demo.src.data.entity.Couple;
-import com.example.demo.src.data.entity.CoupleRepository;
-import com.example.demo.src.data.entity.User;
-import com.example.demo.src.data.entity.UserRepository;
+import com.example.demo.src.data.dto.view.NoticeViewRes;
+import com.example.demo.src.data.entity.*;
 import com.example.demo.utils.CommonUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -26,11 +23,19 @@ public class CoupleDao {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    NoticeRepository noticeRepository;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    Date date = new Date();
 
     @Transactional
     // 커플 등록(POST)
     public CoupleRes createCouple(int userId, PostCoupleReq postCoupleReq) throws BaseException {
 
+        Optional<User> user = Optional.of(userRepository.findById(userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
         Optional<User> partner = userRepository.findByUserCode(postCoupleReq.getPartnerCode());
         if (!partner.isPresent()) {
             throw new BaseException(NOT_EXIST_DATA);
@@ -43,6 +48,9 @@ public class CoupleDao {
         try {
             Couple couple = postCoupleReq.toEntity(userId, partnerId);
             coupleRepository.save(couple);
+            date = new Date();
+            Notice notice = new Notice(couple.getCoupleId(),user.get().getNickname()+", "+partner.get().getNickname()+". 커플이 된 걸 축하해.", date);
+            noticeRepository.save(notice);
             return new CoupleRes(
                     couple.getCoupleId(),
                     false,
@@ -135,6 +143,9 @@ public class CoupleDao {
         ));
         try {
             couple.get().modifyFirstMetDay(str);
+            date = new Date();
+            Notice notice = new Notice(couple.get().getCoupleId(),str.substring(0,4)+"년 "+str.substring(4,6)+"월 "+str.substring(6,8)+"일, 우리의 기념일이 등록되었어!", date);
+            noticeRepository.save(notice);
             return couple.get().getCoupleId();
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -153,6 +164,9 @@ public class CoupleDao {
         ));
         try {
             couple.get().modifyMailbox(str);
+            date = new Date();
+            Notice notice = new Notice(couple.get().getCoupleId(),"우리 우편함 이름이 "+str+"으로 설정되었어!", date);
+            noticeRepository.save(notice);
             return couple.get().getCoupleId();
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -262,5 +276,20 @@ public class CoupleDao {
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
         return user.get().getNickname();
+    }
+
+    @Transactional
+    public List<NoticeViewRes> getNotice(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        List<Notice> noticeList = noticeRepository.findByCoupleId(couple.get().getCoupleId());
+        List<NoticeViewRes> noticeViewRes = new ArrayList<>();
+        for(Notice notice : noticeList){
+            noticeViewRes.add(new NoticeViewRes(notice.getContent(), notice.getCreateDate()));
+            if(noticeViewRes.size()>=30) break;
+        }
+        Collections.reverse(noticeViewRes);
+        return noticeViewRes;
     }
 }

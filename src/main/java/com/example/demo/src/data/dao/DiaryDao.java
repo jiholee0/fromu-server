@@ -6,6 +6,7 @@ import com.example.demo.src.data.dto.diary.DiaryReq;
 import com.example.demo.src.data.dto.diary.DiaryRes;
 import com.example.demo.src.data.dto.diary.GetDiaryListByMonthRes;
 import com.example.demo.src.data.entity.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,11 +27,18 @@ public class DiaryDao {
     @Autowired
     CoupleRepository coupleRepository;
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
+    @Autowired
+    private NoticeRepository noticeRepository;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    Date date = new Date();
 
     @Transactional
     public int createDiary(int userId, DiaryReq postDiaryReq, String imageUrl) throws BaseException {
-        Date date = new Date();
+        Date diaryDate = new Date();
+        Optional<User> user = Optional.of(userRepository.findById(userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
         Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_COUPLE)
         ));
@@ -48,9 +56,12 @@ public class DiaryDao {
         }
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            Diary diary = postDiaryReq.toEntity(diarybook.get().getDiarybookId(),userId, imageUrl, sdf.format(date));
+            Diary diary = postDiaryReq.toEntity(diarybook.get().getDiarybookId(),userId, imageUrl, sdf.format(diaryDate));
             diaryRepository.save(diary);
             diarybook.get().writeDiary();
+            date = new Date();
+            Notice notice = new Notice(couple.get().getCoupleId(),user.get().getNickname()+"(이)가 일기를 작성했어!", date);
+            noticeRepository.save(notice);
             return diary.getDiaryId();
         } catch (Exception exception){
             exception.printStackTrace();
