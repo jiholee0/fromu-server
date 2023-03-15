@@ -356,7 +356,7 @@ public class UserController {
      * [PATCH] /users/logout
      */
     @Operation(method = "PATCH",
-            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 로그아웃 처리하는 api입니다.",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣어 로그아웃 처리(device token, refresh token 삭제)하는 api입니다.",
             tags = "USER", summary = "로그아웃 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),

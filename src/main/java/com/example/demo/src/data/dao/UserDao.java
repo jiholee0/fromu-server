@@ -153,4 +153,18 @@ public class UserDao {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    @Transactional
+    public void logout(int userId) throws BaseException {
+        Optional<User> user = Optional.of(userRepository.findById(userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        try {
+            user.get().saveDeviceToken("");
+            user.get().saveRefreshToken("");
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

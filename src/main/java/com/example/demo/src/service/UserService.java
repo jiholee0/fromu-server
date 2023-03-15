@@ -137,6 +137,6 @@ public class UserService {
     }
 
     public void logout(int userId) throws BaseException {
-
+        userDao.logout(userId);
     }
 }
