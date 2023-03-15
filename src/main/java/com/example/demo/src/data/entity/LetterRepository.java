@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface LetterRepository extends JpaRepository<Letter, Integer> {
 
     Optional<Letter> findByRefLetterId(int refLetterId);
-    List<Letter> findBySendCoupleId(@Param(value="sendCoupleId") int sendCoupleId);
-    List<Letter> findByReceiveCoupleId(@Param(value="receiveCoupleId") int receiveCoupleId);
+    List<Letter> findBySendCoupleId(int sendCoupleId);
+    List<Letter> findByReceiveCoupleId(int receiveCoupleId);
 
 }

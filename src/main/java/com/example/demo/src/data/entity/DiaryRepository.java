@@ -10,5 +10,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Integer> {
-    List<Diary> findByDiarybookId(@Param(value="diarybookId") int diarybookId);
+    List<Diary> findByDiarybookId(int diarybookId);
 }
