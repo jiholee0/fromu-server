@@ -125,11 +125,10 @@ public class LetterDao {
             }
             return new PatchReadLetterRes(letterId,letter.get().getStampNum(),letter.get().getContent(),
                 sendCouple.get().getMailboxName(),receiveCouple.get().getMailboxName(),letter.get().getCreateDate(),status,replyFlag,scoreFlag);
-    } catch (Exception exception) {
-        exception.printStackTrace();
-        throw new BaseException(DATABASE_ERROR);
-    }
-
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     @Transactional
@@ -148,7 +147,7 @@ public class LetterDao {
                         letter.getLetterId(),
                         receiveCouple.get().getMailboxName(),
                         letter.getCreateDate(),
-                        letter.isReadFlag()));
+                        letter.isReadFlag(), 1));
             }
             Collections.reverse(resList);
             return resList;
@@ -170,18 +169,22 @@ public class LetterDao {
                 Optional<Couple> sendCouple = Optional.of(coupleRepository.findById(letter.getSendCoupleId()).orElseThrow(
                         () -> new BaseException(NOT_EXIST_DATA_COUPLE)
                 ));
+                int status;
+                if(letter.getLetterId()==0){
+                    status = 2;
+                } else {status = 0;}
                 if(letter.isReadFlag()){
                     resReadList.add(new GetLetterRes(
                             letter.getLetterId(),
                             sendCouple.get().getMailboxName(),
                             letter.getCreateDate(),
-                            letter.isReadFlag()));
+                            letter.isReadFlag(), status));
                 } else {
                     resNotReadList.add(new GetLetterRes(
                             letter.getLetterId(),
                             sendCouple.get().getMailboxName(),
                             letter.getCreateDate(),
-                            letter.isReadFlag()));
+                            letter.isReadFlag(), status));
                 }
             }
             Collections.reverse(resReadList);

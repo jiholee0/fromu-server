@@ -18,4 +18,5 @@ public class GetLetterRes {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private Date time;
     private boolean readFlag;
+    private int status;
 }
