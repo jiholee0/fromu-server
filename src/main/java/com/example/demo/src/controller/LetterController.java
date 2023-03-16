@@ -137,7 +137,7 @@ public class LetterController {
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 "+
                     "받은 편지함, 보낸 편지함을 조회하는 api입니다. " +
                     "받은 편지함이면 type = 0, 보낸 편지함이면 type = 1이며, " +
-                    "letterId, 우편함 이름, 작성 시간, 읽음 여부 list를 return합니다.",
+                    "letterId, 우편함 이름, 작성 시간, 읽음 여부 list, status(받은편지면 0 , 보낸편지면 1, 답장편지면 2)를 return합니다.",
             tags = "LETTER", summary = "편지함 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
