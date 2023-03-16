@@ -170,9 +170,11 @@ public class LetterDao {
                         () -> new BaseException(NOT_EXIST_DATA_COUPLE)
                 ));
                 int status;
-                if(letter.getLetterId()==0){
+                if(letter.getRefLetterId()!=0){
                     status = 2;
-                } else {status = 0;}
+                } else {
+                    status = 0;
+                }
                 if(letter.isReadFlag()){
                     resReadList.add(new GetLetterRes(
                             letter.getLetterId(),
