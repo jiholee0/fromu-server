@@ -84,6 +84,10 @@ public class ViewService {
         return shopDao.getStampByUserId(userId);
     }
 
+    public List<Integer> getStampAllList(int userId) throws BaseException {
+        return shopDao.getStampByUserIdAllList(userId);
+    }
+
     public List<NoticeViewRes> getNotice(int userId) throws BaseException {
         return coupleDao.getNotice(userId);
     }

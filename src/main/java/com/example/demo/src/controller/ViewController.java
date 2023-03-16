@@ -142,6 +142,32 @@ public class ViewController {
     }
 
     /**
+     * 우표 수 조회 API
+     * [GET] /views/stampList
+     */
+    @Operation(method = "GET",
+            description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 우표 수를 조회하는 api입니다. 보유한 우표 번호를 모두 return합니다. ",
+            tags = "VIEW", summary = "보유 우표 리스트 조회 API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "2000", description = "JWT를 입력해주세요."),
+            @ApiResponse(responseCode = "2001", description = "유효하지 않은 JWT입니다."),
+            @ApiResponse(responseCode = "4000", description = "데이터베이스 연결에 실패하였습니다."),
+            @ApiResponse(responseCode = "4002", description = "커플이 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @GetMapping("/stampList")
+    public BaseResponse<List<Integer>> getStampAllList(){
+        try{
+            int userIdByJwt = tokenService.getUserId();
+            List<Integer> stampViewRes = viewService.getStampAllList(userIdByJwt);
+            return new BaseResponse<>(stampViewRes);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
      * 알림 조회 API
      * [GET] /views/notice
      */
