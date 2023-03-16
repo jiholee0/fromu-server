@@ -36,10 +36,10 @@ public class LetterDao {
 
     @Transactional
     public PostLetterRes sendLetter(int userId, PostLetterReq postLetterReq, Couple receiveCouple, String partnerNickname) throws BaseException {
+        Optional<Couple> sendCouple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
         try {
-            Optional<Couple> sendCouple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_COUPLE)
-            ));
             date = new Date();
             Letter letter = postLetterReq.toEntity(0, userId, sendCouple.get().getCoupleId(), receiveCouple.getCoupleId(), date);
             letterRepository.save(letter);
@@ -60,19 +60,19 @@ public class LetterDao {
 
     @Transactional
     public PostLetterRes sendLetterReply(int userId, int letterId, PostLetterReq postLetterReq, String partnerNickname) throws BaseException {
+        Optional<Couple> sendCouple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        Optional<Letter> refLetter = Optional.of(letterRepository.findById(letterId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_LETTER)
+        ));
+        if (refLetter.get().getRefLetterId()!=0){
+            throw new BaseException(POST_LETTERS_ALREADY_REPLY);
+        }
+        Optional<Couple> receiveCouple = Optional.of(coupleRepository.findById(refLetter.get().sendCoupleId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
         try{
-            Optional<Couple> sendCouple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_COUPLE)
-            ));
-            Optional<Letter> refLetter = Optional.of(letterRepository.findById(letterId).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_LETTER)
-            ));
-            if (refLetter.get().getRefLetterId()!=0){
-                throw new BaseException(POST_LETTERS_ALREADY_REPLY);
-            }
-            Optional<Couple> receiveCouple = Optional.of(coupleRepository.findById(refLetter.get().sendCoupleId).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_COUPLE)
-            ));
             date = new Date();
             Letter letter = postLetterReq.toEntity(letterId,userId,sendCouple.get().getCoupleId(),receiveCouple.get().getCoupleId(), date);
             letterRepository.save(letter);
@@ -93,16 +93,16 @@ public class LetterDao {
 
     @Transactional
     public PatchReadLetterRes readLetter(int userId, int letterId) throws BaseException {
+        Optional<Letter> letter = Optional.of(letterRepository.findById(letterId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_LETTER)
+        ));
+        Optional<Couple> sendCouple = Optional.of(coupleRepository.findById(letter.get().getSendCoupleId()).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        Optional<Couple> receiveCouple = Optional.of(coupleRepository.findById(letter.get().getReceiveCoupleId()).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
         try {
-            Optional<Letter> letter = Optional.of(letterRepository.findById(letterId).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_LETTER)
-            ));
-            Optional<Couple> sendCouple = Optional.of(coupleRepository.findById(letter.get().getSendCoupleId()).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_COUPLE)
-            ));
-            Optional<Couple> receiveCouple = Optional.of(coupleRepository.findById(letter.get().getReceiveCoupleId()).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_COUPLE)
-            ));
             int status = -1;
             boolean replyFlag = false;
             boolean scoreFlag = false;
@@ -157,38 +157,38 @@ public class LetterDao {
         }
     }
     public List<GetLetterRes> getReceiveLetterList(int userId) throws BaseException {
-        try {
-            Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        List<Letter> letterList = letterRepository.findByReceiveCoupleId(couple.get().getCoupleId());
+        List<GetLetterRes> resList = new ArrayList<>();
+        List<GetLetterRes> resReadList = new ArrayList<>();
+        List<GetLetterRes> resNotReadList = new ArrayList<>();
+        for(Letter letter : letterList){
+            Optional<Couple> sendCouple = Optional.of(coupleRepository.findById(letter.getSendCoupleId()).orElseThrow(
                     () -> new BaseException(NOT_EXIST_DATA_COUPLE)
             ));
-            List<Letter> letterList = letterRepository.findByReceiveCoupleId(couple.get().getCoupleId());
-            List<GetLetterRes> resList = new ArrayList<>();
-            List<GetLetterRes> resReadList = new ArrayList<>();
-            List<GetLetterRes> resNotReadList = new ArrayList<>();
-            for(Letter letter : letterList){
-                Optional<Couple> sendCouple = Optional.of(coupleRepository.findById(letter.getSendCoupleId()).orElseThrow(
-                        () -> new BaseException(NOT_EXIST_DATA_COUPLE)
-                ));
-                int status;
-                if(letter.getRefLetterId()!=0){
-                    status = 2;
-                } else {
-                    status = 0;
-                }
-                if(letter.isReadFlag()){
-                    resReadList.add(new GetLetterRes(
-                            letter.getLetterId(),
-                            sendCouple.get().getMailboxName(),
-                            letter.getCreateDate(),
-                            letter.isReadFlag(), status));
-                } else {
-                    resNotReadList.add(new GetLetterRes(
-                            letter.getLetterId(),
-                            sendCouple.get().getMailboxName(),
-                            letter.getCreateDate(),
-                            letter.isReadFlag(), status));
-                }
+            int status;
+            if(letter.getRefLetterId()!=0){
+                status = 2;
+            } else {
+                status = 0;
             }
+            if(letter.isReadFlag()){
+                resReadList.add(new GetLetterRes(
+                        letter.getLetterId(),
+                        sendCouple.get().getMailboxName(),
+                        letter.getCreateDate(),
+                        letter.isReadFlag(), status));
+            } else {
+                resNotReadList.add(new GetLetterRes(
+                        letter.getLetterId(),
+                        sendCouple.get().getMailboxName(),
+                        letter.getCreateDate(),
+                        letter.isReadFlag(), status));
+            }
+        }
+        try {
             Collections.reverse(resReadList);
             Collections.reverse(resNotReadList);
             resList.addAll(resNotReadList);
@@ -202,22 +202,22 @@ public class LetterDao {
 
     @Transactional
     public Map<Integer, Integer> scoreLetter(int userId, int letterId, int score) throws BaseException {
+        Optional<Letter> letter = Optional.of(letterRepository.findById(letterId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_LETTER)
+        ));
+        Optional<Couple> giveScoreCouple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        if(letter.get().getReceiveCoupleId()!=giveScoreCouple.get().getCoupleId()){
+            throw new BaseException(FAIL_TO_SCORE_INVALID_COUPLE);
+        }
+        Optional<Couple> receiveScoreCouple = Optional.of(coupleRepository.findById(letter.get().getReceiveCoupleId()).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        if(letter.get().getScore()!=-1){
+            throw new BaseException(FAIL_TO_SCORE_ALREADY);
+        }
         try {
-            Optional<Letter> letter = Optional.of(letterRepository.findById(letterId).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_LETTER)
-            ));
-            Optional<Couple> giveScoreCouple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_COUPLE)
-            ));
-            if(letter.get().getReceiveCoupleId()!=giveScoreCouple.get().getCoupleId()){
-                throw new BaseException(FAIL_TO_SCORE_INVALID_COUPLE);
-            }
-            Optional<Couple> receiveScoreCouple = Optional.of(coupleRepository.findById(letter.get().getReceiveCoupleId()).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_COUPLE)
-            ));
-            if(letter.get().getScore()!=-1){
-                throw new BaseException(FAIL_TO_SCORE_ALREADY);
-            }
             letter.get().score(score);
             Notice notice = new Notice(giveScoreCouple.get().getCoupleId(),receiveScoreCouple.get().getMailboxName()+"에게 감사 인사를 했어.", date);
             noticeRepository.save(notice);
@@ -238,10 +238,10 @@ public class LetterDao {
 
     @Transactional
     public int getNewLetterId(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
         try {
-            Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
-                    () -> new BaseException(NOT_EXIST_DATA_COUPLE)
-            ));
             List<Letter> receiveLetter = letterRepository.findByReceiveCoupleId(couple.get().getCoupleId());
             int lastIndex = receiveLetter.size()-1;
             if(lastIndex>=0 && !receiveLetter.get(lastIndex).isReadFlag()){
