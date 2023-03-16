@@ -184,4 +184,29 @@ public class ShopDao {
         stampList.add(stampStatus.get().getStampCount6());
         return stampList;
     }
+
+    @Transactional
+    public List<Integer> getStampByUserIdAllList(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId,userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_COUPLE)
+        ));
+        Optional<StampStatus> stampStatus = Optional.of(stampStatusRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_STAMP)
+        ));
+        List<Integer> stampList = new ArrayList<>();
+        for (int i=0;i<stampStatus.get().getStampCount1();i++){
+            stampList.add(1);
+        }for (int i=0;i<stampStatus.get().getStampCount2();i++){
+            stampList.add(2);
+        }for (int i=0;i<stampStatus.get().getStampCount3();i++){
+            stampList.add(3);
+        }for (int i=0;i<stampStatus.get().getStampCount4();i++){
+            stampList.add(4);
+        }for (int i=0;i<stampStatus.get().getStampCount5();i++){
+            stampList.add(5);
+        }for (int i=0;i<stampStatus.get().getStampCount6();i++){
+            stampList.add(6);
+        }
+        return stampList;
+    }
 }

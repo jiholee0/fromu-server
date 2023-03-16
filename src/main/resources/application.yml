@@ -1,6 +1,10 @@
 server:
   port: 8080  # 9000번 포트로 실행
 
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+
 spring:
   application:
     name: fromu
