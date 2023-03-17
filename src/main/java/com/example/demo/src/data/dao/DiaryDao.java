@@ -35,7 +35,7 @@ public class DiaryDao {
 
     @Transactional
     public int createDiary(int userId, DiaryReq postDiaryReq, String imageUrl) throws BaseException {
-        Date diaryDate = new Date();
+        date = new Date();
         Optional<User> user = Optional.of(userRepository.findById(userId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
         ));
@@ -56,10 +56,9 @@ public class DiaryDao {
         }
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            Diary diary = postDiaryReq.toEntity(diarybook.get().getDiarybookId(),userId, imageUrl, sdf.format(diaryDate));
+            Diary diary = postDiaryReq.toEntity(diarybook.get().getDiarybookId(),userId, imageUrl, sdf.format(date));
             diaryRepository.save(diary);
             diarybook.get().writeDiary();
-            date = new Date();
             Notice notice = new Notice(couple.get().getCoupleId(),user.get().getNickname()+"(이)가 일기를 작성했어!", date);
             noticeRepository.save(notice);
             return diary.getDiaryId();
