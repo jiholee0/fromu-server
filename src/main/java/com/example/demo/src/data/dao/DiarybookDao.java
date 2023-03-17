@@ -161,7 +161,7 @@ public class DiarybookDao {
             throw new BaseException(PATCH_DIARYBOOKS_NOT_WRITE_DIARY);
         }
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.SECOND, 10);
+        cal.add(Calendar.SECOND, 3);
         Date turnTime = new Date(cal.getTimeInMillis());
         int partnerId;
         if (couple.get().getUserId1()==userId) {partnerId=couple.get().getUserId2();}
