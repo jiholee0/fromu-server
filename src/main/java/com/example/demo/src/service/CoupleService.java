@@ -3,6 +3,7 @@ package com.example.demo.src.service;
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dao.CoupleDao;
 import com.example.demo.src.data.dao.LetterDao;
+import com.example.demo.src.data.dao.ScheduleDao;
 import com.example.demo.src.data.dao.ShopDao;
 import com.example.demo.src.data.dto.couple.CoupleRes;
 import com.example.demo.src.data.dto.couple.GetCoupleMatchRes;
@@ -22,12 +23,14 @@ public class CoupleService {
     private final CoupleDao coupleDao;
     private final ShopDao shopDao;
     private final LetterDao letterDao;
+    private final ScheduleDao scheduleDao;
 
     @Autowired
-    public CoupleService(CoupleDao coupleDao, ShopDao shopDao, LetterDao letterDao) {
+    public CoupleService(CoupleDao coupleDao, ShopDao shopDao, LetterDao letterDao, ScheduleDao scheduleDao) {
         this.coupleDao = coupleDao;
         this.shopDao = shopDao;
         this.letterDao = letterDao;
+        this.scheduleDao = scheduleDao;
     }
 
     // 커플 등록(POST)
@@ -35,6 +38,7 @@ public class CoupleService {
         CoupleRes coupleRes = coupleDao.createCouple(userId, postCoupleReq);
         shopDao.init(coupleRes.getCoupleId());
         letterDao.init(coupleRes.getCoupleId());
+        scheduleDao.init(coupleRes.getCoupleId());
         return coupleRes;
     }
 

@@ -17,6 +17,7 @@ public class ScheduleRes {
     private String date;
     private int userId;
     private String nickname;
+    private boolean editable;
 
     public static Comparator<ScheduleRes> getComparatorByDate() {
         return Comparator.comparing(ScheduleRes::getDate);

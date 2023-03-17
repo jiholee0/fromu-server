@@ -130,7 +130,7 @@ public class ScheduleController {
      */
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값과 파라미터에 month(ex-202303)와 date(ex-03)을 넣어 일정을 조회하는 api입니다. month는 필수, date는 필수가 아닙니다." +
-                    "date를 입력하지 않으면 특정 달의 모든 일정을 조회합니다. ",
+                    "date를 입력하지 않으면 특정 달의 모든 일정을 조회합니다. **기념일이라면 일정의 닉네임은 \"우리\"입니다.**",
             tags = "SCHEDULE", summary = "특정 달 또는 날짜의 일정 전체 조회 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
