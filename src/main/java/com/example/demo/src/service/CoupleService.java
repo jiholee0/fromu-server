@@ -38,7 +38,6 @@ public class CoupleService {
         CoupleRes coupleRes = coupleDao.createCouple(userId, postCoupleReq);
         shopDao.init(coupleRes.getCoupleId());
         letterDao.init(coupleRes.getCoupleId());
-        scheduleDao.init(coupleRes.getCoupleId());
         return coupleRes;
     }
 
