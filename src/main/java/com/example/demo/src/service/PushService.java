@@ -113,7 +113,7 @@ public class PushService {
         Response response;
         try{
             String message = makeMessage(targetToken, title, body);
-
+            if(message == null) return;
             OkHttpClient client = new OkHttpClient();
             RequestBody requestBody = RequestBody.create(message,
                     MediaType.get("application/json; charset=utf-8"));
@@ -127,12 +127,7 @@ public class PushService {
             System.out.println(response.body().string());
         } catch (IOException exception){
             exception.printStackTrace();
-            throw new BaseException(FAIL_TO_PUSH_MESSAGE);
         }
-        if(response.code()!=200){
-            throw new BaseException(FAIL_TO_PUSH_MESSAGE);
-        }
-
     }
 
     private String makeMessage(String targetToken, String title, String body) throws BaseException {
@@ -153,7 +148,7 @@ public class PushService {
             return objectMapper.writeValueAsString(fcmMessage);
         } catch(JsonParseException | JsonProcessingException exception){
             exception.printStackTrace();
-            throw new BaseException(FAIL_TO_PUSH_MESSAGE);
+            return null;
         }
     }
 
