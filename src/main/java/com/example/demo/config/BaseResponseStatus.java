@@ -44,6 +44,8 @@ public enum BaseResponseStatus {
     POST_DIARIES_INVALID_WEATHER(false,2033,"날씨 형식을 확인해주세요."),
     // [POST] /letters
     POST_LETTERS_ALREADY_REPLY(false,2035,"이미 답장이 존재합니다."),
+    // [POST] /schedules
+    POST_SCHEDULES_INVALID_DATE(false,2040,"날짜 형식을 확인해주세요."),
 
 
 
@@ -61,6 +63,8 @@ public enum BaseResponseStatus {
 
     PATCH_DIARIES_INVALID_WEATHER(false,2072,"날씨 형식을 확인해주세요."),
     PATCH_LETTER_INVALID_SCORE(false,2080,"점수는 1~5 사이의 값이어야 합니다."),
+    PATCH_SCHEDULES_INVALID_DATE(false,2090,"날짜 형식을 확인해주세요."),
+
 
 
 

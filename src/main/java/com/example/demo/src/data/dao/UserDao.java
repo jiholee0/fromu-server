@@ -106,8 +106,8 @@ public class UserDao {
                     break;
             }
         } catch (Exception exception) {
-        exception.printStackTrace();
-        throw new BaseException(DATABASE_ERROR);
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
         }
     }
 
