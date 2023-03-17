@@ -64,14 +64,13 @@ public class PushService {
         return false;
     }
 
-    public boolean sendMessageToPartnerFree(int userId, String title, String body) throws BaseException{
+    public void sendMessageToPartnerFree(int userId, String title, String body) throws BaseException{
         String targetToken = coupleDao.getPartnerDeviceToken(userId);
-        if(targetToken == null || targetToken.equals("")) return false;
+        if(targetToken == null || targetToken.equals("")) return;
         sendMessageTo(
                 targetToken,
                 title,
                 body);
-        return true;
     }
 
 //    @Scheduled(initialDelay = 60 * 60 * 1000) // 1시간 후에 실행
