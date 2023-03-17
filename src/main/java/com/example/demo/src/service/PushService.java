@@ -110,6 +110,7 @@ public class PushService {
     }
 
     public void sendMessageTo(String targetToken, String title, String body) throws BaseException {
+        Response response;
         try{
             String message = makeMessage(targetToken, title, body);
 
@@ -122,17 +123,13 @@ public class PushService {
                     .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
                     .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
                     .build();
-
-
-            Response response = client.newCall(request).execute();
+            response = client.newCall(request).execute();
             System.out.println(response.body().string());
-            if(response.code()!=200){
-                throw new BaseException(FAIL_TO_PUSH_MESSAGE);
-            }
-
-
         } catch (IOException exception){
             exception.printStackTrace();
+            throw new BaseException(FAIL_TO_PUSH_MESSAGE);
+        }
+        if(response.code()!=200){
             throw new BaseException(FAIL_TO_PUSH_MESSAGE);
         }
 
