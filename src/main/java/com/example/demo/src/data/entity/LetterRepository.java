@@ -11,9 +11,11 @@ import java.util.Optional;
 
 @Service
 public interface LetterRepository extends JpaRepository<Letter, Integer> {
-
+    @Where(clause = "report_flag = false")
     Optional<Letter> findByRefLetterId(int refLetterId);
+    @Where(clause = "report_flag = false")
     List<Letter> findBySendCoupleId(int sendCoupleId);
+    @Where(clause = "report_flag = false")
     List<Letter> findByReceiveCoupleId(int receiveCoupleId);
 
 }

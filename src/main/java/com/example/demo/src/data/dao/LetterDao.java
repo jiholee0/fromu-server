@@ -256,9 +256,13 @@ public class LetterDao {
 
     @Transactional
     public int report(int userId, int letterId, PostReportReq postReportReq) throws BaseException {
+        Optional<Letter> letter = Optional.of(letterRepository.findById(letterId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_LETTER)
+        ));
         try {
             Report report = postReportReq.toEntity(userId,letterId);
             reportRepository.save(report);
+            letter.get().report();
             return report.getReportId();
         } catch (Exception exception) {
             exception.printStackTrace();
