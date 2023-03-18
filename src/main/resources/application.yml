@@ -1,9 +1,6 @@
 server:
   port: 8080  # 9000번 포트로 실행
 
-  servlet:
-    multipart:
-      maxFileSize: 10MB
 
 spring:
   application:
@@ -23,6 +20,11 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST}/fromuDB?useSSL=false
     username: ${MYSQL_USERNAME}
     password: ${MYSQL_PASSWORD}
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 cloud:
   aws:
