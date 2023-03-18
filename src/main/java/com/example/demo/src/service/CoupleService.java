@@ -7,6 +7,7 @@ import com.example.demo.src.data.dao.ScheduleDao;
 import com.example.demo.src.data.dao.ShopDao;
 import com.example.demo.src.data.dto.couple.CoupleRes;
 import com.example.demo.src.data.dto.couple.GetCoupleMatchRes;
+import com.example.demo.src.data.dto.couple.GetPushMessageRes;
 import com.example.demo.src.data.dto.couple.PostCoupleReq;
 import com.example.demo.src.data.entity.Couple;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,10 @@ public class CoupleService {
 
     public int modifyPushMessage(int userId, String str) throws BaseException{
         return coupleDao.modifyPushMessage(userId, str);
+    }
+
+    public GetPushMessageRes getPushMessage(int userId) throws BaseException {
+        return new GetPushMessageRes(coupleDao.getPushMessage(userId));
     }
 
     public int deleteCouple(int userId) throws BaseException {
