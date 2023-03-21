@@ -81,7 +81,7 @@ public class ScheduleDao {
         }
         try {
             // 기념일
-            if(couple.get().getFirstMetDay().substring(4,6).equals(month.substring(4,6))){
+            if(couple.get().getFirstMetDay() != null && couple.get().getFirstMetDay().substring(4,6).equals(month.substring(4,6))){
                 int year = (Integer.parseInt(month) - Integer.parseInt(couple.get().getFirstMetDay().substring(0,6)))/100;
                 if(year == 0){
                     scheduleRes.add(new ScheduleRes(
@@ -162,7 +162,7 @@ public class ScheduleDao {
         }
         try {
             // 기념일
-            if(couple.get().getFirstMetDay().substring(4,8).equals(month.substring(4,6)+date)){
+            if(couple.get().getFirstMetDay() != null && couple.get().getFirstMetDay().substring(4,8).equals(month.substring(4,6)+date)){
                 int year = (Integer.parseInt(month) - Integer.parseInt(couple.get().getFirstMetDay().substring(0,6)))/100;
                 if(year == 0){
                     scheduleRes.add(new ScheduleRes(
