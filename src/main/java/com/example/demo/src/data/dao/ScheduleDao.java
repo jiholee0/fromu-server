@@ -233,7 +233,7 @@ public class ScheduleDao {
                 dateSet.add(Integer.parseInt(date));
             }
             // 기념일
-            if(couple.get().getFirstMetDay().substring(4,6).equals(month.substring(4,6))){
+            if(couple.get().getFirstMetDay() != null && couple.get().getFirstMetDay().substring(4,6).equals(month.substring(4,6))){
                 int year = (Integer.parseInt(month) - Integer.parseInt(couple.get().getFirstMetDay().substring(0,6)))/100;
                 if(year >= 0){
                     dateSet.add(Integer.parseInt(couple.get().getFirstMetDay().substring(6,8)));
