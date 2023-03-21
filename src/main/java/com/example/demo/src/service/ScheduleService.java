@@ -9,6 +9,7 @@ import com.example.demo.src.data.entity.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,7 @@ public class ScheduleService {
         return scheduleDao.getDateListByMonth(userId, month);
     }
 
+    @Transactional
     public void modifySchedule(int userId, int scheduleId, ScheduleReq patchScheduleReq) throws BaseException {
         if(!isRegexDay(patchScheduleReq.getDate())) throw new BaseException(PATCH_SCHEDULES_INVALID_DATE);
         Optional<Schedule> schedule = Optional.of(scheduleRepository.findById(scheduleId).orElseThrow(
@@ -57,6 +59,7 @@ public class ScheduleService {
         }
     }
 
+    @Transactional
     public void deleteSchedule(int userId, int scheduleId) throws BaseException {
         Optional<Schedule> schedule = Optional.of(scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA)
