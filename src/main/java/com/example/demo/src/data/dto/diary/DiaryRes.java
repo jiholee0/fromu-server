@@ -11,6 +11,7 @@ import lombok.Setter;
 public class DiaryRes {
     private int diaryId;
     private String writerNickname;
+    private int writerUserId;
     private String content;
     @ApiModelProperty(allowableValues = "null")
     private String imageUrl;

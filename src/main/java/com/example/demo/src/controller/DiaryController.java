@@ -101,8 +101,7 @@ public class DiaryController {
      */
     @Operation(method = "PATCH",
             description = "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 일기(내용, 사진(null 가능), 날씨)를 입력하여 "+
-                    "해당 유저 커플의 일기를 수정하는 api입니다. 수정한 diaryId와 수정한 결과(내용, 사진, 날씨), 날짜, 요일, 작성자 닉네임을 return하며, " +
-                    "사진이 NULL인 경우에는 기존 저장되어 있는 사진을 return합니다.",
+                    "해당 유저 커플의 일기를 수정하는 api입니다. 수정한 diaryId를 return합니다.",
             tags = "DIARY", summary = "일기 수정 API - \uD83D\uDD12 JWT")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
@@ -116,15 +115,15 @@ public class DiaryController {
     })
     @ResponseBody
     @PostMapping("/{diaryId}")
-    public BaseResponse<DiaryRes> modifyDiary(@PathVariable("diaryId") int diaryId,
+    public BaseResponse<Integer> modifyDiary(@PathVariable("diaryId") int diaryId,
                                                   @Parameter(required = true) @RequestPart(value = "patchDiaryReq", required = true) DiaryReq patchDiaryReq,
                                                   @Parameter(required = false) @RequestPart(value = "imageFile", required = false) MultipartFile imageFile)
     {
         try{
             if(patchDiaryReq.getWeather().equalsIgnoreCase("SUNNY") || patchDiaryReq.getWeather().equalsIgnoreCase("CLOUD") || patchDiaryReq.getWeather().equalsIgnoreCase("RAINY")) {
                 int userIdByJwt = tokenService.getUserId();
-                DiaryRes patchDiaryRes = diaryService.modifyDiary(userIdByJwt, diaryId, patchDiaryReq, imageFile);
-                return new BaseResponse<>(patchDiaryRes);
+                diaryService.modifyDiary(userIdByJwt, diaryId, patchDiaryReq, imageFile);
+                return new BaseResponse<>(diaryId);
             }
             throw new BaseException(PATCH_DIARIES_INVALID_WEATHER);
         } catch (BaseException exception){
@@ -149,8 +148,8 @@ public class DiaryController {
     public BaseResponse<DiaryRes> getDiaryByDiaryId(@PathVariable("diaryId") int diaryId){
         try{
             int userIdByJwt = tokenService.getUserId();
-            DiaryRes patchDiaryRes = diaryService.getDiaryByDiaryId(diaryId);
-            return new BaseResponse<>(patchDiaryRes);
+            DiaryRes diaryRes = diaryService.getDiaryByDiaryId(diaryId);
+            return new BaseResponse<>(diaryRes);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }
@@ -256,8 +255,8 @@ public class DiaryController {
     public BaseResponse<Integer> deleteDiary(@PathVariable("diaryId") int diaryId){
         try{
             int userIdByJwt = tokenService.getUserId();
-            int deletedDiaryId = diaryService.deleteDiary(userIdByJwt, diaryId);
-            return new BaseResponse<>(deletedDiaryId);
+            diaryService.deleteDiary(userIdByJwt, diaryId);
+            return new BaseResponse<>(diaryId);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
         }

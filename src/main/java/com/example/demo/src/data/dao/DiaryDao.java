@@ -69,7 +69,7 @@ public class DiaryDao {
     }
 
     @Transactional
-    public DiaryRes modifyDiary(int userId, int diaryId, DiaryReq postDiaryReq, String imageUrl) throws BaseException {
+    public void modifyDiary(int userId, int diaryId, DiaryReq postDiaryReq, String imageUrl) throws BaseException {
         Optional<Diary> diary = Optional.of(diaryRepository.findById(diaryId)).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_DIARY)
         );
@@ -81,17 +81,6 @@ public class DiaryDao {
         } else{
             diary.get().modifyDiaryExceptImage(postDiaryReq.getContent(), postDiaryReq.getWeather());
         }
-        Optional<User> user = Optional.of(userRepository.findById(diary.get().getUserId())).orElseThrow(
-                () -> new BaseException(NOT_EXIST_DATA)
-        );
-        String writerNickname = user.get().getNickname();
-        String date = diary.get().getDate();
-
-        LocalDate localDate = LocalDate.of(
-                Integer.parseInt(date.substring(0,4)),
-                Integer.parseInt(date.substring(4,6)),
-                Integer.parseInt(date.substring(6,8)));
-        return new DiaryRes(diaryId, writerNickname, diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), date,localDate.getDayOfWeek().getValue());
     }
 
     @Transactional
@@ -109,7 +98,7 @@ public class DiaryDao {
                 Integer.parseInt(date.substring(0,4)),
                 Integer.parseInt(date.substring(4,6)),
                 Integer.parseInt(date.substring(6,8)));
-        return new DiaryRes(diaryId, writerNickname, diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), date,localDate.getDayOfWeek().getValue());
+        return new DiaryRes(diaryId, writerNickname, diary.get().getUserId(), diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), date,localDate.getDayOfWeek().getValue());
     }
 
     @Transactional
@@ -158,7 +147,7 @@ public class DiaryDao {
     }
 
     @Transactional
-    public int deleteDiary(int userId, int diaryId) throws BaseException {
+    public void deleteDiary(int userId, int diaryId) throws BaseException {
         Optional<Diary> diary = Optional.of(diaryRepository.findById(diaryId)).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_DIARY)
         );
@@ -167,7 +156,6 @@ public class DiaryDao {
         }
         try {
             diaryRepository.deleteById(diaryId);
-            return diary.get().getDiaryId();
         } catch (Exception exception) {
             exception.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
