@@ -38,7 +38,7 @@ public class DiaryService {
         return diaryDao.createDiary(userId, postDiaryReq, fileUrl);
     }
 
-    public DiaryRes modifyDiary(int userId, int diaryId, DiaryReq patchDiaryReq, MultipartFile imageFile) throws BaseException {
+    public void modifyDiary(int userId, int diaryId, DiaryReq patchDiaryReq, MultipartFile imageFile) throws BaseException {
         String fileUrl = "";
         if(imageFile != null){
             try{
@@ -47,7 +47,7 @@ public class DiaryService {
                 throw new BaseException(FAIL_TO_UPLOAD_FILE);
             }
         }
-        return diaryDao.modifyDiary(userId, diaryId, patchDiaryReq, fileUrl);
+        diaryDao.modifyDiary(userId, diaryId, patchDiaryReq, fileUrl);
     }
 
     public DiaryRes getDiaryByDiaryId(int diaryId) throws BaseException {
@@ -65,7 +65,7 @@ public class DiaryService {
         return diaryDao.getDiaries(diarybookId);
     }
 
-    public int deleteDiary(int userId, int diaryId) throws BaseException {
-        return diaryDao.deleteDiary(userId, diaryId);
+    public void deleteDiary(int userId, int diaryId) throws BaseException {
+        diaryDao.deleteDiary(userId, diaryId);
     }
 }
