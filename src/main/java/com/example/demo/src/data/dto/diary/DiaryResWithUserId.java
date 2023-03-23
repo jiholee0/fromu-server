@@ -8,9 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DiaryRes {
+public class DiaryResWithUserId {
     private int diaryId;
     private String writerNickname;
+    private int writerUserId;
     private String content;
     @ApiModelProperty(allowableValues = "null")
     private String imageUrl;
