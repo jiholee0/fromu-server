@@ -1,10 +1,7 @@
 package com.example.demo.src.data.dao;
 
 import com.example.demo.config.BaseException;
-import com.example.demo.src.data.dto.diary.DiaryInfo;
-import com.example.demo.src.data.dto.diary.DiaryReq;
-import com.example.demo.src.data.dto.diary.DiaryRes;
-import com.example.demo.src.data.dto.diary.GetDiaryListByMonthRes;
+import com.example.demo.src.data.dto.diary.*;
 import com.example.demo.src.data.entity.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +95,25 @@ public class DiaryDao {
                 Integer.parseInt(date.substring(0,4)),
                 Integer.parseInt(date.substring(4,6)),
                 Integer.parseInt(date.substring(6,8)));
-        return new DiaryRes(diaryId, writerNickname, diary.get().getUserId(), diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), date,localDate.getDayOfWeek().getValue());
+        return new DiaryRes(diaryId, writerNickname, diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), date,localDate.getDayOfWeek().getValue());
+    }
+
+    @Transactional
+    public DiaryResWithUserId getDiaryWithUserIdByDiaryId(int diaryId) throws BaseException {
+        Optional<Diary> diary = Optional.of(diaryRepository.findById(diaryId)).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_DIARY)
+        );
+        Optional<User> user = Optional.of(userRepository.findById(diary.get().getUserId())).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        );
+        String writerNickname = user.get().getNickname();
+        String date = diary.get().getDate();
+
+        LocalDate localDate = LocalDate.of(
+                Integer.parseInt(date.substring(0,4)),
+                Integer.parseInt(date.substring(4,6)),
+                Integer.parseInt(date.substring(6,8)));
+        return new DiaryResWithUserId(diaryId, writerNickname, diary.get().getUserId(), diary.get().getContent(), diary.get().getImageUrl(), diary.get().getWeather(), date,localDate.getDayOfWeek().getValue());
     }
 
     @Transactional
