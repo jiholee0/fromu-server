@@ -5,6 +5,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
 import com.example.demo.src.data.dto.diary.DiaryReq;
 import com.example.demo.src.data.dto.diary.DiaryRes;
+import com.example.demo.src.data.dto.diary.DiaryResWithUserId;
 import com.example.demo.src.data.dto.diary.GetDiaryListByMonthRes;
 import com.example.demo.src.service.DiaryService;
 import com.example.demo.utils.TokenService;
@@ -154,6 +155,32 @@ public class DiaryController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+
+    /**
+     * diaryId로 일기 1개 조회
+     * [GET] /diaries/:diaryId/withUserId
+     */
+    @Operation(method = "GET",
+            description =  "Header-'X-ACCESS-TOKEN'에 JWT 값을 넣고 diaryId로 일기를 조회하는 api입니다. 일기 Id, 내용, 사진 url, 날씨, 날짜(ex : 20230305), 요일(ex : 1(월)~7(일)), 작성자 nickname, 작성자 userId을 return합니다.",
+            tags = "DIARY", summary = "diaryId로 일기 조회(with userId) API - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "4001", description = "데이터가 존재하지 않습니다."),
+            @ApiResponse(responseCode = "4004", description = "일기가 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @GetMapping("/{diaryId}/withUserId")
+    public BaseResponse<DiaryResWithUserId> getDiaryWithUserIdByDiaryId(@PathVariable("diaryId") int diaryId){
+        try{
+            int userIdByJwt = tokenService.getUserId();
+            DiaryResWithUserId diaryRes = diaryService.getDiaryWithUserIdByDiaryId(diaryId);
+            return new BaseResponse<>(diaryRes);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 
     /**
      * diarybookId로 월챕터 조회

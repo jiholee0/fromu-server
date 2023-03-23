@@ -4,6 +4,7 @@ import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dao.DiaryDao;
 import com.example.demo.src.data.dto.diary.DiaryReq;
 import com.example.demo.src.data.dto.diary.DiaryRes;
+import com.example.demo.src.data.dto.diary.DiaryResWithUserId;
 import com.example.demo.src.data.dto.diary.GetDiaryListByMonthRes;
 import com.example.demo.utils.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,10 @@ public class DiaryService {
 
     public DiaryRes getDiaryByDiaryId(int diaryId) throws BaseException {
         return diaryDao.getDiaryByDiaryId(diaryId);
+    }
+
+    public DiaryResWithUserId getDiaryWithUserIdByDiaryId(int diaryId) throws BaseException {
+        return diaryDao.getDiaryWithUserIdByDiaryId(diaryId);
     }
 
     public List<String> getMonthList(int diarybookId) throws BaseException {
