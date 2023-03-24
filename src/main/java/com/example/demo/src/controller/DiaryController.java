@@ -3,10 +3,7 @@ package com.example.demo.src.controller;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
-import com.example.demo.src.data.dto.diary.DiaryReq;
-import com.example.demo.src.data.dto.diary.DiaryRes;
-import com.example.demo.src.data.dto.diary.DiaryResWithUserId;
-import com.example.demo.src.data.dto.diary.GetDiaryListByMonthRes;
+import com.example.demo.src.data.dto.diary.*;
 import com.example.demo.src.service.DiaryService;
 import com.example.demo.utils.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -257,6 +254,29 @@ public class DiaryController {
         try{
             int userIdByJwt = tokenService.getUserId();
             List<Integer> diaryIdList = diaryService.getDiaries(diarybookId);
+            return new BaseResponse<>(diaryIdList);
+        } catch (BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * diarybookId로 모든 일기 오름차순으로 조회 API
+     * [GET] /diaries/all/:diarybookId/withUserId
+     */
+    @Operation(method = "GET",
+            description = "diarybookId로 모든 일기를 오름차순으로 조회하는 api입니다. 해당 일기장에 작성된 일기 ID와 작성자 ID를 모두 return합니다.",
+            tags = "DIARY", summary = "diarybookId로 모든 일기 오름차순으로 조회 API(최근 순, with UserId) - \uD83D\uDD12 JWT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "1000", description = "요청에 성공하였습니다."),
+            @ApiResponse(responseCode = "4003", description = "일기장이 존재하지 않습니다.")
+    })
+    @ResponseBody
+    @GetMapping("/all/{diarybookId}/withUserId")
+    public BaseResponse<List<GetDiariesWithUserId>> getDiariesWithUserId(@PathVariable("diarybookId") int diarybookId){
+        try{
+            int userIdByJwt = tokenService.getUserId();
+            List<GetDiariesWithUserId> diaryIdList = diaryService.getDiariesWithUserId(diarybookId);
             return new BaseResponse<>(diaryIdList);
         } catch (BaseException exception){
             return new BaseResponse<>(exception.getStatus());
