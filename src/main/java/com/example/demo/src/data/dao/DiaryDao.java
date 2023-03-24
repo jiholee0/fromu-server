@@ -162,6 +162,21 @@ public class DiaryDao {
     }
 
     @Transactional
+    public List<GetDiariesWithUserId> getDiariesWithUserId(int diarybookId) throws BaseException {
+        Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findById(diarybookId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
+        ));
+        List<Diary> diaryList = diaryRepository.findByDiarybookId(diarybookId);
+        List<GetDiariesWithUserId> diaryIdList = new ArrayList<>();
+        for(Diary diary : diaryList){
+            diaryIdList.add(new GetDiariesWithUserId(diary.getDiaryId(),diary.getUserId()));
+        }
+        // Collections.reverse(diaryIdList); // 내림차순
+        return diaryIdList;
+    }
+
+
+    @Transactional
     public void deleteDiary(int userId, int diaryId) throws BaseException {
         Optional<Diary> diary = Optional.of(diaryRepository.findById(diaryId)).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_DIARY)

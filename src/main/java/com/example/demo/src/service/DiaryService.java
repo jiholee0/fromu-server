@@ -2,10 +2,7 @@ package com.example.demo.src.service;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.dao.DiaryDao;
-import com.example.demo.src.data.dto.diary.DiaryReq;
-import com.example.demo.src.data.dto.diary.DiaryRes;
-import com.example.demo.src.data.dto.diary.DiaryResWithUserId;
-import com.example.demo.src.data.dto.diary.GetDiaryListByMonthRes;
+import com.example.demo.src.data.dto.diary.*;
 import com.example.demo.utils.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +65,10 @@ public class DiaryService {
 
     public List<Integer> getDiaries(int diarybookId) throws BaseException {
         return diaryDao.getDiaries(diarybookId);
+    }
+
+    public List<GetDiariesWithUserId> getDiariesWithUserId(int diarybookId) throws BaseException {
+        return diaryDao.getDiariesWithUserId(diarybookId);
     }
 
     public void deleteDiary(int userId, int diaryId) throws BaseException {
