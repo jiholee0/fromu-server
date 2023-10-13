@@ -18,12 +18,9 @@ import java.util.Date;
 public class TestController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final PushService pushService;
-    private final PushServiceWithIOS pushServiceWithIOS;
-
     @Autowired
-    public TestController(PushService pushService, PushServiceWithIOS pushServiceWithIOS) {
+    public TestController(PushService pushService) {
         this.pushService = pushService;
-        this.pushServiceWithIOS = pushServiceWithIOS;
     }
 
     /**
