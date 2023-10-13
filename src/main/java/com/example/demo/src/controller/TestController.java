@@ -1,17 +1,14 @@
 package com.example.demo.src.controller;
 
-import com.example.demo.config.BaseException;
 import com.example.demo.config.BaseResponse;
+import com.example.demo.src.data.dto.push.PushMsgReq;
 import com.example.demo.src.service.PushService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -21,10 +18,12 @@ import java.util.Date;
 public class TestController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final PushService pushService;
+    private final PushServiceWithIOS pushServiceWithIOS;
 
     @Autowired
-    public TestController(PushService pushService) {
+    public TestController(PushService pushService, PushServiceWithIOS pushServiceWithIOS) {
         this.pushService = pushService;
+        this.pushServiceWithIOS = pushServiceWithIOS;
     }
 
     /**
@@ -72,4 +71,24 @@ public class TestController {
 //        // date = pushService.testScheduled();
 //        return new BaseResponse<>(date);
 //    }
+
+    /**
+    * push 테스트 API
+    */
+    @Operation(method = "POST",
+            description = "IOS 특정 Device에 푸시 알람을 주는 api입니다.",
+            tags = "TEST", summary = "IOS 푸시 알람 test API")
+    @ResponseBody
+    @PostMapping("/push")
+    public BaseResponse<String> pushMessage(@RequestBody PushMsgReq pushMsgReq){
+        try{
+            pushService.sendMessageTo(
+                    pushMsgReq.getTargetToken(),
+                    "알림이에요",
+                    "잘 도착했나요?");
+            return new BaseResponse<>("SUCCES");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -9,6 +9,10 @@ import com.example.demo.src.data.entity.PushStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import com.google.gson.JsonParseException;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +33,11 @@ import java.util.Optional;
 import static com.example.demo.config.BaseResponseStatus.*;
 
 @Service
-@EnableScheduling
 public class PushService {
     private final CoupleDao coupleDao;
     private final ShopDao shopDao;
     private final UserDao userDao;
     private final ObjectMapper objectMapper;
-
-    private int setUserId = 0;
-    private String setTitle = "";
-    private String setBody = "";
-
 
     @Autowired
     public PushService(CoupleDao coupleDao, ShopDao shopDao, UserDao userDao, ObjectMapper objectMapper){
@@ -64,6 +62,15 @@ public class PushService {
         return false;
     }
 
+    public void sendMessageToWithIOS(String targetToken, String title, String body) throws Exception {
+        Message message = Message.builder()
+                .setToken(targetToken)
+                .setNotification(new Notification(title, body))
+                .build();
+        String response = FirebaseMessaging.getInstance().send(message);
+        System.out.println("Successfully sent message: " + response);
+    }
+
     public void sendMessageToPartnerFree(int userId, String title, String body) throws BaseException{
         String targetToken = coupleDao.getPartnerDeviceToken(userId);
         if(targetToken == null || targetToken.equals("")) return;
@@ -71,31 +78,6 @@ public class PushService {
                 targetToken,
                 title,
                 body);
-    }
-
-//    @Scheduled(initialDelay = 60 * 60 * 1000) // 1시간 후에 실행
-//    public boolean sendMessageToPartnerFreeAfterHour(int userId, String title, String body) throws BaseException{
-//        String targetToken = coupleDao.getPartnerDeviceToken(userId);
-//        if(shopDao.push(userId)){
-//            if(targetToken == null || targetToken.equals("")) throw new BaseException(NOT_EXIST_DEVICE_TOKEN);
-//            sendMessageTo(
-//                    targetToken,
-//                    title,
-//                    body);
-//            return true;
-//        }
-//        return false;
-//    }
-
-//    @Scheduled(initialDelay = 60 * 1000) // 1분 후에 실행
-//    public Date testScheduled() throws BaseException{
-//        return new Date();
-//    }
-
-    public void set(int userId, String title, String body){
-        this.setUserId = userId;
-        this.setTitle = title;
-        this.setBody = body;
     }
 
     public boolean sendMessageFree(int userId, String title, String body) throws BaseException{
@@ -138,10 +120,10 @@ public class PushService {
                                     .title(title)
                                     .body(body)
                                     .build())
-//                            .notification(FcmMessage.Notification.builder()
-//                                    .title(title)
-//                                    .body(body)
-//                                    .build())
+                            .notification(FcmMessage.Notification.builder()
+                                    .title(title)
+                                    .body(body)
+                                    .build())
                             .build()).validateOnly(false).build();
 
             return objectMapper.writeValueAsString(fcmMessage);
@@ -152,7 +134,8 @@ public class PushService {
     }
 
     private String getAccessToken() throws IOException {
-        String firebaseConfigPath = "firebase_service_key.json";
+        //String firebaseConfigPath = "firebase_service_key.json";
+        String firebaseConfigPath = "fromu-9ec65-firebase-adminsdk-gndzq-d943f1c0be.json";
 
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())

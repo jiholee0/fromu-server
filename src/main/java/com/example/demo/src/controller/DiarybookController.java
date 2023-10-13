@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/app/diarybooks")
@@ -29,6 +32,8 @@ public class DiarybookController {
     private final PushService pushService;
     @Autowired
     private final TokenService tokenService;
+
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public DiarybookController(DiarybookService diarybookService, PushService pushService, TokenService tokenService) {
         this.diarybookService = diarybookService;
@@ -246,7 +251,25 @@ public class DiarybookController {
             int userIdByJwt = tokenService.getUserId();
             int diarybookId = diarybookService.passDiarybook(userIdByJwt);
             pushService.sendMessageToPartnerFree(userIdByJwt,"두근두근","일기장이 내게로 오고 있어");
-            //pushService.sendMessageToPartnerFreeAfterHour(userIdByJwt,"드디어...!", "일기장이 나에게 왔어. 연인의 일기를 보러 가볼까?");
+            scheduler.schedule(() -> {
+                try {
+                    System.out.println("[스케줄러 실행] : 연인에게 일기장 도착 메세지");
+                    pushService.sendMessageToPartnerFree(userIdByJwt,"드디어...!","일기장이 나에게 왔어. 연인의 일기를 보러 가볼까?");
+                } catch (BaseException e) {
+                    e.printStackTrace();
+                }
+            }, 3, TimeUnit.SECONDS);
+            scheduler.schedule(() -> {
+                try {
+                    if(!diarybookService.isGetTurnUserId(userIdByJwt)){
+                        System.out.println("스케줄러 실행");
+                        pushService.sendMessageFree(userIdByJwt,"띵띵ㅇ띧띵띵ㅇㄷ띵ㄸ동","일기장을 아직도 안 보내다니. 벨을 누르러 가볼까?");
+                        pushService.sendMessageToPartnerFree(userIdByJwt,"(속닥속닥)","연인이 나의 일상이 궁금하대!");
+                    }
+                } catch (BaseException e) {
+                    e.printStackTrace();
+                }
+            }, 24, TimeUnit.HOURS);
             return new BaseResponse<>(new PatchDiarybookRes(userIdByJwt, diarybookId));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
