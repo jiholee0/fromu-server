@@ -33,7 +33,7 @@ public class PushStatus {
     public void charge(){
         this.pushCount = 15;
     }
-    public void startCharge(){
-        this.chargeTime = new Date();
+    public void setChargeTime(Date date){
+        this.chargeTime = date;
     }
 }

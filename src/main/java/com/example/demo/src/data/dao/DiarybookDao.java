@@ -45,7 +45,7 @@ public class DiarybookDao {
             Diarybook diarybook = postDiarybookReq.toEntity(userId, couple.get().getCoupleId());
             diarybookRepository.save(diarybook);
             date = new Date();
-            Notice notice = new Notice(couple.get().getCoupleId(),"우리만의 교환일기, "+postDiarybookReq.getName()+"이 만들어졌어!", date);
+            Notice notice = new Notice(couple.get().getCoupleId(),"우리만의 교환일기, "+postDiarybookReq.getName()+"(이)가 만들어졌어!", date);
             noticeRepository.save(notice);
             return diarybook.getDiarybookId();
         } catch (Exception exception){
@@ -120,6 +120,22 @@ public class DiarybookDao {
     @Transactional
     public Diarybook getDiarybookByCoupleId(int coupleId) throws BaseException {
         Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findByCoupleId(coupleId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
+        ));
+        try {
+            return diarybook.get();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    @Transactional
+    public Diarybook getDiarybookByUserId(int userId) throws BaseException {
+        Optional<Couple> couple = Optional.of(coupleRepository.findByUserId1OrUserId2(userId, userId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_DATA)
+        ));
+        Optional<Diarybook> diarybook = Optional.of(diarybookRepository.findByCoupleId(couple.get().getCoupleId()).orElseThrow(
                 () -> new BaseException(NOT_EXIST_DATA_DIARYBOOK)
         ));
         try {

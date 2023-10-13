@@ -84,4 +84,9 @@ public class DiarybookService {
     public GetFirstPageRes getFirstPage(int userId) throws BaseException {
         return diarybookDao.getFirstPage(userId);
     }
+
+    public boolean isGetTurnUserId(int userIdByJwt) throws BaseException {
+        Diarybook diarybook = diarybookDao.getDiarybookByUserId(userIdByJwt);
+        return userIdByJwt == diarybook.getTurnUserId();
+    }
 }

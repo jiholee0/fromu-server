@@ -35,8 +35,8 @@ dependencies {
 
     // Lombok
     implementation ('org.projectlombok:lombok')
-    compileOnly ('org.projectlombok:lombok:1.18.16')
-    annotationProcessor ('org.projectlombok:lombok:1.18.16')
+    compileOnly ('org.projectlombok:lombok:1.18.22')
+    annotationProcessor ('org.projectlombok:lombok:1.18.22')
 
     // test
     implementation('org.springframework.boot:spring-boot-test-autoconfigure:2.4.2')
@@ -75,6 +75,7 @@ dependencies {
     // push firebase
     implementation 'com.google.firebase:firebase-admin:6.8.1'
     implementation(group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2')
+    implementation group: 'com.turo', name: 'pushy', version: '0.13.10'
 }
 
 test {

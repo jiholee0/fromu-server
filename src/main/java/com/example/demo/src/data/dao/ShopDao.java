@@ -2,12 +2,16 @@ package com.example.demo.src.data.dao;
 
 import com.example.demo.config.BaseException;
 import com.example.demo.src.data.entity.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static com.example.demo.config.BaseResponseStatus.*;
 
@@ -23,7 +27,9 @@ public class ShopDao {
     PushStatusRepository pushStatusRepository;
     @Autowired
     CoupleRepository coupleRepository;
-    private int setUserId = 0;
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    Date date = new Date();
 
     @Transactional
     public int buyStamp(int userId, int stampNum) throws BaseException{
@@ -122,39 +128,18 @@ public class ShopDao {
                 () -> new BaseException(NOT_EXIST_DATA_PUSH)
         ));
         if(pushStatus.get().getPushCount()<=0){
-            pushStatus.get().startCharge();
-            //charge();
-            setUserId(userId);
-            //chargeTest();
+            scheduler.schedule(() -> {
+                System.out.println("[스케줄러 실행] : 충전");
+                date = new Date();
+                pushStatus.get().charge();
+                pushStatus.get().setChargeTime(date);
+            }, 12, TimeUnit.HOURS);
             return false;
         } else{
             pushStatus.get().push();
             return true;
         }
     }
-
-//    @Transactional
-//    @Scheduled(initialDelay = 12 * 60 * 60 * 1000) // 12시간 후에 실행
-//    public void charge(int userId) throws BaseException {
-//        Optional<PushStatus> pushStatus = Optional.of(pushStatusRepository.findByUserId(userId).orElseThrow(
-//                () -> new BaseException(NOT_EXIST_DATA_PUSH)
-//        ));
-//        pushStatus.get().charge();
-//    }
-
-//    @Transactional
-//    @Scheduled(initialDelay = 60 * 1000) // 1분 후에 실행
-//    public void chargeTest() throws BaseException {
-//        Optional<PushStatus> pushStatus = Optional.of(pushStatusRepository.findByUserId(this.setUserId).orElseThrow(
-//                () -> new BaseException(NOT_EXIST_DATA_PUSH)
-//        ));
-//        pushStatus.get().charge();
-//    }
-
-    public void setUserId(int userId){
-        this.setUserId = userId;
-    }
-
 
     @Transactional
     public int getFromByUserId(int userId) throws BaseException{
